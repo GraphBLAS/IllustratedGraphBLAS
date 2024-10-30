@@ -8,7 +8,7 @@ class Scene0(VoiceoverScene, Scene):
         self.set_speech_service(GTTSService(lang="en"))
 
         # Load all logo images from the imgs/ directory
-        img_dir = "imgs"
+        img_dir = "Chapter0/imgs"
         logo_filenames = [
             "aristotle.png", "anaconda.png", "berkeley.png",
             "cmu.png", "cwi.png", "du.png",
