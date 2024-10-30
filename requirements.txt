@@ -2,3 +2,4 @@ ipython
 manim
 manim-voiceover
 manim-voiceover[gtts]
+invoke
