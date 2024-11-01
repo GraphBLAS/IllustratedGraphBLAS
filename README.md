@@ -1,5 +1,13 @@
 # IllustratedGraphBLAS
 
+To start create a virtual environment and install requirements:
+
+```
+virtualenv --python=python3 .virt
+. .virt/bin/activate
+pip install -r requirements.txt
+```
+
 To build a scene in a chapter
 
 ```
