@@ -30,26 +30,23 @@ class Scene0(VoiceoverScene, Scene):
         logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
 
         # Title text
-        title = Tex("Introduction to the GraphBLAS").scale(1.5).to_edge(UP)
+        title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
             """Welcome to this introduction to the GraphBLAS Sparse Linear Algebra
-            API. In this video series, we’ll explore the basic concepts of
-            algebraic graph theory. By the end of this series, you will understand
-            how to create new sparse graph algorithms using algebraic operations
-            expressed with simple mathematical notation."""
+            API. In this video series, we’ll explore the basic
+            concepts of algebraic graph theory and how it can be used
+            to write portable graph algorithms on many different kinds
+            of hardware like CPUs and GPUs. By the end of this series,
+            you will understand how to create new parallel graph
+            algorithms using simple mathematical notation."""
         ):
             self.play(Write(title), FadeIn(logos_group))
-            self.wait(2)
-
-        # Footer text
-        footer = Text(
-            "The GraphBLAS Forum"
-        ).scale(0.5).to_edge(DOWN)
-
-        # Display the footer text
-        self.play(Write(footer))
-        self.wait(2)
+            self.wait(1)
+            footer = Text(
+                "The GraphBLAS Forum"
+            ).scale(0.75).to_edge(DOWN)
+            self.play(Write(footer))
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))

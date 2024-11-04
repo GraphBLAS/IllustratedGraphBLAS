@@ -1,3 +1,4 @@
+import scipy.optimize
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
@@ -15,6 +16,7 @@ class Scene2(VoiceoverScene, Scene):
             [0, 0, 0, 0, 2, 0]
         ]
 
+        num_rows, num_cols = len(matrix_data), len(matrix_data[0])
         vector_data = [[0], [0], [0], [2], [0], [0]]  # Vertical vector
         initial_result_data = [[0], [0], [0], [0], [4], [18]]  # Example result vector
 
@@ -42,7 +44,15 @@ class Scene2(VoiceoverScene, Scene):
             multiplying a vector on the left, the vector is treated as
             a scaling factor for each of the rows in the matrix."""
         ):
-            self.play(Write(expression_group))
+            row_labels = [Tex(str(i)) for i in range(num_rows)]
+            col_labels = [Tex(str(j)) for j in range(num_cols)]
+
+            for i, label in enumerate(row_labels):
+                label.next_to(row_vector.get_rows()[i], LEFT * 3)
+            for j, label in enumerate(col_labels):
+                label.next_to(dense_matrix.get_columns()[j], UP * 1.5)
+
+            self.play(Write(expression_group), *[Write(label) for label in row_labels + col_labels])
             self.wait(0.5)
 
         with self.voiceover(
@@ -85,7 +95,7 @@ class Scene2(VoiceoverScene, Scene):
             edge_config={"stroke_color": BLUE}
         ).scale(1.3)
 
-        self.play(FadeOut(expression_group))
+        self.play(FadeOut(expression_group), FadeOut(*row_labels), FadeOut(*col_labels))
         with self.voiceover(
             """The GraphBLAS uses sparse data structures that efficiently store
             only elements in the matrix that are present in the data.
@@ -112,7 +122,11 @@ class Scene2(VoiceoverScene, Scene):
                     sparse_entry.set_opacity(0)
 
             self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))
-            self.play(FadeIn(sparse_matrix), FadeIn(sparse_vector))
+            for i, label in enumerate(row_labels):
+                label.next_to(sparse_matrix.get_rows()[i], LEFT * 3)
+            for j, label in enumerate(col_labels):
+                label.next_to(sparse_matrix.get_columns()[j], UP * 1.5)
+            self.play(FadeIn(sparse_matrix), FadeIn(sparse_vector), FadeIn(*row_labels), FadeIn(*col_labels))
 
         with self.voiceover(
             """ The core concept of graph algebra is that every matrix can be seen

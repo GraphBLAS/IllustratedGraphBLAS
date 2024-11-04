@@ -1,8 +1,9 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
+import scipy.optimize
 
-class Scene3(VoiceoverScene, Scene):
+class Scene1(VoiceoverScene, Scene):
     def construct(self):
         self.set_speech_service(GTTSService(lang="en"))
 

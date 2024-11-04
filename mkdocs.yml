@@ -1,0 +1,30 @@
+site_name: The Illustrated GraphBLAS
+
+nav:
+  - Introduction: Chapter0.md
+  - Matrix Multiplication and Semirings: Chapter1.md
+  - Breadth First Search: Chapter2.md
+  - Shortest Path: Chapter3.md
+  - Element-Wise Operations: Chapter4.md
+  - Applying and Selecting: Chapter5.md
+  - Triangle Counting and Centrality: Chapter6.md
+  - Page Rank: Chapter7.md
+  - Sparse Neural Networks: Chapter8.md
+  - Chapter9: Chapter9.md
+  
+theme:
+  name: material
+  highlightjs: true
+  hljs_languages:
+    - C
+    - python
+    - pgsql
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences    
+

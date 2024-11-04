@@ -1,3 +1,4 @@
+import scipy.optimize
 from manim import *
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
@@ -27,9 +28,10 @@ class Scene1(VoiceoverScene, Scene):
 
         with self.voiceover(
             """This matrix starts with many values, but most of them are zero.
-            This is a sparse matrix. Sparse data is everywhere and it
-            presents unique computing challenges when using Linear
-            Algebra"""
+            This is a common feature of many problems where the data
+            set or the connections between the data are sparse. Sparse
+            data is everywhere and efficiently analyzing it presents
+            unique computing challenges."""
         ):
             self.play(Write(dense_matrix), *[Write(label) for label in row_labels + col_labels])
 
@@ -78,7 +80,7 @@ class Scene1(VoiceoverScene, Scene):
             edge_config={"stroke_color": BLUE}
         ).scale(1.3)
 
-        self.play(graph.animate.to_edge(RIGHT).shift(UP * 0.5))  # Shift graph to the right and up by 0.5 units
+        self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))  # Shift graph to the right and up by 0.5 units
 
         edge_labels = VGroup()
 
