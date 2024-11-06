@@ -6,9 +6,9 @@ class Scene0(Scene):
         title = Text("Triangle Counting and Centrality", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Generalizes matrix multiplication to non-standard operations",
-            "Used in graph algorithms like shortest paths and connectivity",
-            "Elements are combined with addition and multiplication from a chosen semiring",
+            "Triangle are an important structure in graphs.",
+            "Show various examples of counting triangles in Python, give explanation.",
+            "Show how Triangle Centrality with example in Python.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

@@ -6,9 +6,10 @@ class Scene0(Scene):
         title = Text("Page Rank", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Generalizes matrix multiplication to non-standard operations",
-            "Used in graph algorithms like shortest paths and connectivity",
-            "Elements are combined with addition and multiplication from a chosen semiring",
+            "Give brief overview of Page Rank.",
+            "Show linear algebraic formulation and tie back to fundamentals of design.",
+            "Show dense implementation in Python, give disadvantages for large graphs",
+            "Show sparse implementation in Python that resolves the issues.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

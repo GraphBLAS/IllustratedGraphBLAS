@@ -47,7 +47,7 @@ def stitch_chapter(ctx, chapter, quality="l"):
             f.write(f"file '{video}'\n")
 
     # Stitch videos using ffmpeg
-    ctx.run(f"ffmpeg -f concat -safe 0 -i videos_to_stitch.txt -c copy ../docs/{chapter}_{resolution}.mp4")
+    ctx.run(f"ffmpeg -y -f concat -safe 0 -i videos_to_stitch.txt -c copy ../docs/{chapter}_{resolution}.mp4")
     os.unlink('videos_to_stitch.txt')
     os.chdir('..')
 
@@ -73,8 +73,11 @@ def clean_media(ctx, chapter):
 
     print(f"Cleaned media folder in {chapter}")
 
-from invoke import task
-import os
+@task
+def clean_all(ctx):
+    for chapter in sorted(os.listdir()):
+        if os.path.isdir(chapter) and chapter.startswith("Chapter"):
+            clean_media(ctx, chapter)
 
 @task
 def render_thumbnails(ctx, quality='l'):

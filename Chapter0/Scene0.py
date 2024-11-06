@@ -17,7 +17,7 @@ class Scene0(VoiceoverScene, Scene):
             "njit.png", "nvidia.png", "pnnl.png",
             "redis.png", "romatre.png", "tamu.png",
             "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg"
+            "JuliaComputing.jpg", "falkor.png",
         ]
 
         # Create ImageMobject for each logo and scale them uniformly
@@ -33,16 +33,16 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """Welcome to this introduction to the GraphBLAS Sparse Linear Algebra
-            API. In this video series, we’ll explore the basic
-            concepts of algebraic graph theory and how it can be used
-            to write portable graph algorithms on many different kinds
-            of hardware like CPUs and GPUs. By the end of this series,
+            """The GraphBLAS Sparse Linear Algebra API is a powerful mathematical
+            tool for graph analysis and sparse linear algebra. In this
+            video series, we’ll explore the basic concepts of
+            algebraic graph theory and how it can be used to write
+            portable graph algorithms on many different kinds of
+            hardware like CPUs and GPUs. By the end of this series,
             you will understand how to create new parallel graph
             algorithms using simple mathematical notation."""
         ):
             self.play(Write(title), FadeIn(logos_group))
-            self.wait(1)
             footer = Text(
                 "The GraphBLAS Forum"
             ).scale(0.75).to_edge(DOWN)

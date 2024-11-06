@@ -7,9 +7,12 @@ class Scene0(Scene):
         title = Text("Breadth First Search", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Generalizes matrix multiplication to non-standard operations",
-            "Used in graph algorithms like shortest paths and connectivity",
-            "Elements are combined with addition and multiplication from a chosen semiring",
+            "The primary algorithm for graph analysis is Breadth First Search.",
+            "Give an example of how it differs from Depth First Search.",
+            "Show how DFS is inherently serial, where BFS can be parallelized",
+            "Compare and contrast procedural BFS algorithms to Linear Algebra",
+            "Explain problems parallelizing procedural code, including architectural considerations (CUDA, etc)",
+            "Explain how Linear Algebra abstracts away the need to consider parallelization.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

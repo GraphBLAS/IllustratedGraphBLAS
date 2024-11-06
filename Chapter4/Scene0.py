@@ -6,9 +6,10 @@ class Scene0(Scene):
         title = Text("Applying Operators and Selecting Values", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Generalizes matrix multiplication to non-standard operations",
-            "Used in graph algorithms like shortest paths and connectivity",
-            "Elements are combined with addition and multiplication from a chosen semiring",
+            "Apply a function to all elements in a graph, transforming it.",
+            "Show how selection can choose elements that match a criteria.",
+            "Give an example of apply in an algorithm in Python.",
+            "Give an example of select in an algorithm in Python.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

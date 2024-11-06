@@ -1,150 +1,225 @@
-import scipy.optimize
 from manim import *
+import scipy.optimize
 from manim_voiceover import VoiceoverScene
 from manim_voiceover.services.gtts import GTTSService
+import os
 
 class Scene1(VoiceoverScene, Scene):
     def construct(self):
         self.set_speech_service(GTTSService(lang="en"))
 
-        matrix_data = [
-            [0, 1, 0, 2, 0, 0],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 2, 9],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 2, 0]
-        ]
-        num_rows, num_cols = len(matrix_data), len(matrix_data[0])
+        # Title text
+        title = Tex("Graphs are Everywhere").scale(1.5).to_edge(UP)
 
-        dense_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
-        row_labels = [Tex(str(i)) for i in range(num_rows)]
-        col_labels = [Tex(str(j)) for j in range(num_cols)]
-
-        for i, label in enumerate(row_labels):
-            label.next_to(dense_matrix.get_rows()[i], LEFT * 3)
-        for j, label in enumerate(col_labels):
-            label.next_to(dense_matrix.get_columns()[j], UP * 1.5)
-
-        with self.voiceover(
-            """This matrix starts with many values, but most of them are zero.
-            This is a common feature of many problems where the data
-            set or the connections between the data are sparse. Sparse
-            data is everywhere and efficiently analyzing it presents
-            unique computing challenges."""
-        ):
-            self.play(Write(dense_matrix), *[Write(label) for label in row_labels + col_labels])
-
-        non_zero_positions = [
-            (i, j, matrix_data[i][j])
-            for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] != 0
-        ]
-
-        zero_positions = [(i, j) for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] == 0]
-
-        highlights = [
-            SurroundingRectangle(dense_matrix.get_entries()[i * num_cols + j], color=BLUE)
-            for i, j, _ in non_zero_positions
-        ]
-
-        with self.voiceover(
-            """Here we highlight the non-zero values, which carry the meaningful
-            information in this matrix."""
-        ):
-            self.play(*[Create(highlight) for highlight in highlights])
-
-        fade_out_animations = [
-            dense_matrix.get_entries()[i * num_cols + j].animate.set_opacity(0)
-            for i, j in zero_positions
-        ]
-
-        with self.voiceover(
-            """Let's ignore the zero values, leaving us with only the non-zero
-            elements."""
-        ):
-            self.play(*fade_out_animations)
-            self.play(*[FadeOut(highlight) for highlight in highlights])
-
-        matrix_and_labels = VGroup(dense_matrix, *row_labels, *col_labels)
-        self.play(matrix_and_labels.animate.to_edge(LEFT))
-
-        # Create the graph, shift it to the right, and raise it by 0.5 units
-        nodes = [i for i in range(num_rows)]
-        edges = [(i, j) for i, j, _ in non_zero_positions]
-
-        graph = DiGraph(
-            vertices=nodes,
-            edges=edges,
-            layout="kamada_kawai",
-            labels=True,
-            edge_config={"stroke_color": BLUE}
-        ).scale(1.3)
-
-        self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))  # Shift graph to the right and up by 0.5 units
-
-        edge_labels = VGroup()
-
-        with self.voiceover(
-                """We can represent this matrix as a graph, where there is a row and
-                column for each node, and elements become an edge
-                connecting two nodes. The elements of each row vector
-                in the matrix corresponds to the outgoing edges for
-                the graph node associated with that row."""
-        ):
-            previous_node_highlight = None  # Store the previous node highlight
-            for i in range(num_rows):  # Iterate over rows
-                row_highlight = SurroundingRectangle(dense_matrix.get_rows()[i], color=YELLOW, buff=0.1)
-
-                # Highlight the current node in the graph
-                node_highlight = ApplyMethod(graph.vertices[i].set_fill, YELLOW, 1)
-
-                # Highlight outgoing edges for the current node
-                outgoing_edges = [
-                    graph.edges[(i, j)].animate.set_stroke(color=YELLOW, width=4)
-                    for j in range(num_cols) if (i, j) in graph.edges
-                ]
-
-                # Play the row, node, and edge highlights
-                self.play(Create(row_highlight), node_highlight, *outgoing_edges)
-
-                for j in range(num_cols):
-                    if matrix_data[i][j] != 0:
-                        value = matrix_data[i][j]
-                        value_text = Tex(str(value)).move_to(dense_matrix.get_entries()[i * num_cols + j].get_center())
-                        edge_center = graph.edges[(i, j)].get_center()
-
-                        # Move the value to the graph edge with a slight delay
-                        self.play(value_text.animate.move_to(edge_center))
-                        edge_labels.add(value_text)
-                        self.wait(0.1)  # Small delay for clarity
-
-                # Unhighlight the previous node and edges
-                if previous_node_highlight:
-                    self.play(ApplyMethod(previous_node_highlight.set_fill, WHITE, 0.5))
-                self.play(FadeOut(row_highlight))  # Remove row highlight after processing
-                previous_node_highlight = graph.vertices[i]  # Store the current node as previous
-
-        matrix_label = Tex("Adjacency Matrix").next_to(dense_matrix, DOWN)
-        graph_label = Tex("Graph").next_to(graph, DOWN)
-
-        with self.voiceover(
-                """This type of matrix, where elements describe connections in a
-                graph, is called an adjacency matrix.  It occurs all
-                through math, science and computing, including machine
-                learning and artificial intelligence.  It's a powerful
-                way to express graph structures and algorithms using
-                the operations of linear algebra like matrix
-                multiplication."""
-        ):
-            self.play(FadeIn(matrix_label), FadeIn(graph_label))
-
+        self.play(Write(title))
         self.wait(1)
+
+        with self.voiceover(
+            """Graphs are a powerful mathematical structure that can model social
+            networks, financial transactions, language models, drug
+            interactions, and many other real world interconnected
+            systems. """
+        ):
+            # Nodes representing species in the ecosystem
+            nodes = [
+                "Jane", "Rick", "Jessica", "Teagan", "Justin",
+                "Matt", "Mike", "Sandra", "Olive", "Hank", "Cooper"
+            ]
+
+            # Edges representing realistic feeding relationships in a forest ecosystem
+            edges = [
+                ("Jane", "Rick"), ("Jane", "Jessica"),
+                ("Jane", "Mike"), ("Teagan", "Matt"), ("Teagan", "Justin"),
+                ("Rick", "Matt"), ("Rick", "Mike"), ("Matt", "Sandra"),
+                ("Jessica", "Olive"), ("Justin", "Hank"), ("Mike", "Sandra"),
+                ("Mike", "Cooper"), ("Sandra", "Hank"), ("Matt", "Cooper"),
+                ("Jessica", "Cooper"), ("Olive", "Cooper")
+            ]
+
+            # Create the graph
+            graph = Graph(nodes, edges, layout="kamada_kawai", layout_scale=3,
+                          )
+
+            # Display the graph
+            self.play(Create(graph.scale(0.8)))
+            self.wait(4)
+
+            labels = {}
+            for node in nodes:
+                label = Text(node, font_size=28).next_to(graph.vertices[node], UP, buff=0.15)
+                labels[node] = label
+                self.add(label)  # Add label to the scene
+
+            self.wait(6)
+            # Fade out at the end
+            self.play(FadeOut(graph), FadeOut(*labels.values()))
+
+        with self.voiceover(
+                """ In technology, they underpin the analysis and security
+                architecture of computer networks, linking devices
+                across the internet."""
+        ):
+            nodes = [
+                "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
+                "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
+                "Austin", "Jacksonville", "Fort Worth", "Columbus", "Charlotte"
+            ]
+
+            edges = [
+                ("New York", "Chicago"), ("New York", "Philadelphia"), ("New York", "Dallas"),
+                ("Los Angeles", "Phoenix"), ("Los Angeles", "San Diego"), ("Los Angeles", "San Jose"),
+                ("Chicago", "Dallas"), ("Chicago", "Houston"), ("Chicago", "Philadelphia"),
+                ("Houston", "Dallas"), ("Phoenix", "San Antonio"), ("San Antonio", "Dallas"),
+                ("San Diego", "San Jose"), ("Dallas", "Austin"), ("Dallas", "Fort Worth"),
+                ("Austin", "San Antonio"), ("Jacksonville", "Charlotte"), ("Charlotte", "Columbus"),
+                ("Philadelphia", "Jacksonville"), ("Columbus", "Chicago"), ("San Jose", "Austin"),
+                ("Charlotte", "Dallas")
+            ]
+
+            graph = Graph(
+                nodes, edges,
+                layout="circular", layout_scale=3,
+                vertex_config={"radius": 0.2}
+            )
+
+            self.play(Create(graph.scale(0.75)))
+            self.wait(1)
+
+            # Add labels to each node
+            labels = {}
+            for node in nodes:
+                label = Text(node, font_size=18).next_to(graph.vertices[node], DOWN, buff=0.1)
+                labels[node] = label
+                self.add(label)  # Add label to the scene
+
+            self.wait(4)
+
+            # Fade out at the end
+            self.play(FadeOut(graph), *[FadeOut(label) for label in labels.values()])
+
+        with self.voiceover("""and power knowledge graphs that organize information for complex queries."""):
+            # Define nodes and edges for the knowledge graph
+            nodes = [
+                "LM", "Transformer", "SelfAttention", "Pretraining", "FineTuning",
+                "Tokenization", "EmbeddingLayer", "PositionalEncoding", "MLM", "TransferLearning"
+            ]
+
+            # Define edges between nodes to represent relationships
+            edges = [
+                ("LM", "Transformer"),
+                ("LM", "SelfAttention"),
+                ("LM", "Pretraining"),
+                ("LM", "FineTuning"),
+                ("Transformer", "SelfAttention"),
+                ("Transformer", "EmbeddingLayer"),
+                ("SelfAttention", "PositionalEncoding"),
+                ("Pretraining", "MLM"),
+                ("Pretraining", "TransferLearning"),
+                ("Tokenization", "EmbeddingLayer"),
+                ("EmbeddingLayer", "SelfAttention"),
+                ("MLM", "FineTuning")
+            ]
+
+            # Create the directed graph without labels
+            graph = DiGraph(
+                vertices=nodes,
+                edges=edges,
+                layout="shell",
+                vertex_config={
+                    "radius": 0.2,
+                    "fill_color": BLUE,
+                },
+                edge_config={
+                    "stroke_color": GREY,
+                    "stroke_width": 2,
+                    "tip_length": 0.2,
+                }
+            )
+
+            # Add the graph to the scene
+            self.play(Create(graph))
+            self.wait(1)
+
+            # Define labels for each node
+            labels = {
+                "LM": "Language Models",
+                "Transformer": "Transformer Architecture",
+                "SelfAttention": "Self-Attention",
+                "Pretraining": "Pretraining",
+                "FineTuning": "Fine-Tuning",
+                "Tokenization": "Tokenization",
+                "EmbeddingLayer": "Embedding Layer",
+                "PositionalEncoding": "Positional Encoding",
+                "MLM": "Masked Language Modeling",
+                "TransferLearning": "Transfer Learning"
+            }
+
+            # Add labels next to each node
+            label_objects = []
+            for node_key in graph.vertices:
+                node = graph.vertices[node_key]
+                label_text = labels[node_key]
+                label = Text(label_text, font_size=20)
+
+                # Position label next to the node
+                label.next_to(node, DOWN, buff=0.2)
+                label_objects.append(label)
+
+                # Animate the label appearing
+                self.play(FadeIn(label), run_time=0.5)
+
+            # Fade out the graph and labels at the end
+            self.play(FadeOut(graph), *[FadeOut(label) for label in label_objects])
+            self.wait(1)
+
+        with self.voiceover(
+                """In AI, graphs represent the interconnected layers of neural
+                networks, allowing language models to process information
+                efficiently."""
+        ):
+            # Define the number of layers and nodes per layer
+            num_layers = 4
+            nodes_per_layer = 4
+
+            # Layer node positions
+            layer_positions = []
+            layer_spacing = 1.5  # Spacing between layers
+            node_spacing = 1  # Spacing between nodes in a layer
+
+            # Generate positions for each layer
+            for layer_index in range(num_layers):
+                layer_x = -5 + layer_index * layer_spacing
+                layer_positions.append([
+                    (layer_x, y_pos, 0) for y_pos in range(-int(nodes_per_layer/2), int(nodes_per_layer/2))
+                ])
+
+            # Create nodes and store them in a list
+            nodes = []
+            for layer_index, positions in enumerate(layer_positions):
+                layer_nodes = [
+                    Dot(point=pos, radius=0.1, color=BLUE).shift(RIGHT * layer_index * layer_spacing) for pos in positions
+                ]
+                nodes.append(layer_nodes)
+                # Animate the nodes appearing
+                self.play(*[Create(node) for node in layer_nodes])
+
+            edges = []
+            # Create edges (arrows) between each node in one layer to each node in the next layer
+            for layer_index in range(num_layers - 1):
+                for source_node in nodes[layer_index]:
+                    for target_node in nodes[layer_index + 1]:
+                        edge = Arrow(
+                            start=source_node.get_center(), end=target_node.get_center(),
+                            buff=0.1, stroke_width=1, color=GREY)
+                        edges.append(edge)
+                        self.play(Create(edge), run_time=0.1)
+            self.wait(2)
+
+        # Fade out the entire network at the end
         self.play(
-            FadeOut(matrix_and_labels),
-            FadeOut(graph),
-            FadeOut(matrix_label),
-            FadeOut(graph_label),
-            FadeOut(edge_labels),
-            run_time=1  # Smooth fade-out transition
+            *[FadeOut(node) for layer in nodes for node in layer],
         )
+
+        # Fade out all elements at the end
+        self.play(FadeOut(title), FadeOut(*edges))
         self.wait(0.5)

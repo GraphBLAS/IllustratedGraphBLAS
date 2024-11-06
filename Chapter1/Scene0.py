@@ -6,9 +6,10 @@ class Scene0(Scene):
         title = Text("Matrix Multiplication over Semirings", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Generalizes matrix multiplication to non-standard operations",
-            "Used in graph algorithms like shortest paths and connectivity",
-            "Elements are combined with addition and multiplication from a chosen semiring",
+            "Describe matrix multiplication operations in common terms, plus times.",
+            "Describe how plus\_times is one of infinite semirings, many useful for graphs.",
+            "Explain how structural graph problems don't need values at all, so more efficient semirings can be used.",
+            "Give teaser for several algorithms in upcoming videos.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)
