@@ -15,77 +15,62 @@ class Scene2(VoiceoverScene, Scene):
             [0, 0, 5, 0, 0, 0],
             [0, 0, 0, 0, 2, 0]
         ]
-
         num_rows, num_cols = len(matrix_data), len(matrix_data[0])
-        vector_data = [[0], [0], [0], [2], [0], [0]]  # Vertical vector
-        initial_result_data = [[0], [0], [0], [0], [4], [18]]  # Example result vector
 
-        # Create vertically oriented input and result vectors
-        row_vector = Matrix(vector_data, v_buff=0.5).scale(1.5)
         dense_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
-        result_vector = Matrix(initial_result_data, v_buff=0.5).scale(1.5)
+        row_labels = [Tex(str(i)) for i in range(num_rows)]
+        col_labels = [Tex(str(j)) for j in range(num_cols)]
 
-        # Create symbols for the equation
-        at_symbol = Tex("@").scale(2)
-        equal_symbol = Tex("=").scale(2)
-
-        # Arrange the equation with vertical vectors but treat as row vectors
-        expression_group = VGroup(
-            row_vector, at_symbol, dense_matrix, equal_symbol, result_vector
-        ).arrange(buff=0.5)
-
-        for entry in result_vector.get_entries():
-            entry.set_opacity(0)
+        for i, label in enumerate(row_labels):
+            label.next_to(dense_matrix.get_rows()[i], LEFT * 3)
+        for j, label in enumerate(col_labels):
+            label.next_to(dense_matrix.get_columns()[j], UP * 1.5)
 
         with self.voiceover(
-            """The core operation of Linear Algebra is multiplying matrices and
-            vectors with each other.  In this first example, a vector
-            is the left operand and a matrix is the right.  When
-            multiplying a vector on the left, the vector is treated as
-            a scaling factor for each of the rows in the matrix."""
+            """This matrix starts with many values, but most of them are zero.
+            This is a common feature of many problems where the data
+            set or the connections between the data are sparse. Sparse
+            data is everywhere and efficiently analyzing it presents
+            unique computing challenges."""
         ):
-            row_labels = [Tex(str(i)) for i in range(num_rows)]
-            col_labels = [Tex(str(j)) for j in range(num_cols)]
+            self.play(Write(dense_matrix), *[Write(label) for label in row_labels + col_labels])
 
-            for i, label in enumerate(row_labels):
-                label.next_to(row_vector.get_rows()[i], LEFT * 3)
-            for j, label in enumerate(col_labels):
-                label.next_to(dense_matrix.get_columns()[j], UP * 1.5)
+        non_zero_positions = [
+            (i, j, matrix_data[i][j])
+            for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] != 0
+        ]
 
-            self.play(Write(expression_group), *[Write(label) for label in row_labels + col_labels])
-            self.wait(0.5)
+        zero_positions = [(i, j) for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] == 0]
+
+        highlights = [
+            SurroundingRectangle(dense_matrix.get_entries()[i * num_cols + j], color=BLUE)
+            for i, j, _ in non_zero_positions
+        ]
 
         with self.voiceover(
-            """Now, we multiply the vector by the matrix to get a result. Each row
-            in the matrix contributes to the corresponding element in
-            the result vector, but notice how most of the operations
-            involve multiplying by zero, which wastes time, memory
-            space, and energy when there are truely only two actual
-            calculations to be done."""
+            """Here we highlight the non-zero values, which carry the meaningful
+            information in this matrix."""
         ):
-            for i in range(6):  # Row-wise operations
-                row_highlight = SurroundingRectangle(dense_matrix.get_rows()[i], color=YELLOW, buff=0.1)
-                vector_entry = row_vector.get_entries()[i]
-                vector_highlight = SurroundingRectangle(vector_entry, color=YELLOW, buff=0.1)
+            self.play(*[Create(highlight) for highlight in highlights])
 
-                self.play(Create(row_highlight), Create(vector_highlight))
+        fade_out_animations = [
+            dense_matrix.get_entries()[i * num_cols + j].animate.set_opacity(0)
+            for i, j in zero_positions
+        ]
 
-                for j in range(6):
-                    matrix_entry = dense_matrix.get_entries()[i * 6 + j]
-                    result_entry = result_vector.get_entries()[j]
+        with self.voiceover(
+            """Let's ignore the zero values, leaving us with only the non-zero
+            elements."""
+        ):
+            self.play(*fade_out_animations)
+            self.play(*[FadeOut(highlight) for highlight in highlights])
 
-                    if i == 3 and matrix_data[i][j] != 0:
-                        self.play(TransformFromCopy(matrix_entry, result_entry), run_time=0.5)
-                        self.play(result_entry.animate.set_opacity(1), vector_entry.animate.set_opacity(1), run_time=0.5)
-                    else:
-                        self.play(matrix_entry.animate.set_opacity(0.3), vector_entry.animate.set_opacity(0.3), run_time=0.1)
+        matrix_and_labels = VGroup(dense_matrix, *row_labels, *col_labels)
+        self.play(matrix_and_labels.animate.to_edge(LEFT))
 
-                self.wait(0.3)
-                self.play(FadeOut(row_highlight), FadeOut(vector_highlight), run_time=0.5)
-
-        # Create the graph representation
-        nodes = [i for i in range(6)]
-        edges = [(i, j) for i in range(6) for j in range(6) if matrix_data[i][j] != 0]
+        # Create the graph, shift it to the right, and raise it by 0.5 units
+        nodes = [i for i in range(num_rows)]
+        edges = [(i, j) for i, j, _ in non_zero_positions]
 
         graph = DiGraph(
             vertices=nodes,
@@ -95,59 +80,71 @@ class Scene2(VoiceoverScene, Scene):
             edge_config={"stroke_color": BLUE}
         ).scale(1.3)
 
-        self.play(FadeOut(expression_group), FadeOut(*row_labels), FadeOut(*col_labels))
-        with self.voiceover(
-            """The GraphBLAS uses sparse data structures that efficiently store
-            only elements in the matrix that are present in the data.
-            Where there is no value there isn't a zero stored in
-            memory to represent it, instead there is simply nothing.
-            The GraphBLAS Library uses various compressed formats to
-            store the data in memory using many different kinds of
-            sparse algorithms.  """
-        ):
-            # Position the sparse matrix and result vector next to the graph
-            sparse_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
-            for i, row in enumerate(matrix_data):
-                for j, value in enumerate(row):
-                    if value == 0:
-                        sparse_matrix.get_entries()[i * len(row) + j].set_opacity(0)
+        self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))  # Shift graph to the right and up by 0.5 units
 
-            sparse_matrix.to_edge(LEFT, buff=0.5)
-            sparse_vector = Matrix(initial_result_data, v_buff=0.5).scale(1.5).next_to(sparse_matrix, RIGHT, buff=0.5)
-
-            for j, sparse_entry in enumerate(sparse_vector.get_entries()):
-                if j in (4, 5):
-                    sparse_entry.set_opacity(1)
-                else:
-                    sparse_entry.set_opacity(0)
-
-            self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))
-            for i, label in enumerate(row_labels):
-                label.next_to(sparse_matrix.get_rows()[i], LEFT * 3)
-            for j, label in enumerate(col_labels):
-                label.next_to(sparse_matrix.get_columns()[j], UP * 1.5)
-            self.play(FadeIn(sparse_matrix), FadeIn(sparse_vector), FadeIn(*row_labels), FadeIn(*col_labels))
+        edge_labels = VGroup()
 
         with self.voiceover(
-            """ The core concept of graph algebra is that every matrix can be seen
-            as a graph, and every graph can be seen as one or more
-            matrices.  Matrix multiplication in linear algebra
-            translates to edge traversal in graphs, in the graph
-            representation on the right the result vector corresponds
-            to the outgoing edges for the node labeled 3 in the graph
-            that go to nodes 4 and 5."""
+                """We can represent this matrix as a graph, where there is a row and
+                column for each node, and elements become an edge
+                connecting two nodes. The elements of each row vector
+                in the matrix corresponds to the outgoing edges for
+                the graph node associated with that row."""
         ):
-            vector_highlight = SurroundingRectangle(sparse_vector.get_entries()[4:6], color=YELLOW, buff=0.1)
-            self.play(Create(vector_highlight))
+            previous_node_highlight = None  # Store the previous node highlight
+            for i in range(num_rows):  # Iterate over rows
+                row_highlight = SurroundingRectangle(dense_matrix.get_rows()[i], color=YELLOW, buff=0.1)
 
-            col_highlight = SurroundingRectangle(sparse_matrix.get_rows()[3], color=YELLOW, buff=0.1)
-            self.play(Create(col_highlight))
+                # Highlight the current node in the graph
+                node_highlight = ApplyMethod(graph.vertices[i].set_fill, YELLOW, 1)
 
-            node_highlight = ApplyMethod(graph.vertices[3].set_fill, YELLOW, 1)
-            outgoing_edges = [
-                graph.edges[(3, j)].animate.set_stroke(color=YELLOW, width=4)
-                for j in range(6) if (3, j) in graph.edges
-            ]
-            self.play(node_highlight, *outgoing_edges)
+                # Highlight outgoing edges for the current node
+                outgoing_edges = [
+                    graph.edges[(i, j)].animate.set_stroke(color=YELLOW, width=4)
+                    for j in range(num_cols) if (i, j) in graph.edges
+                ]
+
+                # Play the row, node, and edge highlights
+                self.play(Create(row_highlight), node_highlight, *outgoing_edges)
+
+                for j in range(num_cols):
+                    if matrix_data[i][j] != 0:
+                        value = matrix_data[i][j]
+                        value_text = Tex(str(value)).move_to(dense_matrix.get_entries()[i * num_cols + j].get_center())
+                        edge_center = graph.edges[(i, j)].get_center()
+
+                        # Move the value to the graph edge with a slight delay
+                        self.play(value_text.animate.move_to(edge_center))
+                        edge_labels.add(value_text)
+                        self.wait(0.1)  # Small delay for clarity
+
+                # Unhighlight the previous node and edges
+                if previous_node_highlight:
+                    self.play(ApplyMethod(previous_node_highlight.set_fill, WHITE, 0.5))
+                self.play(FadeOut(row_highlight))  # Remove row highlight after processing
+                previous_node_highlight = graph.vertices[i]  # Store the current node as previous
+
+        matrix_label = Tex("Adjacency Matrix").next_to(dense_matrix, DOWN)
+        graph_label = Tex("Graph").next_to(graph, DOWN)
+
+        with self.voiceover(
+                """This type of matrix, where elements describe connections in a
+                graph, is called an adjacency matrix.  It occurs all
+                through math, science and computing, including machine
+                learning and artificial intelligence.  It's a powerful
+                way to express graph structures and algorithms using
+                the operations of linear algebra like matrix
+                multiplication."""
+        ):
+            self.play(FadeIn(matrix_label), FadeIn(graph_label))
 
         self.wait(1)
+        self.play(
+            FadeOut(matrix_and_labels),
+            FadeOut(graph),
+            FadeOut(matrix_label),
+            FadeOut(graph_label),
+            FadeOut(edge_labels),
+            run_time=1  # Smooth fade-out transition
+        )
+        self.wait(0.5)

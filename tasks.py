@@ -58,7 +58,7 @@ def stitch_all(ctx, quality="l"):
             stitch_chapter(ctx, chapter, quality)
 
 @task
-def clean_media(ctx, chapter):
+def clean_chapter(ctx, chapter):
     media_folder = os.path.join(chapter, "media")
 
     if not os.path.exists(media_folder):
@@ -77,7 +77,7 @@ def clean_media(ctx, chapter):
 def clean_all(ctx):
     for chapter in sorted(os.listdir()):
         if os.path.isdir(chapter) and chapter.startswith("Chapter"):
-            clean_media(ctx, chapter)
+            clean_chapter(ctx, chapter)
 
 @task
 def render_thumbnails(ctx, quality='l'):
@@ -89,3 +89,10 @@ def render_thumbnails(ctx, quality='l'):
             command = f"manim -q{quality} -s {scene_file} Thumb -o {output_image}"
             with ctx.cd(chapter):
                 ctx.run(command)
+
+@task
+def all(ctx, quality='l'):
+       clean_all(ctx)
+       build_all(ctx, quality)
+       stitch_all(ctx, quality)
+       render_thumbnails(ctx, quality)
