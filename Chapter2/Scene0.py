@@ -1,18 +1,15 @@
 from manim import *
-import scipy.optimize
 
 class Scene0(Scene):
     def construct(self):
         # Title
-        title = Text("Breadth First Search", font_size=48).to_edge(UP)
+        title = Text("Matrix Multiplication over Semirings", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "The primary algorithm for graph analysis is Breadth First Search.",
-            "Give an example of how it differs from Depth First Search.",
-            "Show how DFS is inherently serial, where BFS can be parallelized",
-            "Compare and contrast procedural BFS algorithms to Linear Algebra",
-            "Explain problems parallelizing procedural code, including architectural considerations (CUDA, etc)",
-            "Explain how Linear Algebra abstracts away the need to consider parallelization.",
+            "Describe matrix multiplication operations in common terms, plus times.",
+            "Describe how plus\_times is one of infinite semirings, many useful for graphs.",
+            "Explain how structural graph problems don't need values at all, so more efficient semirings can be used.",
+            "Give teaser for several algorithms in upcoming videos.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

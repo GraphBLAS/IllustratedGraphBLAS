@@ -3,13 +3,12 @@ from manim import *
 class Scene0(Scene):
     def construct(self):
         # Title
-        title = Text("Page Rank", font_size=48).to_edge(UP)
+        title = Text("Triangle Counting and Centrality", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Give brief overview of Page Rank.",
-            "Show linear algebraic formulation and tie back to fundamentals of design.",
-            "Show dense implementation in Python, give disadvantages for large graphs",
-            "Show sparse implementation in Python that resolves the issues.",
+            "Triangle are an important structure in graphs.",
+            "Show various examples of counting triangles in Python, give explanation.",
+            "Show how Triangle Centrality with example in Python.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

@@ -17,7 +17,7 @@ class Scene0(VoiceoverScene, Scene):
             "njit.png", "nvidia.png", "pnnl.png",
             "redis.png", "romatre.png", "tamu.png",
             "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png",
+            "JuliaComputing.jpg", "falkor.png", "supabase2.png",
         ]
 
         # Create ImageMobject for each logo and scale them uniformly

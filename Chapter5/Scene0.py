@@ -3,12 +3,13 @@ from manim import *
 class Scene0(Scene):
     def construct(self):
         # Title
-        title = Text("Triangle Counting and Centrality", font_size=48).to_edge(UP)
+        title = Text("Applying Operators and Selecting Values", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Triangle are an important structure in graphs.",
-            "Show various examples of counting triangles in Python, give explanation.",
-            "Show how Triangle Centrality with example in Python.",
+            "Apply a function to all elements in a graph, transforming it.",
+            "Show how selection can choose elements that match a criteria.",
+            "Give an example of apply in an algorithm in Python.",
+            "Give an example of select in an algorithm in Python.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

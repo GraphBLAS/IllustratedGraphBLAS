@@ -3,14 +3,13 @@ from manim import *
 class Scene0(Scene):
     def construct(self):
         # Title
-        title = Text("Sparse Neural Networks", font_size=48).to_edge(UP)
+        title = Text("Page Rank", font_size=48).to_edge(UP)
 
         bullet_points = BulletedList(
-            "Neural Network introduction and theory.",
-            "Network Networks are often dense adjacencies for simplicity and direct mapping to parallel hardware.",
-            "Sparse NN has advantages of similar or better results with less memory and resources",
-            "Sparse NN can be created *de novo* avoiding being limited by dense boundaries.",
-            "Give implementation example in Python of Radix-Net and show algebraic interpretation.",
+            "Give brief overview of Page Rank.",
+            "Show linear algebraic formulation and tie back to fundamentals of design.",
+            "Show dense implementation in Python, give disadvantages for large graphs",
+            "Show sparse implementation in Python that resolves the issues.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

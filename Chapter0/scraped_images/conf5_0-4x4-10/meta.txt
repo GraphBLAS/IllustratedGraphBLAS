@@ -1,0 +1,12 @@
+Name: conf5_0-4x4-10
+Group: QCD
+Matrix ID: 1591
+Num Rows: 3,072
+Num Cols: 3,072
+Nonzeros: 119,808
+Pattern Entries: 119,808
+Kind: Theoretical/Quantum Chemistry Problem
+Symmetric: No
+Date: 1999
+Author: B. Medeke
+Editor: R. Boisvert, R. Pozo, K. Remington, B. Miller, R. Lipman, R. Barrett, J. Dongarra

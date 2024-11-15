@@ -1,0 +1,12 @@
+Name: lpl1
+Group: Andrianov
+Matrix ID: 1384
+Num Rows: 32,460
+Num Cols: 32,460
+Nonzeros: 328,036
+Pattern Entries: 328,036
+Kind: Optimization Problem
+Symmetric: Yes
+Date: 2006
+Author: A. Andrianov
+Editor: T. Davis
