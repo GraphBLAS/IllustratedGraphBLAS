@@ -56,7 +56,7 @@ invoke clean-chapter --chapter Chapter0
 To clean all chapters:
 
 ```
-invoke clean-chapter --chapter Chapter0
+invoke clean-all
 ```
 
 To clean, build, stitch and render all thumbnails:
