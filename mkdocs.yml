@@ -2,7 +2,7 @@ site_name: The Illustrated GraphBLAS
 
 nav:
   - Introduction: Chapter0.md
-  - Python GraphBLAS: Chapter1.md
+  - Python and Julia GraphBLAS: Chapter1.md
   - Breadth First Search: Chapter2.md
   - Semirings and Accumulation: Chapter3.md
   - Masking and Assignment: Chapter4.md

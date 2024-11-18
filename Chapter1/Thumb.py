@@ -6,10 +6,9 @@ class Thumb(Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
         bullet_points = BulletedList(
             "Install Python library",
-            "Matrix Multiplication as Breadth First Search.",
-            "Using Semirings to perform combining operations.",
-            "Accumulating results as you go.",
-            "Masking or including only certain values.",
+            "Install Julia Library.",
+            "Give side by side examples to create matrix from Introduction.",
+            "Show how to print, plot and draw basic graphs.",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

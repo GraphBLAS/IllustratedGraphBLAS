@@ -14,7 +14,7 @@ class Thumb(Scene):
             "njit.png", "nvidia.png", "pnnl.png",
             "redis.png", "romatre.png", "tamu.png",
             "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase2.png"
+            "JuliaComputing.jpg", "falkor.png", "supabase3.png"
         ]
 
         logos = [
