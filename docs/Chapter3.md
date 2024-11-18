@@ -1,3 +1,3 @@
-# Matrix Multiplication
+# Semirings and Accumulation
 
 [![Chapter 3](Chapter3.png)](Chapter3_480p15.mp4)
