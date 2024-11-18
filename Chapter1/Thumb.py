@@ -6,8 +6,8 @@ class Thumb(Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
         bullet_points = BulletedList(
             "Install Python library",
-            "Install Julia Library.",
-            "Give side by side examples to create matrix from Introduction.",
+            "Also reference Julia and Postgres Library.",
+            "Give examples to create matrix from Introduction.",
             "Show how to print, plot and draw basic graphs.",
             font_size=36
         )
