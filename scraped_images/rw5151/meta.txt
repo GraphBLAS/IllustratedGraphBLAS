@@ -1,0 +1,12 @@
+Name: rw5151
+Group: Bai
+Matrix ID: 336
+Num Rows: 5,151
+Num Cols: 5,151
+Nonzeros: 20,199
+Pattern Entries: 20,199
+Kind: Statistical/Mathematical Problem
+Symmetric: No
+Date: 1978
+Author: G. Stewart
+Editor: Z. Bai, D. Day, J. Demmel, J. Dongarra

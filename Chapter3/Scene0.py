@@ -1,22 +1,54 @@
 from manim import *
-import scipy.optimize
+from manim_voiceover import VoiceoverScene
+from manim_voiceover.services.gtts import GTTSService
+import os
 
-class Scene0(Scene):
+class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        # Title
-        title = Text("Breadth First Search", font_size=48).to_edge(UP)
+        self.set_speech_service(GTTSService(lang="en"))
 
-        bullet_points = BulletedList(
-            "The primary algorithm for graph analysis is Breadth First Search.",
-            "Give an example of how it differs from Depth First Search.",
-            "Show how DFS is inherently serial, where BFS can be parallelized",
-            "Compare and contrast procedural BFS algorithms to Linear Algebra",
-            "Explain problems parallelizing procedural code, including architectural considerations (CUDA, etc)",
-            "Explain how Linear Algebra abstracts away the need to consider parallelization.",
-            font_size=36
-        )
-        bullet_points.next_to(title, DOWN, buff=0.5)
+        # Load all logo images from the imgs/ directory
+        img_dir = "../imgs"
+        logo_filenames = [
+            "aristotle.png", "anaconda.png", "berkeley.png",
+            "cmu.png", "cwi.png", "du.png",
+            "graphegon.png", "humboldt.png", "intel.png",
+            "imbr.png", "lucata.png", "mit.png",
+            "njit.png", "nvidia.png", "pnnl.png",
+            "redis.png", "romatre.png", "tamu.png",
+            "ucdavis.png", "ucsb.png", "unibz.png",
+            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
+        ]
 
-        self.play(Write(title))
-        self.play(FadeIn(bullet_points, shift=UP, lag_ratio=0.1))
-        self.wait(2)
+        # Create ImageMobject for each logo and scale them uniformly
+        logos = [
+            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
+            for filename in logo_filenames
+        ]
+
+        # Arrange logos in a 4x6 grid using Group
+        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+
+        # Title text
+        title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
+
+        with self.voiceover(
+            """Matrix Multiplication is a powerful mathematical tool, and in the
+            previous video you learned how matrix multiplication
+            translates into a step of a Breadth First Search across a
+            graph.  In this video, we will dig deeper into the concept
+            of semirings to customize BFS behavior, and accumulators
+            for combining and storing results as BFS progresses across
+            a graph."""
+        ):
+            self.play(Write(title))
+            for logo in logos_group:
+                self.play(FadeIn(logo, run_time=0.1))
+            footer = Text(
+                "The GraphBLAS Forum"
+            ).scale(0.75).to_edge(DOWN)
+            self.play(Write(footer))
+
+        # Fade out title and logos at the end
+        self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+        self.wait(0.5)

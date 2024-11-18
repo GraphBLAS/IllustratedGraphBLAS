@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 from invoke import task
+from time import sleep
 
 @task
 def build_scene(ctx, chapter, scene, quality='l'):
@@ -10,11 +11,12 @@ def build_scene(ctx, chapter, scene, quality='l'):
         ctx.run(command)
 
 @task
-def build_chapter(ctx, chapter, quality='l'):
+def build_chapter(ctx, chapter, quality='l', pause_time=3):
     for filename in sorted(os.listdir(chapter)):
         if filename.startswith("Scene") and filename.endswith(".py"):
             scene = filename.replace(".py", "")
             build_scene(ctx, chapter, scene, quality)
+            sleep(pause_time)
 
 @task
 def build_all(ctx, quality="l"):
@@ -92,7 +94,6 @@ def render_thumbnails(ctx, quality='l'):
 
 @task
 def all(ctx, quality='l'):
-       clean_all(ctx)
        build_all(ctx, quality)
        stitch_all(ctx, quality)
        render_thumbnails(ctx, quality)

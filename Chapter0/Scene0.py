@@ -8,7 +8,7 @@ class Scene0(VoiceoverScene, Scene):
         self.set_speech_service(GTTSService(lang="en"))
 
         # Load all logo images from the imgs/ directory
-        img_dir = "imgs"
+        img_dir = "../imgs"
         logo_filenames = [
             "aristotle.png", "anaconda.png", "berkeley.png",
             "cmu.png", "cwi.png", "du.png",
@@ -42,7 +42,9 @@ class Scene0(VoiceoverScene, Scene):
             you will understand how to create new parallel graph
             algorithms using simple mathematical notation."""
         ):
-            self.play(Write(title), FadeIn(logos_group))
+            self.play(Write(title))
+            for logo in logos_group:
+                self.play(FadeIn(logo, run_time=0.1))
             footer = Text(
                 "The GraphBLAS Forum"
             ).scale(0.75).to_edge(DOWN)

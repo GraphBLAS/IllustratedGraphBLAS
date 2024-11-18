@@ -21,8 +21,8 @@ broad scientific and engineering disciplines, including """):
             self.wait(3)
 
         for subdir, description, ai, gi in matrices:
-            matrix_image = ImageMobject(f"scraped_images/{subdir}/image_{ai}_inv.jpg").scale(1.5).to_edge(LEFT)
-            graph_image = ImageMobject(f"scraped_images/{subdir}/image_{gi}.jpg").scale(1.5).to_edge(RIGHT)
+            matrix_image = ImageMobject(f"../scraped_images/{subdir}/image_{ai}_inv.jpg").scale(1.5).to_edge(LEFT)
+            graph_image = ImageMobject(f"../scraped_images/{subdir}/image_{gi}.jpg").scale(1.5).to_edge(RIGHT)
 
             self.play(FadeIn(matrix_image), FadeIn(graph_image))
             with self.voiceover(description):
