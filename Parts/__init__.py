@@ -6,4 +6,8 @@ from .matrix_utils import (
     get_non_zero_positions,
     get_zero_positions,
 )
-from .graph_utils import create_adjacency_digraph
+from .graph_utils import (
+    create_adjacency_digraph,
+    set_vertex_fill_preserve_label,
+    animate_vertex_fill,
+)

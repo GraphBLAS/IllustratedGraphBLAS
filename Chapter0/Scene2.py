@@ -1,46 +1,41 @@
-import scipy.optimize
+import sys
+sys.path.insert(0, '..')
+
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover.services.elevenlabs import ElevenLabsService
+from dotenv import load_dotenv
+load_dotenv()
+
+from Parts import (
+    CHAPTER0_MATRIX_DATA,
+    create_labeled_matrix,
+    hide_zero_entries,
+    get_non_zero_positions,
+    create_adjacency_digraph,
+    animate_vertex_fill,
+)
+
 
 class Scene2(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(GTTSService(lang="en"))
+        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
 
-        matrix_data = [
-            [0, 1, 0, 2, 0, 0],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 2, 9],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 2, 0]
-        ]
+        matrix_data = CHAPTER0_MATRIX_DATA
         num_rows, num_cols = len(matrix_data), len(matrix_data[0])
 
-        dense_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
-        row_labels = [Tex(str(i)) for i in range(num_rows)]
-        col_labels = [Tex(str(j)) for j in range(num_cols)]
-
-        for i, label in enumerate(row_labels):
-            label.next_to(dense_matrix.get_rows()[i], LEFT * 3)
-        for j, label in enumerate(col_labels):
-            label.next_to(dense_matrix.get_columns()[j], UP * 1.5)
+        dense_matrix, row_labels, col_labels = create_labeled_matrix(matrix_data)
 
         with self.voiceover(
-            """This matrix starts with many values, but most of them are zero.
-            This is a common feature of many problems where the data
-            set or the connections between the data are sparse. Sparse
-            data is everywhere and efficiently analyzing it presents
-            unique computing challenges."""
+            """This matrix starts with many values, but most of them
+            are zero. This is a common feature of many problems where
+            the dataset or the connections between data points are
+            sparse. Sparse data is everywhere, and efficiently
+            analyzing it presents unique computing challenges."""
         ):
             self.play(Write(dense_matrix), *[Write(label) for label in row_labels + col_labels])
 
-        non_zero_positions = [
-            (i, j, matrix_data[i][j])
-            for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] != 0
-        ]
-
-        zero_positions = [(i, j) for i in range(num_rows) for j in range(num_cols) if matrix_data[i][j] == 0]
+        non_zero_positions = get_non_zero_positions(matrix_data)
 
         highlights = [
             SurroundingRectangle(dense_matrix.get_entries()[i * num_cols + j], color=BLUE)
@@ -53,10 +48,7 @@ class Scene2(VoiceoverScene, Scene):
         ):
             self.play(*[Create(highlight) for highlight in highlights])
 
-        fade_out_animations = [
-            dense_matrix.get_entries()[i * num_cols + j].animate.set_opacity(0)
-            for i, j in zero_positions
-        ]
+        fade_out_animations = hide_zero_entries(dense_matrix, matrix_data)
 
         with self.voiceover(
             """Let's ignore the zero values, leaving us with only the non-zero
@@ -72,31 +64,27 @@ class Scene2(VoiceoverScene, Scene):
         nodes = [i for i in range(num_rows)]
         edges = [(i, j) for i, j, _ in non_zero_positions]
 
-        graph = DiGraph(
-            vertices=nodes,
-            edges=edges,
-            layout="kamada_kawai",
-            labels=True,
-            edge_config={"stroke_color": BLUE}
-        ).scale(1.3)
+        graph = create_adjacency_digraph(matrix_data)
 
         self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))  # Shift graph to the right and up by 0.5 units
 
         edge_labels = VGroup()
 
         with self.voiceover(
-                """We can represent this matrix as a graph, where there is a row and
-                column for each node, and elements become an edge
-                connecting two nodes. The elements of each row vector
-                in the matrix corresponds to the outgoing edges for
-                the graph node associated with that row."""
+                """We can represent this matrix as a graph, where rows
+                and columns correspond to nodes, and non-zero elements
+                become edges connecting them. As we step through each
+                row, you can see how the elements in that row
+                correspond to the outgoing edges from that node. The
+                value stored in each position represents the weight or
+                strength of that connection."""
         ):
             previous_node_highlight = None  # Store the previous node highlight
             for i in range(num_rows):  # Iterate over rows
                 row_highlight = SurroundingRectangle(dense_matrix.get_rows()[i], color=YELLOW, buff=0.1)
 
                 # Highlight the current node in the graph
-                node_highlight = ApplyMethod(graph.vertices[i].set_fill, YELLOW, 1)
+                node_highlight = animate_vertex_fill(graph.vertices[i], YELLOW, 1)
 
                 # Highlight outgoing edges for the current node
                 outgoing_edges = [
@@ -120,7 +108,7 @@ class Scene2(VoiceoverScene, Scene):
 
                 # Unhighlight the previous node and edges
                 if previous_node_highlight:
-                    self.play(ApplyMethod(previous_node_highlight.set_fill, WHITE, 0.5))
+                    self.play(animate_vertex_fill(previous_node_highlight, WHITE, 0.5))
                 self.play(FadeOut(row_highlight))  # Remove row highlight after processing
                 previous_node_highlight = graph.vertices[i]  # Store the current node as previous
 
@@ -128,12 +116,13 @@ class Scene2(VoiceoverScene, Scene):
         graph_label = Tex("Graph").next_to(graph, DOWN)
 
         with self.voiceover(
-                """This type of matrix, where elements describe connections in a
-                graph, is called an adjacency matrix.  It occurs all
-                through math, science and computing, including machine
-                learning and artificial intelligence.  It's a powerful
-                way to express graph structures and algorithms using
-                the operations of linear algebra like matrix
+                """This type of matrix, where elements describe
+                connections in a graph, is called an adjacency matrix.
+                Adjacency matrices appear throughout mathematics,
+                science, and computing, including machine learning and
+                artificial intelligence. They provide a powerful way
+                to express graph structures and algorithms using the
+                operations of linear algebra, especially matrix
                 multiplication."""
         ):
             self.play(FadeIn(matrix_label), FadeIn(graph_label))
