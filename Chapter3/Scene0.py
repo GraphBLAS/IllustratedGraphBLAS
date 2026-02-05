@@ -1,11 +1,13 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover.services.elevenlabs import ElevenLabsService
+from dotenv import load_dotenv
+load_dotenv()
 import os
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(GTTSService(lang="en"))
+        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
 
         # Load all logo images from the imgs/ directory
         img_dir = "../imgs"

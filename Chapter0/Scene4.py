@@ -1,21 +1,26 @@
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover.services.elevenlabs import ElevenLabsService
+from dotenv import load_dotenv
+load_dotenv()
 
 matrices = [
     ('pct20stif', 'Structural Analysis', 1, 2),
-    ('rw5151', 'Statistics and Mathematics ', 1, 5),
+    ('rw5151', 'Statistics and Mathematics', 1, 5),
     ('lpl1', 'Resource Optimization', 2, 4),
-    ('poli_large', 'Economics Planning', 1, 5),
-    ('conf5_0-4x4-10', 'and Theoretical Quantum Chemistry', 1, 5),
+    ('poli_large', 'Economic Planning', 1, 5),
+    ('conf5_0-4x4-10', 'Theoretical Quantum Chemistry', 1, 5),
 ]
 
 class Scene4(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(GTTSService(lang="en"))
+        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
 
-        with self.voiceover("""Sparse Graphs and Linear Algebra play an important role in many
-broad scientific and engineering disciplines, including """):
+        with self.voiceover(
+                """Sparse graphs and linear algebra play an important
+                role in many scientific and engineering disciplines,
+                including:"""
+        ):
             title = Tex("Graphs are Everywhere").scale(1.5).to_edge(UP)
             self.play(Write(title))
             self.wait(3)
@@ -32,11 +37,13 @@ broad scientific and engineering disciplines, including """):
         self.play(FadeOut(title))
 
         with self.voiceover(
-                """ In our next video, we will introduce the Python binding to the
-                GraphBLAS API, and dig deeper into the dual mechanism
-                of matrix multplication to do graph traversal.  We
-                will also introduce some more basic GraphBLAS concepts
-                such as semirings, accumulation, and masking. """):
+                """In our next video, we will introduce the Python
+                bindings for GraphBLAS and explore the duality between
+                matrix multiplication and graph traversal in more
+                depth. We will also introduce fundamental GraphBLAS
+                concepts including semirings, accumulation, and
+                masking."""
+        ):
             title = Tex("Coming Next").scale(1.5).to_edge(UP)
 
             bullet_points = BulletedList(

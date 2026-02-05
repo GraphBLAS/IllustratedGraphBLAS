@@ -16,10 +16,13 @@ class Scene1(VoiceoverScene, Scene):
         self.wait(1)
 
         with self.voiceover(
-            """Graphs are a powerful mathematical structure that can model social
-            networks, financial transactions, language models, drug
-            interactions, and many other real world interconnected
-            systems. """
+            """Graphs are a powerful mathematical structure that can
+            model social networks, financial transactions, language
+            models, drug interactions, and many other real-world
+            interconnected systems. In a graph, entities are
+            represented as nodes, and the relationships between them
+            are represented as edges. This simple structure can
+            capture remarkably complex patterns."""
         ):
             # Nodes representing species in the ecosystem
             nodes = [
@@ -56,9 +59,11 @@ class Scene1(VoiceoverScene, Scene):
             self.play(FadeOut(graph), FadeOut(*labels.values()))
 
         with self.voiceover(
-                """ In technology, they underpin the analysis and security
-                architecture of computer networks, linking devices
-                across the internet."""
+                """In technology, graphs underpin the analysis and
+                security architecture of computer networks, linking
+                devices across the internet. Network administrators
+                use graph algorithms to detect intrusions, optimize
+                routing, and identify critical infrastructure."""
         ):
             nodes = [
                 "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
@@ -98,7 +103,13 @@ class Scene1(VoiceoverScene, Scene):
             # Fade out at the end
             self.play(FadeOut(graph), *[FadeOut(label) for label in labels.values()])
 
-        with self.voiceover("""and power knowledge graphs that organize information for complex queries."""):
+        with self.voiceover(
+                """Graphs also power knowledge bases that organize
+                information for complex queries. Each node can
+                represent a concept, and edges define the relationships
+                between them, enabling systems to answer sophisticated
+                questions by traversing these connections."""
+        ):
             # Define nodes and edges for the knowledge graph
             nodes = [
                 "LM", "Transformer", "SelfAttention", "Pretraining", "FineTuning",
@@ -174,9 +185,11 @@ class Scene1(VoiceoverScene, Scene):
             self.wait(1)
 
         with self.voiceover(
-                """In AI, graphs represent the interconnected layers of neural
-                networks, allowing language models to process information
-                efficiently."""
+                """In artificial intelligence, graphs represent the
+                interconnected layers of neural networks. Each layer
+                passes information forward through weighted edges,
+                allowing language models and other deep learning
+                systems to process and transform data efficiently."""
         ):
             # Define the number of layers and nodes per layer
             num_layers = 4

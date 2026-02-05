@@ -1,20 +1,20 @@
-import scipy.optimize
+import sys
+sys.path.insert(0, '..')
+
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.gtts import GTTSService
+from manim_voiceover.services.elevenlabs import ElevenLabsService
+from dotenv import load_dotenv
+load_dotenv()
+
+from Parts import CHAPTER0_MATRIX_DATA, create_adjacency_digraph
+
 
 class Scene3(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(GTTSService(lang="en"))
+        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
 
-        matrix_data = [
-            [0, 1, 0, 2, 0, 0],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 2, 9],
-            [0, 0, 5, 0, 0, 0],
-            [0, 0, 0, 0, 2, 0]
-        ]
+        matrix_data = CHAPTER0_MATRIX_DATA
 
         num_rows, num_cols = len(matrix_data), len(matrix_data[0])
         vector_data = [[0], [0], [0], [2], [0], [0]]  # Vertical vector
@@ -38,11 +38,11 @@ class Scene3(VoiceoverScene, Scene):
             entry.set_opacity(0)
 
         with self.voiceover(
-            """The core operation of Linear Algebra is multiplying matrices and
-            vectors with each other.  In this first example, a vector
-            is the left operand and a matrix is the right.  When
-            multiplying a vector on the left, the vector is treated as
-            a scaling factor for each of the rows in the matrix."""
+            """The core operation of linear algebra is multiplying
+            matrices and vectors. In this example, a vector is the
+            left operand and a matrix is the right. When multiplying a
+            vector on the left, each element of the vector acts as a
+            scaling factor for the corresponding row in the matrix."""
         ):
             row_labels = [Tex(str(i)) for i in range(num_rows)]
             col_labels = [Tex(str(j)) for j in range(num_cols)]
@@ -60,8 +60,8 @@ class Scene3(VoiceoverScene, Scene):
             in the matrix contributes to the corresponding element in
             the result vector, but notice how most of the operations
             involve multiplying by zero, which wastes time, memory
-            space, and energy when there are truely only two actual
-            calculations to be done."""
+            space, and energy when there are truly only two
+            calculations needed."""
         ):
             for i in range(6):  # Row-wise operations
                 row_highlight = SurroundingRectangle(dense_matrix.get_rows()[i], color=YELLOW, buff=0.1)
@@ -84,26 +84,17 @@ class Scene3(VoiceoverScene, Scene):
                 self.play(FadeOut(row_highlight), FadeOut(vector_highlight), run_time=0.5)
 
         # Create the graph representation
-        nodes = [i for i in range(6)]
-        edges = [(i, j) for i in range(6) for j in range(6) if matrix_data[i][j] != 0]
-
-        graph = DiGraph(
-            vertices=nodes,
-            edges=edges,
-            layout="kamada_kawai",
-            labels=True,
-            edge_config={"stroke_color": BLUE}
-        ).scale(1.3)
+        graph = create_adjacency_digraph(matrix_data)
 
         self.play(FadeOut(expression_group), FadeOut(*row_labels), FadeOut(*col_labels))
         with self.voiceover(
-            """The GraphBLAS uses sparse data structures that efficiently store
-            only elements in the matrix that are present in the data.
-            Where there is no value there isn't a zero stored in
-            memory to represent it, instead there is simply nothing.
-            The GraphBLAS Library uses various compressed formats to
-            store the data in memory using many different kinds of
-            sparse algorithms.  """
+            """GraphBLAS uses sparse data structures that efficiently
+            store only the non-zero elements in a matrix. Where there
+            is no value, there isn't a zero stored in memory—instead,
+            there is simply nothing. The GraphBLAS library uses
+            various compressed formats to store data compactly,
+            enabling efficient sparse algorithms that skip unnecessary
+            work."""
         ):
             # Position the sparse matrix and result vector next to the graph
             sparse_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
@@ -122,6 +113,11 @@ class Scene3(VoiceoverScene, Scene):
                     sparse_entry.set_opacity(0)
 
             self.play(Create(graph.to_edge(RIGHT).shift(UP * 0.5)))
+
+            # Recreate labels for the sparse matrix display
+            row_labels = [Tex(str(i)) for i in range(num_rows)]
+            col_labels = [Tex(str(j)) for j in range(num_cols)]
+
             for i, label in enumerate(row_labels):
                 label.next_to(sparse_matrix.get_rows()[i], LEFT * 3)
             for j, label in enumerate(col_labels):
@@ -129,13 +125,12 @@ class Scene3(VoiceoverScene, Scene):
             self.play(FadeIn(sparse_matrix), FadeIn(sparse_vector), FadeIn(*row_labels), FadeIn(*col_labels))
 
         with self.voiceover(
-            """ The core concept of graph algebra is that every matrix can be seen
-            as a graph, and every graph can be seen as one or more
-            matrices.  Matrix multiplication in linear algebra
-            translates to edge traversal in graphs, in the graph
-            representation on the right the result vector corresponds
-            to the outgoing edges for the node labeled 3 in the graph
-            that go to nodes 4 and 5."""
+            """The core concept of graph algebra is that every matrix
+            can be seen as a graph, and every graph can be seen as one
+            or more matrices. Matrix multiplication in linear algebra
+            translates to edge traversal in graphs. In the graph on
+            the right, the result vector corresponds to the outgoing
+            edges from node 3, which connect to nodes 4 and 5."""
         ):
             vector_highlight = SurroundingRectangle(sparse_vector.get_entries()[4:6], color=YELLOW, buff=0.1)
             self.play(Create(vector_highlight))
@@ -151,3 +146,15 @@ class Scene3(VoiceoverScene, Scene):
             self.play(node_highlight, *outgoing_edges)
 
         self.wait(1)
+
+        # Cleanup: FadeOut all remaining objects
+        self.play(
+            FadeOut(sparse_matrix),
+            FadeOut(sparse_vector),
+            FadeOut(graph),
+            FadeOut(*row_labels),
+            FadeOut(*col_labels),
+            FadeOut(vector_highlight),
+            FadeOut(col_highlight),
+        )
+        self.wait(0.5)
