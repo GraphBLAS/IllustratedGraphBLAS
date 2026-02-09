@@ -1,28 +1,50 @@
 import os
 import shutil
 import glob
+import re
 from invoke import task
 from time import sleep
 
 @task
-def build_scene(ctx, chapter, scene, quality='l'):
-    command = f"manim -q{quality} {scene}.py"
+def build_scene(ctx, chapter, scene, quality='l', prod=False):
+    """Build a single scene. Use --prod for production build with ElevenLabs TTS."""
+    # Extract chapter and scene numbers
+    chapter_match = re.search(r'Chapter(\d+)', chapter)
+    scene_match = re.search(r'Scene(\d+)', scene)
+    chapter_num = chapter_match.group(1) if chapter_match else '0'
+    scene_num = scene_match.group(1) if scene_match else '0'
+
+    # Set environment variables
+    env_vars = [
+        f"CHAPTER_NUM={chapter_num}",
+        f"SCENE_NUM={scene_num}",
+    ]
+    if prod:
+        env_vars.append("PROD_MODE=1")
+        env_vars.append("VOICE_SERVICE=elevenlabs")
+    else:
+        env_vars.append("VOICE_SERVICE=gtts")
+
+    env_prefix = " ".join(env_vars)
+    command = f"{env_prefix} manim -q{quality} {scene}.py"
     with ctx.cd(chapter):
         ctx.run(command)
 
 @task
-def build_chapter(ctx, chapter, quality='l', pause_time=3):
+def build_chapter(ctx, chapter, quality='l', pause_time=3, prod=False):
+    """Build all scenes in a chapter. Use --prod for production build with ElevenLabs TTS."""
     for filename in sorted(os.listdir(chapter)):
         if filename.startswith("Scene") and filename.endswith(".py"):
             scene = filename.replace(".py", "")
-            build_scene(ctx, chapter, scene, quality)
+            build_scene(ctx, chapter, scene, quality, prod)
             sleep(pause_time)
 
 @task
-def build_all(ctx, quality="l"):
+def build_all(ctx, quality="l", prod=False):
+    """Build all chapters. Use --prod for production build with ElevenLabs TTS."""
     for chapter in sorted(os.listdir()):
         if os.path.isdir(chapter) and chapter.startswith("Chapter"):
-            build_chapter(ctx, chapter, quality)
+            build_chapter(ctx, chapter, quality, prod=prod)
 
 @task
 def stitch_chapter(ctx, chapter, quality="l"):
@@ -93,7 +115,8 @@ def render_thumbnails(ctx, quality='l'):
                 ctx.run(command)
 
 @task
-def all(ctx, quality='l'):
-       build_all(ctx, quality)
-       stitch_all(ctx, quality)
-       render_thumbnails(ctx, quality)
+def all(ctx, quality='l', prod=False):
+    """Full rebuild: clean, build, stitch, thumbnails. Use --prod for production."""
+    build_all(ctx, quality, prod=prod)
+    stitch_all(ctx, quality)
+    render_thumbnails(ctx, quality)

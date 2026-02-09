@@ -302,7 +302,7 @@ class Scene1(VoiceoverScene, Scene):
                 font_size=28, color=YELLOW
             ).move_to(ORIGIN)
             self.play(Write(conclusion), run_time=1)
-            self.wait(2)
+            self.wait(12)
             self.play(FadeOut(conclusion), FadeOut(title), run_time=0.5)
 
         self.wait(0.5)

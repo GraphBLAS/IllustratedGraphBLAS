@@ -3,7 +3,6 @@ sys.path.insert(0, '..')
 
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.elevenlabs import ElevenLabsService
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -14,12 +13,13 @@ from Parts import (
     get_non_zero_positions,
     create_adjacency_digraph,
     animate_vertex_fill,
+    setup_scene,
 )
 
 
 class Scene2(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
+        setup_scene(self)
 
         matrix_data = CHAPTER0_MATRIX_DATA
         num_rows, num_cols = len(matrix_data), len(matrix_data[0])

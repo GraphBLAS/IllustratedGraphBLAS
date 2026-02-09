@@ -40,11 +40,10 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In this chapter, we'll explore three powerful GraphBLAS features
-            that give you fine-grained control over graph computations: semirings
-            for customizing operations, accumulation for combining results, and
-            masking for selective computation. These concepts transform GraphBLAS
-            into a flexible framework for diverse graph algorithms."""
+            """In this chapter, we'll explore semirings, a powerful GraphBLAS
+            feature that lets you customize what matrix multiplication means.
+            The same operation can compute total costs, find shortest paths,
+            or check simple reachability, just by changing the semiring."""
         ):
             self.play(Write(title))
             for logo in logos_group:

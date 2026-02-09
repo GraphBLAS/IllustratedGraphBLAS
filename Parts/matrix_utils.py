@@ -11,7 +11,7 @@ CHAPTER0_MATRIX_DATA = [
 ]
 
 
-def create_labeled_matrix(matrix_data, scale=1.5, v_buff=0.5, h_buff=0.5):
+def create_labeled_matrix(matrix_data, scale=1, v_buff=0.5, h_buff=0.5):
     """
     Create a matrix with row and column labels.
 
@@ -32,9 +32,9 @@ def create_labeled_matrix(matrix_data, scale=1.5, v_buff=0.5, h_buff=0.5):
     col_labels = [Tex(str(j)) for j in range(num_cols)]
 
     for i, label in enumerate(row_labels):
-        label.next_to(matrix.get_rows()[i], LEFT * 3)
+        label.next_to(matrix.get_rows()[i], LEFT * 4)
     for j, label in enumerate(col_labels):
-        label.next_to(matrix.get_columns()[j], UP * 1.5)
+        label.next_to(matrix.get_columns()[j], UP * 2)
 
     return matrix, row_labels, col_labels
 

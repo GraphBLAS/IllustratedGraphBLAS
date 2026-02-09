@@ -6,12 +6,12 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import CHAPTER0_MATRIX_DATA, create_labeled_matrix, hide_zero_entries, get_speech_service
+from Parts import CHAPTER0_MATRIX_DATA, create_labeled_matrix, hide_zero_entries, setup_scene
 
 
 class Scene3(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(get_speech_service())
+        setup_scene(self)
 
         title = Tex("Matrix-Vector Multiplication").scale(1.5).to_edge(UP)
 

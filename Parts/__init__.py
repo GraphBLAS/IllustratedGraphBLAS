@@ -11,3 +11,4 @@ from .graph_utils import (
     set_vertex_fill_preserve_label,
     animate_vertex_fill,
 )
+from .speech import get_speech_service, setup_scene, is_prod_mode

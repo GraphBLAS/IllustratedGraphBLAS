@@ -6,12 +6,12 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import get_speech_service
+from Parts import setup_scene
 
 
 class Scene1(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(get_speech_service())
+        setup_scene(self)
 
         title = Tex("Installing Python-GraphBLAS").scale(1.5).to_edge(UP)
 
@@ -48,7 +48,7 @@ class Scene1(VoiceoverScene, Scene):
 
             postgres_alt = VGroup(
                 Tex("PostgreSQL: ").scale(0.8),
-                Code(code_string="CREATE EXTENSION pggraphblas;", language="sql", background="window").scale(0.7),
+                Code(code_string="CREATE EXTENSION onesparse;", language="sql", background="window").scale(0.7),
             ).arrange(RIGHT, buff=0.3)
 
             alt_group = VGroup(alternatives, postgres_alt).arrange(DOWN, buff=0.5)

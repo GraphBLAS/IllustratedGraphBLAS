@@ -16,9 +16,9 @@ class Scene3(VoiceoverScene, Scene):
         self.play(Write(title))
 
         with self.voiceover(
-            """PLUS_TIMES is standard arithmetic, used for path counting and
-            weighted sums. MIN_PLUS finds shortest paths by minimizing total
-            distance. MAX_PLUS finds longest or widest paths, critical in
+            """PLUS_TIMES is standard arithmetic, used for calculating total
+            costs and weighted sums. MIN_PLUS finds shortest paths by minimizing
+            total distance. MAX_PLUS finds longest or widest paths, critical in
             network capacity problems. ANY_PAIR checks reachability, perfect
             for BFS since we only care if a path exists. PLUS_PAIR counts
             unweighted paths, useful when edge weights don't matter. You can
@@ -28,7 +28,7 @@ class Scene3(VoiceoverScene, Scene):
             # Create table data
             table_data = [
                 ["Semiring", "Operations", "Use Case"],
-                ["PLUS_TIMES", "× and +", "Path counting"],
+                ["PLUS_TIMES", "× and +", "Total costs"],
                 ["MIN_PLUS", "+ and min", "Shortest paths"],
                 ["MAX_PLUS", "+ and max", "Longest paths"],
                 ["ANY_PAIR", "any and any", "Reachability, BFS"],

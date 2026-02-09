@@ -1,13 +1,18 @@
+import sys
+sys.path.insert(0, '..')
+
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.elevenlabs import ElevenLabsService
 from dotenv import load_dotenv
 load_dotenv()
 import os
 
+from Parts import setup_scene
+
+
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
+        setup_scene(self)
 
         # Load all logo images from the imgs/ directory
         img_dir = "../imgs"
@@ -35,13 +40,11 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """Matrix Multiplication is a powerful mathematical tool, and in the
-            previous video you learned how matrix multiplication
-            translates into a step of a Breadth First Search across a
-            graph.  In this video, we will dig deeper into the concept
-            of semirings to customize BFS behavior, and accumulators
-            for combining and storing results as BFS progresses across
-            a graph."""
+            """In this chapter, we'll explore masking and put together a complete
+            BFS implementation. Masking lets you control which elements participate
+            in computation, essential for avoiding redundant work in graph traversal.
+            We'll see how semirings, accumulation, and masking combine to create
+            efficient, elegant graph algorithms."""
         ):
             self.play(Write(title))
             for logo in logos_group:

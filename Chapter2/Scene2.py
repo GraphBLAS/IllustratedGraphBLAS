@@ -128,7 +128,7 @@ class Scene2(VoiceoverScene, Scene):
             and 'add' mean. This flexibility lets GraphBLAS solve diverse problems with a single, unified interface."""
         ):
             self.play(Create(comparison_box1), Create(comparison_box2), run_time=0.8)
-            self.wait(5)
+            self.wait(8)
 
             # Fade out
             self.play(

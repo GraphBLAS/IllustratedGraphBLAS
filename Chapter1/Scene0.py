@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-from Parts import get_speech_service
+from Parts import setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(get_speech_service())
+        setup_scene(self)
 
         # Load all logo images from the imgs/ directory
         img_dir = "../imgs"

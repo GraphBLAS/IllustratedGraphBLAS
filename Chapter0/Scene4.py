@@ -1,8 +1,12 @@
+import sys
+sys.path.insert(0, '..')
+
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.elevenlabs import ElevenLabsService
 from dotenv import load_dotenv
 load_dotenv()
+
+from Parts import setup_scene
 
 matrices = [
     ('pct20stif', 'Structural Analysis', 1, 2),
@@ -14,7 +18,7 @@ matrices = [
 
 class Scene4(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
+        setup_scene(self)
 
         with self.voiceover(
                 """Sparse graphs and linear algebra play an important

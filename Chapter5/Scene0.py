@@ -1,13 +1,18 @@
+import sys
+sys.path.insert(0, '..')
+
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.elevenlabs import ElevenLabsService
 from dotenv import load_dotenv
 load_dotenv()
 import os
 
+from Parts import setup_scene
+
+
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
+        setup_scene(self)
 
         # Load all logo images from the imgs/ directory
         img_dir = "../imgs"

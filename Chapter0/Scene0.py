@@ -3,16 +3,15 @@ sys.path.insert(0, '..')
 
 from manim import *
 from manim_voiceover import VoiceoverScene
-from manim_voiceover.services.elevenlabs import ElevenLabsService
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import create_logo_grid
+from Parts import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(ElevenLabsService(voice_name="michelp", transcription_model=None))
+        setup_scene(self)
 
         logos_group = create_logo_grid()
 
