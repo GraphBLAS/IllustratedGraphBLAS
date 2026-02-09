@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-from Parts import get_speech_service
+from Parts import setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
-        self.set_speech_service(get_speech_service())
+        setup_scene(self)
 
         # Load all logo images from the imgs/ directory
         img_dir = "../imgs"
@@ -40,10 +40,11 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In this video, you will learn the fundamental algorithm of graph
-            analysis, the Breadth First Search or BFS.  Examples will
-            be given in Python showing how matrix multiplication is
-            one step of a Breadth First Search across a graph. """
+            """In this chapter, we'll explore three powerful GraphBLAS features
+            that give you fine-grained control over graph computations: semirings
+            for customizing operations, accumulation for combining results, and
+            masking for selective computation. These concepts transform GraphBLAS
+            into a flexible framework for diverse graph algorithms."""
         ):
             self.play(Write(title))
             for logo in logos_group:
