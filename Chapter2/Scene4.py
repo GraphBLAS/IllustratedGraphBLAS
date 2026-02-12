@@ -35,31 +35,77 @@ class Scene4(VoiceoverScene, Scene):
             self.play(Write(w_group))
             self.play(Write(r_group))
 
-        # Prepare the three scenarios with updated values
-        # w = [3, 7, 5, 9, 2, 4], r = [5, 2, 8, 4, 6, 1]
+        # Helper function to create animated accumulator scenario
+        def animate_accumulator_scenario(
+            self, w_data, r_data, result_data, op_symbol, title_text, label_text, label_color, final_pos
+        ):
+            """
+            Animate w merging with r using the given operator, then move result to final position.
+            Returns the final scenario group.
+            """
+            # Create copies of w and r for this scenario
+            w_copy = Matrix([[x] for x in w_data], h_buff=0.8).scale(0.5)
+            r_copy = Matrix([[x] for x in r_data], h_buff=0.8).scale(0.5)
 
-        # No accumulator (replace with r)
-        no_acc_title = Text("No accumulator:", font_size=24)
-        no_acc_result = Matrix([[5], [2], [8], [4], [6], [1]], h_buff=0.8).scale(0.5)
-        no_acc_label = Text("(replace)", font_size=18, color=GREY)
+            # Create operator symbol
+            if op_symbol:
+                op_text = Text(op_symbol, font_size=36)
+            else:
+                op_text = Text("→", font_size=36, color=GREY)
 
-        # PLUS accumulator (w + r)
-        plus_acc_title = Text("PLUS accumulator:", font_size=24)
-        plus_acc_result = Matrix([[8], [9], [13], [13], [8], [5]], h_buff=0.8).scale(0.5)
-        plus_acc_label = Text("(add)", font_size=18, color=GREEN)
+            # Create result matrix
+            result_mat = Matrix([[x] for x in result_data], h_buff=0.8).scale(0.5)
 
-        # MIN accumulator (min of w, r)
-        min_acc_title = Text("MIN accumulator:", font_size=24)
-        min_acc_result = Matrix([[3], [2], [5], [4], [2], [1]], h_buff=0.8).scale(0.5)
-        min_acc_label = Text("(minimum)", font_size=18, color=BLUE)
+            # Position w, op, r at the final position (no center overlap)
+            merge_group = VGroup(w_copy, op_text, r_copy).arrange(RIGHT, buff=0.4)
+            merge_group.move_to(final_pos)
 
-        # Arrange each scenario vertically
-        no_acc = VGroup(no_acc_title, no_acc_result, no_acc_label).arrange(DOWN, buff=0.2)
-        plus_acc = VGroup(plus_acc_title, plus_acc_result, plus_acc_label).arrange(DOWN, buff=0.2)
-        min_acc = VGroup(min_acc_title, min_acc_result, min_acc_label).arrange(DOWN, buff=0.2)
+            # Show w, operator, r
+            self.play(FadeIn(w_copy), FadeIn(op_text), FadeIn(r_copy))
 
-        # Position all scenarios
-        scenarios = VGroup(no_acc, plus_acc, min_acc).arrange(RIGHT, buff=1.2).shift(DOWN * 0.5)
+            # Animate merge: w slides into r with flash effect
+            self.play(
+                w_copy.animate.move_to(r_copy.get_center()),
+                run_time=0.8
+            )
+
+            # Flash effect and transform to result, centering at final_pos
+            result_mat.move_to(final_pos)
+            self.play(
+                Flash(r_copy, color=label_color, flash_radius=0.8),
+                FadeOut(w_copy),
+                FadeOut(op_text),
+                Transform(r_copy, result_mat),
+                run_time=0.6
+            )
+
+            # Create title and label
+            scenario_title = Text(title_text, font_size=24)
+            scenario_label = Text(label_text, font_size=18, color=label_color)
+
+            # Assemble final scenario group centered at final_pos
+            scenario_title.next_to(r_copy, UP, buff=0.2)
+            scenario_label.next_to(r_copy, DOWN, buff=0.2)
+            scenario = VGroup(scenario_title, r_copy, scenario_label)
+
+            self.play(FadeIn(scenario_title), FadeIn(scenario_label), run_time=0.3)
+
+            return scenario
+
+        # Data for scenarios
+        w_data = [3, 7, 5, 9, 2, 4]
+        r_data = [5, 2, 8, 4, 6, 1]
+
+        # Results:
+        # No acc: r replaces w -> [5, 2, 8, 4, 6, 1]
+        # PLUS: w + r -> [8, 9, 13, 13, 8, 5]
+        # MIN: min(w, r) -> [3, 2, 5, 4, 2, 1]
+
+        # Final positions for the three scenarios (equally spaced, center is centered)
+        spacing = 4.5
+        left_pos = LEFT * spacing + DOWN * 0.5
+        center_pos = DOWN * 0.5
+        right_pos = RIGHT * spacing + DOWN * 0.5
 
         # Voiceover 2: Introduce accumulation concept and show no accumulator
         with self.voiceover(
@@ -67,21 +113,35 @@ class Scene4(VoiceoverScene, Scene):
             new values simply replace old ones."""
         ):
             self.play(FadeOut(vectors_group))
-            self.play(Write(no_acc))
+            no_acc = animate_accumulator_scenario(
+                self, w_data, r_data,
+                [5, 2, 8, 4, 6, 1],  # result: r replaces w
+                None, "No accumulator:", "(replace)", GREY, left_pos
+            )
 
         # Voiceover 3: PLUS accumulator
         with self.voiceover(
             """With a PLUS accumulator, new values add to existing ones -
             essential for aggregating results across iterations."""
         ):
-            self.play(Write(plus_acc))
+            plus_acc = animate_accumulator_scenario(
+                self, w_data, r_data,
+                [8, 9, 13, 13, 8, 5],  # result: w + r
+                "+", "PLUS accumulator:", "(add)", GREEN, center_pos
+            )
 
         # Voiceover 4: MIN accumulator
         with self.voiceover(
             """With a MIN accumulator, we keep whichever value is smaller -
             perfect for maintaining shortest distances in path-finding algorithms."""
         ):
-            self.play(Write(min_acc))
+            min_acc = animate_accumulator_scenario(
+                self, w_data, r_data,
+                [3, 2, 5, 4, 2, 1],  # result: min(w, r)
+                "min", "MIN accumulator:", "(minimum)", BLUE, right_pos
+            )
+
+        scenarios = VGroup(no_acc, plus_acc, min_acc)
 
         # Prepare syntax examples
         syntax_examples = VGroup(
