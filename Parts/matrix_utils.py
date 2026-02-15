@@ -10,6 +10,18 @@ CHAPTER0_MATRIX_DATA = [
     [0, 0, 0, 0, 2, 0]
 ]
 
+# Symmetric 6x6 adjacency matrix for Chapter3 (undirected graph)
+# Same structure as CHAPTER0 but with bidirectional edges
+# Edges: 0↔1, 0↔3, 1↔2, 2↔4, 3↔4, 3↔5, 4↔5
+CHAPTER3_MATRIX_DATA = [
+    [0, 1, 0, 2, 0, 0],
+    [1, 0, 5, 0, 0, 0],
+    [0, 5, 0, 0, 5, 0],
+    [2, 0, 0, 0, 2, 9],
+    [0, 0, 5, 2, 0, 2],
+    [0, 0, 0, 9, 2, 0]
+]
+
 
 def create_labeled_matrix(matrix_data, scale=1, v_buff=0.5, h_buff=0.5):
     """

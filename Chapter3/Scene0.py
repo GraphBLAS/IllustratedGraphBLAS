@@ -40,11 +40,12 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In this chapter, we'll explore masking and put together a complete
-            BFS implementation. Masking lets you control which elements participate
-            in computation, essential for avoiding redundant work in graph traversal.
-            We'll see how semirings, accumulation, and masking combine to create
-            efficient, elegant graph algorithms."""
+            """In this chapter, we'll build a complete BFS implementation step by
+            step. First, we'll explore matrix-vector multiply, the core operation
+            for graph traversal. Then we'll add masking to control which outputs
+            are written, and replacement semantics to manage state between iterations.
+            By the end, you'll understand how these concepts combine into an
+            efficient, elegant graph algorithm."""
         ):
             self.play(Write(title))
             for logo in logos_group:
