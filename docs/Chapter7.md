@@ -2,7 +2,7 @@
 
 [![Chapter 7](Chapter7.png)](Chapter7_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/07_shortest_path.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/07_shortest_path.ipynb)**
 
 ## Summary
 

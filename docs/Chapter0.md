@@ -2,7 +2,7 @@
 
 [![Chapter 0](Chapter0.png)](Chapter0_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/00_introduction.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/00_introduction.ipynb)**
 
 ## Summary
 

@@ -2,7 +2,7 @@
 
 [![Chapter 8](Chapter8.png)](Chapter8_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/08_triangles_centrality.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/08_triangles_centrality.ipynb)**
 
 ## Summary
 

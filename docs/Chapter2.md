@@ -2,7 +2,7 @@
 
 [![Chapter 2](Chapter2.png)](Chapter2_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/02_semirings.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/02_semirings.ipynb)**
 
 ## Summary
 

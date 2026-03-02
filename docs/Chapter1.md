@@ -2,7 +2,7 @@
 
 [![Chapter 1](Chapter1.png)](Chapter1_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/01_python_graphblas.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/01_python_graphblas.ipynb)**
 
 ## Summary
 

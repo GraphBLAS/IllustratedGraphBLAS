@@ -2,7 +2,7 @@
 
 [![Chapter 5](Chapter5.png)](Chapter5_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/05_incidence_matrices.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/05_incidence_matrices.ipynb)**
 
 ## Summary
 

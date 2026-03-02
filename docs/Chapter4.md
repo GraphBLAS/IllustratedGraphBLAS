@@ -2,7 +2,7 @@
 
 [![Chapter 4](Chapter4.png)](Chapter4_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/04_matrix_multiply.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/04_matrix_multiply.ipynb)**
 
 ## Summary
 

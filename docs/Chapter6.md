@@ -2,7 +2,7 @@
 
 [![Chapter 6](Chapter6.png)](Chapter6_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/06_elementwise_ops.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/06_elementwise_ops.ipynb)**
 
 ## Summary
 

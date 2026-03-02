@@ -2,7 +2,7 @@
 
 [![Chapter 9](Chapter9.png)](Chapter9_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/09_sparse_neural_nets.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/09_sparse_neural_nets.ipynb)**
 
 ## Summary
 

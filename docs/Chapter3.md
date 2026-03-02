@@ -2,7 +2,7 @@
 
 [![Chapter 3](Chapter3.png)](Chapter3_480p15.mp4)
 
-**[Interactive Notebook](../notebooks/03_masking_bfs.ipynb)**
+**[Interactive Notebook](https://github.com/GraphBLAS/IllustratedGraphBLAS/blob/main/notebooks/03_masking_bfs.ipynb)**
 
 ## Summary
 
