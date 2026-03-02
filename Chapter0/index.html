@@ -203,6 +203,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -219,6 +237,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -265,7 +313,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -292,7 +340,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -319,7 +367,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -346,7 +394,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -373,7 +421,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -487,6 +535,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,6 +571,17 @@
 
 <h1 id="introduction">Introduction</h1>
 <p><a href="../Chapter0_480p15.mp4"><img alt="Chapter 0" src="../Chapter0.png" /></a></p>
+<p><strong><a href="../notebooks/00_introduction.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter introduces GraphBLAS and the foundations of algebraic graph processing:</p>
+<ul>
+<li><strong>What is GraphBLAS</strong> - A sparse linear algebra API for expressing graph algorithms as matrix operations, enabling high-performance computation on CPUs and GPUs</li>
+<li><strong>Sparse Matrices</strong> - Understanding sparse data structures that store only non-zero elements, avoiding wasteful computation with zeros</li>
+<li><strong>Adjacency Matrices</strong> - How graphs are represented as matrices, where non-zero entries correspond to weighted edges between nodes</li>
+<li><strong>Matrix-Vector Multiplication</strong> - The core operation for graph traversal, showing how multiplying a vector by an adjacency matrix discovers neighboring nodes</li>
+<li><strong>Dense vs Sparse Efficiency</strong> - Why sparse algorithms dramatically outperform dense operations on real-world graph data</li>
+<li><strong>Applications</strong> - Overview of graph applications across scientific domains including structural analysis, optimization, quantum chemistry, and economic planning</li>
+</ul>
 
 
 

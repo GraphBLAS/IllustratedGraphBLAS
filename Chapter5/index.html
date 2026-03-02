@@ -23,7 +23,7 @@
     
     
       
-        <title>Element-wise Operations - The Illustrated GraphBLAS</title>
+        <title>Incidence Matrices - The Illustrated GraphBLAS</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#element-wise-operations" class="md-skip">
+        <a href="#incidence-matrices" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Element-wise Operations
+              Incidence Matrices
             
           </span>
         </div>
@@ -257,7 +257,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -284,7 +284,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -311,7 +311,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -340,6 +340,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Incidence Matrices
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -347,7 +365,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -356,6 +374,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -375,7 +423,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,19 @@
 
 
 
-<h1 id="element-wise-operations">Element-wise Operations</h1>
+<h1 id="incidence-matrices">Incidence Matrices</h1>
 <p><a href="../Chapter5_480p15.mp4"><img alt="Chapter 5" src="../Chapter5.png" /></a></p>
+<p><strong><a href="../notebooks/05_incidence_matrices.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter introduces incidence matrices as an alternative graph representation:</p>
+<ul>
+<li><strong>Incidence vs Adjacency</strong> - Adjacency matrices have nodes as both rows and columns; incidence matrices have nodes as rows and edges as columns</li>
+<li><strong>Incidence Matrix Structure</strong> - Each column represents an edge, with non-zero entries indicating which nodes participate in that edge</li>
+<li><strong>Matrix Multiplication with Incidence</strong> - Multiplying incidence matrices to derive relationships and construct new graph structures</li>
+<li><strong>Multi-graphs</strong> - Graphs with multiple edges between the same pair of nodes, naturally represented through incidence matrices</li>
+<li><strong>Hypergraphs</strong> - Generalized graphs where edges can connect more than two nodes, enabling complex relationship modeling</li>
+<li><strong>Applications</strong> - Network flow, bipartite matching, and modeling relationships that go beyond simple pairwise connections</li>
+</ul>
 
 
 

@@ -23,7 +23,7 @@
     
     
       
-        <title>Semirings and Accumulation - The Illustrated GraphBLAS</title>
+        <title>Masking and BFS - The Illustrated GraphBLAS</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#semirings-and-accumulation" class="md-skip">
+        <a href="#masking-and-bfs" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Semirings and Accumulation
+              Masking and BFS
             
           </span>
         </div>
@@ -257,7 +257,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -286,6 +286,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Masking and BFS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -293,7 +311,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -302,6 +320,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -321,7 +369,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -348,7 +396,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -375,7 +423,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,22 @@
 
 
 
-<h1 id="semirings-and-accumulation">Semirings and Accumulation</h1>
+<h1 id="masking-and-bfs">Masking and BFS</h1>
 <p><a href="../Chapter3_480p15.mp4"><img alt="Chapter 3" src="../Chapter3.png" /></a></p>
+<p><strong><a href="../notebooks/03_masking_bfs.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter builds a complete Breadth-First Search implementation using GraphBLAS primitives:</p>
+<ul>
+<li><strong>Vector-Matrix Multiply</strong> - Deep dive into <code>vxm</code> as the core operation for discovering graph neighbors using ANY_PAIR semiring</li>
+<li><strong>Structural Masks</strong> - Selecting output positions based on where a mask has values</li>
+<li><strong>Value Masks</strong> - Selecting output positions where mask values are True</li>
+<li><strong>Complement Masks</strong> - Using <code>~</code> to invert selection, keeping only positions where the mask has no values</li>
+<li><strong>Masked Expansion</strong> - Combining <code>vxm</code> with complement masking to prevent revisiting nodes in a single operation</li>
+<li><strong>Replacement Semantics</strong> - The difference between merge mode (preserving existing values) and replace mode (clearing before writing)</li>
+<li><strong>BFS Algorithm Construction</strong> - Step-by-step refinement from basic expansion to complete BFS with masking and replacement</li>
+<li><strong>Algorithm Trace</strong> - Full walkthrough on a six-node graph showing vector and graph state at each iteration</li>
+<li><strong>Generalization</strong> - How the same pattern applies to SSSP, connected components, PageRank, and triangle counting</li>
+</ul>
 
 
 

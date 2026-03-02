@@ -23,7 +23,7 @@
     
     
       
-        <title>Selecting and Applying - The Illustrated GraphBLAS</title>
+        <title>Element-wise Operations and Transformations - The Illustrated GraphBLAS</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#selecting-and-applying" class="md-skip">
+        <a href="#element-wise-operations-and-transformations" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Selecting and Applying
+              Element-wise Operations and Transformations
             
           </span>
         </div>
@@ -257,7 +257,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -284,7 +284,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -311,7 +311,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -338,7 +338,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -367,6 +367,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Element-wise Operations and Transformations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -374,7 +392,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -383,6 +401,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,21 @@
 
 
 
-<h1 id="selecting-and-applying">Selecting and Applying</h1>
+<h1 id="element-wise-operations-and-transformations">Element-wise Operations and Transformations</h1>
 <p><a href="../Chapter6_480p15.mp4"><img alt="Chapter 6" src="../Chapter6.png" /></a></p>
+<p><strong><a href="../notebooks/06_elementwise_ops.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter covers element-wise operations and matrix transformations in GraphBLAS:</p>
+<ul>
+<li><strong>Element-wise Addition</strong> - Combining matrices by adding values at matching positions, useful for computing graph unions</li>
+<li><strong>Element-wise Multiplication</strong> - The Hadamard product, multiplying matrices element by element to find graph intersections</li>
+<li><strong>Graph Union and Intersection</strong> - Using element-wise operations to combine or filter graph structures</li>
+<li><strong>Selection Operations</strong> - Choosing elements based on criteria such as thresholds, comparisons, or patterns</li>
+<li><strong>Apply Operations</strong> - Transforming matrix elements by applying a function uniformly across the entire matrix</li>
+<li><strong>Filtering Graphs</strong> - Removing edges that don't meet certain criteria</li>
+<li><strong>Value Transformation</strong> - Scaling, normalizing, or otherwise modifying edge weights</li>
+<li><strong>Practical Applications</strong> - Graph comparison, filtering by edge weight, normalizing adjacency matrices</li>
+</ul>
 
 
 

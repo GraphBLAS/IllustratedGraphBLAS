@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#python-and-julia-graphblas" class="md-skip">
+        <a href="#python-graphblas" class="md-skip">
           Skip to content
         </a>
       
@@ -232,6 +232,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python GraphBLAS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -249,6 +267,36 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -261,33 +309,6 @@
   
     <li class="md-nav__item">
       <a href="../Chapter2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Breadth First Search
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Chapter3/" class="md-nav__link">
         
   
   
@@ -314,6 +335,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Masking and BFS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../Chapter4/" class="md-nav__link">
         
   
@@ -321,7 +369,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -348,7 +396,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -375,7 +423,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,20 @@
 
 
 
-<h1 id="python-and-julia-graphblas">Python and Julia GraphBLAS</h1>
+<h1 id="python-graphblas">Python GraphBLAS</h1>
 <p><a href="../Chapter1_480p15.mp4"><img alt="Chapter 1" src="../Chapter1.png" /></a></p>
+<p><strong><a href="../notebooks/01_python_graphblas.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter covers installing and using GraphBLAS libraries with practical examples:</p>
+<ul>
+<li><strong>Installation</strong> - Installing Python-GraphBLAS via pip, with SuiteSparse as the underlying implementation</li>
+<li><strong>Language Bindings</strong> - Overview of GraphBLAS bindings for Python, Julia, and PostgreSQL</li>
+<li><strong>COO Format</strong> - Creating sparse vectors and matrices using coordinate (COO) format with indices and values arrays</li>
+<li><strong>Sparse Representation</strong> - Understanding why zeros are not stored in sparse data structures</li>
+<li><strong>Matrix-Vector Multiplication</strong> - Using the <code>mxv</code> operation and <code>@</code> operator shorthand for graph traversal</li>
+<li><strong>GraphBLAS Assignment</strong> - The <code>&lt;&lt;</code> operator for writing results back to vectors and matrices</li>
+<li><strong>Breadth-First Search</strong> - Implementing BFS as repeated matrix-vector multiplication, discovering frontier neighbors through linear algebra</li>
+</ul>
 
 
 

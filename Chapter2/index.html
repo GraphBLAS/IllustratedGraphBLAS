@@ -23,7 +23,7 @@
     
     
       
-        <title>Breadth First Search - The Illustrated GraphBLAS</title>
+        <title>Semirings and Accumulation - The Illustrated GraphBLAS</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#breadth-first-search" class="md-skip">
+        <a href="#semirings-and-accumulation" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Breadth First Search
+              Semirings and Accumulation
             
           </span>
         </div>
@@ -259,6 +259,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semirings and Accumulation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -266,7 +284,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -275,6 +293,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -294,7 +342,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -321,7 +369,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -348,7 +396,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -375,7 +423,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,20 @@
 
 
 
-<h1 id="breadth-first-search">Breadth First Search</h1>
+<h1 id="semirings-and-accumulation">Semirings and Accumulation</h1>
 <p><a href="../Chapter2_480p15.mp4"><img alt="Chapter 2" src="../Chapter2.png" /></a></p>
+<p><strong><a href="../notebooks/02_semirings.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter explores how semirings customize matrix multiplication for different problems:</p>
+<ul>
+<li><strong>PLUS_TIMES Semiring</strong> - Standard arithmetic for computing total costs, such as manufacturing production costs</li>
+<li><strong>MIN_PLUS Semiring</strong> - Finding shortest paths by adding distances and keeping the minimum, used in routing and navigation</li>
+<li><strong>ANY_PAIR Semiring</strong> - Testing reachability and connectivity without computing actual values, enabling early termination</li>
+<li><strong>Semiring Comparison</strong> - How the same matrix structure produces different results depending on the chosen semiring</li>
+<li><strong>Common Semirings</strong> - Reference table of PLUS_TIMES, MIN_PLUS, MAX_PLUS, ANY_PAIR, and PLUS_PAIR with their use cases</li>
+<li><strong>Accumulation</strong> - How new results combine with existing data using accumulators (replacement, PLUS, MIN)</li>
+<li><strong>Single Source Shortest Path</strong> - Complete algorithm demonstration using MIN_PLUS semiring with MIN accumulator, showing step-by-step convergence</li>
+</ul>
 
 
 

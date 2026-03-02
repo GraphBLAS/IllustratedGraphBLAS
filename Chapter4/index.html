@@ -23,7 +23,7 @@
     
     
       
-        <title>Masking and Assignment - The Illustrated GraphBLAS</title>
+        <title>Matrix-Matrix Multiplication - The Illustrated GraphBLAS</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#masking-and-assignment" class="md-skip">
+        <a href="#matrix-matrix-multiplication" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Masking and Assignment
+              Matrix-Matrix Multiplication
             
           </span>
         </div>
@@ -257,7 +257,7 @@
   <span class="md-ellipsis">
     
   
-    Breadth First Search
+    Semirings and Accumulation
   
 
     
@@ -284,7 +284,7 @@
   <span class="md-ellipsis">
     
   
-    Semirings and Accumulation
+    Masking and BFS
   
 
     
@@ -313,6 +313,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Matrix-Matrix Multiplication
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -320,7 +338,7 @@
   <span class="md-ellipsis">
     
   
-    Masking and Assignment
+    Matrix-Matrix Multiplication
   
 
     
@@ -329,6 +347,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -348,7 +396,7 @@
   <span class="md-ellipsis">
     
   
-    Element-wise Operations
+    Incidence Matrices
   
 
     
@@ -375,7 +423,7 @@
   <span class="md-ellipsis">
     
   
-    Selecting and Applying
+    Element-wise Operations and Transformations
   
 
     
@@ -489,6 +537,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -504,8 +571,22 @@
 
 
 
-<h1 id="masking-and-assignment">Masking and Assignment</h1>
+<h1 id="matrix-matrix-multiplication">Matrix-Matrix Multiplication</h1>
 <p><a href="../Chapter4_480p15.mp4"><img alt="Chapter 4" src="../Chapter4.png" /></a></p>
+<p><strong><a href="../notebooks/04_matrix_multiply.ipynb">Interactive Notebook</a></strong></p>
+<h2 id="summary">Summary</h2>
+<p>This chapter extends from vector operations to matrix-matrix multiplication for multi-hop path discovery:</p>
+<ul>
+<li><strong>Recall: Vector-Matrix Multiply</strong> - Review of finding 1-hop neighbors using frontier vectors and adjacency matrices</li>
+<li><strong>Matrix-Matrix Multiply</strong> - Computing A x A to discover 2-hop paths, with GraphBLAS syntax <code>mxm</code> and <code>@</code> operator</li>
+<li><strong>Multiplication Mechanics</strong> - Step-by-step computation showing row-by-row multiplication and sparse optimization</li>
+<li><strong>Graph Interpretation</strong> - How matrix entries translate to paths: direct edges vs multi-hop connections</li>
+<li><strong>Higher Powers</strong> - Computing A², A³, and A^k for k-hop path counts</li>
+<li><strong>Diagonal Entries</strong> - Understanding self-loops in powers as cycle counts (degree in A²)</li>
+<li><strong>Transitive Closure</strong> - Finding all reachable pairs through iterative multiplication with ANY_PAIR semiring until fixed point</li>
+<li><strong>Applications</strong> - Database query planning, network analysis, compiler optimization, and dependency resolution</li>
+<li><strong>Preview: Triangle Counting</strong> - Introduction to using Hadamard product (A² ⊙ A) for detecting triangles</li>
+</ul>
 
 
 
