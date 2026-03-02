@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-from Parts import setup_scene
+from scene_utils import setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):

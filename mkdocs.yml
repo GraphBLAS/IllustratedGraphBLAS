@@ -3,11 +3,11 @@ site_name: The Illustrated GraphBLAS
 nav:
   - Introduction: Chapter0.md
   - Python GraphBLAS: Chapter1.md
-  - Breadth First Search: Chapter2.md
-  - Semirings and Accumulation: Chapter3.md
-  - Masking and Assignment: Chapter4.md
-  - Element-wise Operations: Chapter5.md
-  - Selecting and Applying: Chapter6.md
+  - Semirings and Accumulation: Chapter2.md
+  - Masking and BFS: Chapter3.md
+  - Matrix-Matrix Multiplication: Chapter4.md
+  - Incidence Matrices: Chapter5.md
+  - Element-wise Operations and Transformations: Chapter6.md
   - Shortest Path: Chapter7.md
   - Triangle Counting and Centrality: Chapter8.md
   - Sparse Neural Networks: Chapter9.md

@@ -6,8 +6,9 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import (
+from scene_utils import (
     CHAPTER3_MATRIX_DATA,
+    create_sparse_matrix,
     create_undirected_graph,
     animate_vertex_fill,
     setup_scene,
@@ -42,13 +43,13 @@ class Scene1(VoiceoverScene, Scene):
 
         # Create input vector v (frontier at node 0) - vertical column vector
         v_data = [[1], [0], [0], [0], [0], [0]]
-        v_vec = self.create_sparse_matrix(v_data, scale=0.45)
+        v_vec = create_sparse_matrix(v_data, scale=0.45)
 
         # Times symbol
         times_sym = MathTex(r"\times").scale(0.8)
 
         # Create matrix display
-        matrix = self.create_sparse_matrix(matrix_data, scale=0.45)
+        matrix = create_sparse_matrix(matrix_data, scale=0.45)
 
         # Equals symbol
         equals_sym = MathTex("=").scale(0.8)
@@ -183,15 +184,3 @@ class Scene1(VoiceoverScene, Scene):
             FadeOut(graph)
         )
         self.wait(0.5)
-
-    def create_sparse_matrix(self, data, scale=0.6):
-        """Create a matrix with zeros hidden."""
-        matrix = Matrix(data, v_buff=0.8, h_buff=1.0).scale(scale)
-
-        num_cols = len(data[0])
-        for i, row in enumerate(data):
-            for j, val in enumerate(row):
-                if val == 0:
-                    matrix.get_entries()[i * num_cols + j].set_opacity(0)
-
-        return matrix

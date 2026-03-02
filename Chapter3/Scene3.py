@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import (
+from scene_utils import (
     CHAPTER3_MATRIX_DATA,
     create_undirected_graph,
     animate_vertex_fill,
@@ -47,7 +47,7 @@ class Scene3(VoiceoverScene, Scene):
             """Consider our undirected graph. We start at node zero and discover
             nodes one and three. Now we want to expand from the new frontier,
             but we don't want to rediscover node zero. With bidirectional edges,
-            node one can reach back to node zero! A complement mask prevents this."""
+            node one can reach back to node zero. A complement mask prevents this."""
         ):
             self.play(Create(graph))
             # Show iteration 1 result

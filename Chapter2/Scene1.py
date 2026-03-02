@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import setup_scene
+from scene_utils import create_sparse_matrix, setup_scene
 
 
 class Scene1(VoiceoverScene, Scene):
@@ -44,8 +44,8 @@ class Scene1(VoiceoverScene, Scene):
             # Showing cost breakdown by material type (steel, plastic)
             prod_B_data = [[10, 2], [8, 3], [5, 6]]
 
-            matrix_A_small = self.create_sparse_matrix(prod_A_data, scale=0.55)
-            matrix_B_small = self.create_sparse_matrix(prod_B_data, scale=0.55)
+            matrix_A_small = create_sparse_matrix(prod_A_data, scale=0.55)
+            matrix_B_small = create_sparse_matrix(prod_B_data, scale=0.55)
 
             # Result: C[factory, material] = sum over products of (units * cost_per_unit)
             # C[F0, Steel] = 50*10 + 30*8 + 0*5 = 500 + 240 = 740
@@ -137,8 +137,8 @@ class Scene1(VoiceoverScene, Scene):
             # Hub0 to Seattle: 5h, Hub1 to Seattle: 3h, Hub2 to Seattle: 2h
             cost_B_data = [[3, 5], [2, 3], [5, 2]]
 
-            matrix_A_small = self.create_sparse_matrix(cost_A_data, scale=0.55)
-            matrix_B_small = self.create_sparse_matrix(cost_B_data, scale=0.55)
+            matrix_A_small = create_sparse_matrix(cost_A_data, scale=0.55)
+            matrix_B_small = create_sparse_matrix(cost_B_data, scale=0.55)
 
             # MIN_PLUS result: C[i,j] = min over k of (A[i,k] + B[k,j])
             # C[NYC,Miami] = min(2+3, 3+2) = min(5, 5) = 5
@@ -228,8 +228,8 @@ class Scene1(VoiceoverScene, Scene):
             # Frontend needs SQL, React
             conn_B_data = [[1, 0], [1, 1], [0, 1]]
 
-            matrix_A_small = self.create_sparse_matrix(conn_A_data, scale=0.55)
-            matrix_B_small = self.create_sparse_matrix(conn_B_data, scale=0.55)
+            matrix_A_small = create_sparse_matrix(conn_A_data, scale=0.55)
+            matrix_B_small = create_sparse_matrix(conn_B_data, scale=0.55)
 
             # ANY_PAIR result: C[i,j] = OR over k of (A[i,k] AND B[k,j])
             # C[Alice,Backend] = (1&1) | (1&1) | (0&0) = 1 (Python or SQL)
@@ -406,18 +406,6 @@ class Scene1(VoiceoverScene, Scene):
             col_label_mobjects.add(lbl)
 
         return VGroup(matrix, row_label_mobjects, col_label_mobjects)
-
-    def create_sparse_matrix(self, data, scale=0.6):
-        """Create a matrix with zeros hidden."""
-        matrix = Matrix(data, v_buff=0.8, h_buff=1.0).scale(scale)
-
-        num_cols = len(data[0])
-        for i, row in enumerate(data):
-            for j, val in enumerate(row):
-                if val == 0:
-                    matrix.get_entries()[i * num_cols + j].set_opacity(0)
-
-        return matrix
 
     def create_result_matrix(self, data, scale=0.6):
         """Create a matrix with actual values but all entries initially hidden."""

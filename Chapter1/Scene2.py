@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import CHAPTER0_MATRIX_DATA, create_labeled_matrix, hide_zero_entries, setup_scene
+from scene_utils import CHAPTER0_MATRIX_DATA, create_labeled_matrix, hide_zero_entries, setup_scene
 
 
 class Scene2(VoiceoverScene, Scene):

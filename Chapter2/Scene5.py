@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import (
+from scene_utils import (
     CHAPTER0_MATRIX_DATA,
     create_adjacency_digraph,
     animate_vertex_fill,

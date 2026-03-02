@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import setup_scene
+from scene_utils import setup_scene
 
 
 class Scene7(VoiceoverScene, Scene):

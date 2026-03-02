@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-from Parts import setup_scene
+from scene_utils import setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
@@ -40,12 +40,12 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In many algorithms it's necessary to choose elements in a matrix or
-            graph that should be kept or discarded based on the result
-            of some operator defining the selection criteria.  Also in this
-            chapter we will show a similar feature that allows a
-            function to transform matrix elements by applying an
-            operator to the whole matrix."""
+            """Beyond matrix multiplication, GraphBLAS provides element-wise
+            operations for combining matrices at matching positions. We can
+            add or multiply graphs element by element to find unions or
+            intersections. This chapter also covers selection and apply
+            operations: choosing elements based on criteria, and transforming
+            values by applying functions across entire matrices."""
         ):
             self.play(Write(title))
             for logo in logos_group:

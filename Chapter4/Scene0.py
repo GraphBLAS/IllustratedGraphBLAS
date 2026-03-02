@@ -5,46 +5,27 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-from Parts import setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
+    """Introduction to Matrix-Matrix Multiplication."""
+
     def construct(self):
         setup_scene(self)
 
-        # Load all logo images from the imgs/ directory
-        img_dir = "../imgs"
-        logo_filenames = [
-            "aristotle.png", "anaconda.png", "berkeley.png",
-            "cmu.png", "cwi.png", "du.png",
-            "graphegon.png", "humboldt.png", "intel.png",
-            "imbr.png", "lucata.png", "mit.png",
-            "njit.png", "nvidia.png", "pnnl.png",
-            "redis.png", "romatre.png", "tamu.png",
-            "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
-        ]
-
-        # Create ImageMobject for each logo and scale them uniformly
-        logos = [
-            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
-            for filename in logo_filenames
-        ]
-
-        # Arrange logos in a 4x6 grid using Group
-        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+        logos_group = create_logo_grid()
 
         # Title text
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """One of the most important features of graph traversal is minimizing
-            the amount of work done by excluding elements in the
-            matrix that have already been taken into account, this
-            operation is called masking.  We'll also cover more
-            details around assigning values into matrices and vectors."""
+            """In the previous chapters, we used vector-matrix multiply to discover
+            neighbors one hop away. But what if we want to find nodes two or three
+            hops away? Matrix-matrix multiplication lets us combine multiple
+            adjacency matrices to discover multi-hop paths in a single operation.
+            In GraphBLAS, we write this as C equals A dot mxm B with a semiring."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -54,6 +35,6 @@ class Scene0(VoiceoverScene, Scene):
             ).scale(0.75).to_edge(DOWN)
             self.play(Write(footer))
 
-        # Fade out title and logos at the end
+        # Fade out intro elements
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
         self.wait(0.5)

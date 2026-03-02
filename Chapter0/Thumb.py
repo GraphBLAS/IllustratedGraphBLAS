@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, '..')
 
 from manim import *
-from Parts import create_logo_grid
+from scene_utils import create_logo_grid
 
 
 class Thumb(Scene):

@@ -3,3 +3,7 @@ manim
 manim-voiceover[gtts]
 elevenlabs>=0.2.27,<0.3.0
 invoke
+jupyter
+python-graphblas
+networkx
+matplotlib

@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from Parts import create_logo_grid, setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):

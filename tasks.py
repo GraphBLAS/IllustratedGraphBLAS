@@ -120,3 +120,32 @@ def all(ctx, quality='l', prod=False):
     build_all(ctx, quality, prod=prod)
     stitch_all(ctx, quality)
     render_thumbnails(ctx, quality)
+
+@task
+def demo(ctx, util='', quality='l', list=False):
+    """
+    Demo a scene_utils component.
+
+    Usage:
+        invoke demo --util create_sparse_matrix
+        invoke demo --list
+    """
+    if list:
+        # Import the DEMOS registry and print available demos
+        import sys
+        sys.path.insert(0, '_demos')
+        from demo import DEMOS
+        print("Available demos:")
+        for name in sorted(DEMOS.keys()):
+            print(f"  {name}")
+        return
+
+    env_vars = f"DEMO_UTIL={util}"
+    command = f"{env_vars} manim -pq{quality} demo.py Demo"
+    with ctx.cd('_demos'):
+        ctx.run(command)
+
+@task
+def notebooks(ctx):
+    """Launch Jupyter notebook browser for interactive GraphBLAS tutorials."""
+    ctx.run("jupyter notebook notebooks/index.ipynb")

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-from Parts import setup_scene
+from scene_utils import setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
@@ -40,12 +40,14 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """Matrix Multiplication is not the only operation to perform on
-            matrices and vectors, there are also per-element
-            operations that can be used to combine matrices and graphs
-            for matching elements, these are called element-wise
-            operations and are a very powerful feature of the
-            GraphBLAS. """
+            """So far we have represented graphs as adjacency matrices, where
+            rows and columns both represent nodes. But there is another
+            powerful representation using two incidence matrices: one for
+            sources and one for destinations. When we multiply these matrices,
+            S times D gives us back the adjacency matrix. This two-matrix
+            representation naturally handles multi-graphs and hypergraphs,
+            enabling complex relationship modeling beyond simple pairwise
+            connections."""
         ):
             self.play(Write(title))
             for logo in logos_group:
