@@ -9,7 +9,7 @@ nav:
   - Incidence Matrices: Chapter5.md
   - Element-wise Operations and Transformations: Chapter6.md
   - Shortest Path: Chapter7.md
-  - Triangle Counting and Centrality: Chapter8.md
+  - Triangle Counting: Chapter8.md
   - Sparse Neural Networks: Chapter9.md
   
 theme:

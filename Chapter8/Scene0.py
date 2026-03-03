@@ -44,9 +44,7 @@ class Scene0(VoiceoverScene, Scene):
             to each other.  This is a fundamental building block in
             breaking down graphs for analysis and processing.  In this
             video, we will go over several algebraic approaches to
-            triangle counting and show a powerful algorithm for
-            determining the centrality ranking of nodes in a graph
-            based on the number of triangles around them. """
+            triangle counting, both globally and for each node in a graph."""
         ):
             self.play(Write(title))
             for logo in logos_group:
