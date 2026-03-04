@@ -5,6 +5,9 @@ Provides consistent styling for graph visualizations across all notebooks.
 
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+from scipy.spatial import ConvexHull
 
 
 def draw_graph(G, pos=None, ax=None, title=None,
@@ -54,6 +57,108 @@ def draw_graph(G, pos=None, ax=None, title=None,
             plt.title(title)
 
     if ax is None and show:
+        plt.show()
+
+    return pos
+
+
+def draw_multigraph(edges, pos=None, ax=None, title=None,
+                    node_color='lightblue', directed=True,
+                    node_size=500, font_size=16, show=True):
+    """Draw a multigraph with visible parallel edges.
+
+    Args:
+        edges: List of (source, dest) tuples. Parallel edges are allowed.
+        pos: Node positions dict. If None, uses spring_layout with seed=42
+        ax: Matplotlib axes. If None, creates new figure
+        title: Optional title string
+        node_color: Color for nodes
+        directed: Whether to draw arrows
+        node_size: Size of nodes
+        font_size: Font size for labels
+        show: Whether to call plt.show()
+
+    Returns:
+        pos: The node positions used
+    """
+    import matplotlib.patches as mpatches
+    from collections import defaultdict
+
+    # Count edges between each pair of nodes
+    edge_counts = defaultdict(int)
+    for src, dst in edges:
+        edge_counts[(src, dst)] += 1
+
+    # Get all unique nodes
+    nodes = sorted(set(n for e in edges for n in e))
+
+    # Create simple graph for node positioning
+    G_simple = nx.DiGraph() if directed else nx.Graph()
+    G_simple.add_nodes_from(nodes)
+    G_simple.add_edges_from(edges)
+
+    if pos is None:
+        pos = nx.spring_layout(G_simple, seed=42)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Draw nodes
+    nx.draw_networkx_nodes(G_simple, pos, ax=ax, node_color=node_color,
+                           node_size=node_size)
+    nx.draw_networkx_labels(G_simple, pos, ax=ax, font_size=font_size)
+
+    # Draw edges with curves for parallel edges
+    drawn_edges = defaultdict(int)  # Track how many edges drawn between each pair
+
+    for src, dst in edges:
+        # Determine curve amount based on how many edges already drawn
+        key = (min(src, dst), max(src, dst))  # Normalize for undirected comparison
+        edge_idx = drawn_edges[key]
+        total = edge_counts[(src, dst)]
+        if not directed:
+            total += edge_counts.get((dst, src), 0)
+
+        # Calculate rad for connectionstyle
+        if total == 1:
+            rad = 0.0
+        else:
+            # Spread edges evenly: -0.3, 0, 0.3 for 3 edges, etc.
+            rad = 0.2 * (edge_idx - (total - 1) / 2)
+
+        drawn_edges[key] += 1
+
+        # Draw edge with FancyArrowPatch for curve control
+        x1, y1 = pos[src]
+        x2, y2 = pos[dst]
+
+        style = "Simple, tail_width=0.5, head_width=4, head_length=8" if directed else "Simple, tail_width=1, head_width=0, head_length=0"
+        arrow = mpatches.FancyArrowPatch(
+            (x1, y1), (x2, y2),
+            connectionstyle=f"arc3,rad={rad}",
+            arrowstyle=style,
+            color='black',
+            mutation_scale=1,
+            shrinkA=node_size**0.5 / 2,
+            shrinkB=node_size**0.5 / 2,
+        )
+        ax.add_patch(arrow)
+
+    if title:
+        ax.set_title(title)
+
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    # Set axis limits with padding
+    xs = [p[0] for p in pos.values()]
+    ys = [p[1] for p in pos.values()]
+    margin = 0.2
+    ax.set_xlim(min(xs) - margin, max(xs) + margin)
+    ax.set_ylim(min(ys) - margin, max(ys) + margin)
+
+    if show:
+        plt.tight_layout()
         plt.show()
 
     return pos
@@ -367,3 +472,163 @@ def draw_matrices_side_by_side(matrices, titles, figsize=None, box_size=1.0,
         plt.show()
 
     return fig, axes
+
+
+def draw_hypergraph(sources, dests, pos=None, ax=None, title=None,
+                    node_size=500, font_size=16,
+                    hyperedge_colors=None, hyperedge_alpha=0.3,
+                    show=True):
+    """Draw a hypergraph with colored regions for hyperedges.
+
+    Args:
+        sources: List of sets, each containing source node IDs for that hyperedge
+        dests: List of sets, each containing destination node IDs for that hyperedge
+        pos: Dict mapping node_id -> (x, y). If None, auto-generate positions
+        ax: Matplotlib axes. If None, creates new figure
+        title: Optional title string
+        node_size: Size of nodes
+        font_size: Font size for labels
+        hyperedge_colors: Optional list of colors for each hyperedge. If None, use colormap
+        hyperedge_alpha: Transparency for hyperedge regions (default 0.3)
+        show: Whether to call plt.show()
+
+    Returns:
+        pos: The node positions used
+    """
+    # Extract all unique nodes
+    all_source_nodes = set()
+    all_dest_nodes = set()
+    for src_set in sources:
+        all_source_nodes.update(src_set)
+    for dst_set in dests:
+        all_dest_nodes.update(dst_set)
+    all_nodes = all_source_nodes | all_dest_nodes
+
+    # Generate positions if not provided
+    if pos is None:
+        pos = {}
+        sorted_sources = sorted(all_source_nodes)
+        sorted_dests = sorted(all_dest_nodes - all_source_nodes)
+        # Sources on top row
+        for i, node in enumerate(sorted_sources):
+            pos[node] = (i, 1)
+        # Destinations on bottom row
+        for i, node in enumerate(sorted_dests):
+            pos[node] = (i, 0)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Set up colors for hyperedges
+    n_hyperedges = len(sources)
+    if hyperedge_colors is None:
+        cmap = plt.cm.tab10
+        hyperedge_colors = [cmap(i % 10) for i in range(n_hyperedges)]
+
+    # Draw hyperedge regions
+    for he_idx, (src_set, dst_set) in enumerate(zip(sources, dests)):
+        member_nodes = src_set | dst_set
+        if len(member_nodes) == 0:
+            continue
+
+        points = np.array([pos[n] for n in member_nodes])
+        color = hyperedge_colors[he_idx]
+
+        if len(member_nodes) == 1:
+            # Single node: draw a circle around it
+            center = points[0]
+            circle = plt.Circle(center, 0.2, facecolor=color, alpha=hyperedge_alpha,
+                                edgecolor=color, linewidth=2, zorder=1)
+            ax.add_patch(circle)
+        elif len(member_nodes) == 2:
+            # Two nodes: draw an ellipse/capsule shape
+            p1, p2 = points[0], points[1]
+            center = (p1 + p2) / 2
+            length = np.linalg.norm(p2 - p1)
+            angle = np.degrees(np.arctan2(p2[1] - p1[1], p2[0] - p1[0]))
+            ellipse = patches.Ellipse(center, length + 0.4, 0.4,
+                                       angle=angle, facecolor=color, alpha=hyperedge_alpha,
+                                       edgecolor=color, linewidth=2, zorder=1)
+            ax.add_patch(ellipse)
+        else:
+            # Three or more nodes: compute convex hull and expand it
+            try:
+                hull = ConvexHull(points)
+                hull_points = points[hull.vertices]
+
+                # Expand hull outward from centroid
+                centroid = np.mean(hull_points, axis=0)
+                expanded = []
+                for pt in hull_points:
+                    direction = pt - centroid
+                    norm = np.linalg.norm(direction)
+                    if norm > 0:
+                        direction = direction / norm
+                    expanded.append(pt + direction * 0.15)
+                expanded = np.array(expanded)
+
+                polygon = patches.Polygon(expanded, closed=True, facecolor=color,
+                                          alpha=hyperedge_alpha, edgecolor=color,
+                                          linewidth=2, zorder=1)
+                ax.add_patch(polygon)
+            except Exception:
+                # Fallback for collinear points: draw ellipse
+                center = np.mean(points, axis=0)
+                # Find extent
+                diffs = points - center
+                max_dist = np.max(np.linalg.norm(diffs, axis=1))
+                circle = plt.Circle(center, max_dist + 0.2, facecolor=color,
+                                    alpha=hyperedge_alpha, edgecolor=color, linewidth=2, zorder=1)
+                ax.add_patch(circle)
+
+    # Draw nodes on top of regions
+    node_scale = node_size / 500  # Scale factor based on default size
+    square_size = 0.15 * node_scale
+
+    for node in all_nodes:
+        x, y = pos[node]
+        is_source = node in all_source_nodes
+        is_dest = node in all_dest_nodes
+
+        if is_source and not is_dest:
+            # Pure source: square, light blue
+            rect = patches.FancyBboxPatch(
+                (x - square_size, y - square_size),
+                2 * square_size, 2 * square_size,
+                boxstyle='round,pad=0.02,rounding_size=0.02',
+                facecolor='lightblue', edgecolor='black', linewidth=2, zorder=3
+            )
+            ax.add_patch(rect)
+        elif is_dest and not is_source:
+            # Pure destination: circle, light green
+            circle = plt.Circle((x, y), square_size, facecolor='lightgreen',
+                                 edgecolor='black', linewidth=2, zorder=3)
+            ax.add_patch(circle)
+        else:
+            # Both source and dest: hexagon or special marker, light purple
+            # Use a circle with different color
+            circle = plt.Circle((x, y), square_size, facecolor='plum',
+                                 edgecolor='black', linewidth=2, zorder=3)
+            ax.add_patch(circle)
+
+        # Draw label
+        ax.text(x, y, str(node), ha='center', va='center',
+                fontsize=font_size, fontweight='bold', zorder=4)
+
+    # Set axis limits with padding
+    xs = [p[0] for p in pos.values()]
+    ys = [p[1] for p in pos.values()]
+    margin = 0.5
+    ax.set_xlim(min(xs) - margin, max(xs) + margin)
+    ax.set_ylim(min(ys) - margin, max(ys) + margin)
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    if title:
+        ax.set_title(title, fontsize=font_size)
+
+    if show:
+        plt.tight_layout()
+        plt.show()
+
+    return pos

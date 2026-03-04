@@ -41,7 +41,7 @@ class Scene0(VoiceoverScene, Scene):
 
         with self.voiceover(
             """In this video we will show a simple and elegant solution to the
-            problem of finding the shorest paths across a graph to
+            problem of finding the shortest paths across a graph to
             other nodes in the graph.  This shortest path algorithm
             uses an important semiring called a "tropical" semiring,
             very commonly used in optimization problems throughout

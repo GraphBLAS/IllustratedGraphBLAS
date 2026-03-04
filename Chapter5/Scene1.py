@@ -253,9 +253,13 @@ class Scene1(VoiceoverScene, Scene):
     def create_labeled_matrix(self, rows, cols, row_labels, col_labels,
                               row_title, col_title, row_color, col_color):
         """Create an empty matrix with row/column labels."""
-        # Create matrix with empty entries
-        entries = [["" for _ in range(cols)] for _ in range(rows)]
+        # Create matrix with placeholder entries (hidden, but maintain size)
+        entries = [["0" for _ in range(cols)] for _ in range(rows)]
         matrix = Matrix(entries, v_buff=0.7, h_buff=0.7).scale(0.55)
+
+        # Hide all entries initially (will be filled in during animation)
+        for entry in matrix.get_entries():
+            entry.set_opacity(0)
 
         # Row labels
         row_label_group = VGroup(*[
