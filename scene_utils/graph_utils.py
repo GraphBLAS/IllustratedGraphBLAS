@@ -1,5 +1,6 @@
 from manim import *
 import math
+import numpy as np
 
 
 def set_vertex_fill_preserve_label(vertex, color, opacity=1):
@@ -493,6 +494,7 @@ def create_undirected_graph(matrix_data, layout="triangle", scale=1, edge_color=
     # Create double-ended arrows for edges
     edges = VGroup()
     weight_labels = VGroup()
+    edge_dict = {}  # Map (i,j) and (j,i) to edge mobject
 
     for i, j, weight in edges_data:
         start = positions[i]
@@ -508,6 +510,9 @@ def create_undirected_graph(matrix_data, layout="triangle", scale=1, edge_color=
             max_tip_length_to_length_ratio=0.15
         )
         edges.add(double_arrow)
+        # Store edge reference for both directions
+        edge_dict[(i, j)] = double_arrow
+        edge_dict[(j, i)] = double_arrow
 
         if edge_labels:
             # Add weight label at midpoint
@@ -523,7 +528,228 @@ def create_undirected_graph(matrix_data, layout="triangle", scale=1, edge_color=
     graph = VGroup(edges, *vertices.values())
     # Store vertices dict for easy access
     graph.vertices = vertices
+    graph.edges_group = edges
+    graph.edge_dict = edge_dict  # Direct edge lookup
+    graph.positions = positions
 
     if edge_labels:
         return graph, weight_labels
+    return graph
+
+
+def get_edge_between_vertices(graph, i, j):
+    """
+    Find the edge mobject connecting vertices i and j in an undirected graph.
+
+    Args:
+        graph: Graph created by create_undirected_graph
+        i, j: Vertex indices
+
+    Returns:
+        The DoubleArrow edge mobject, or None if not found
+    """
+    # Use direct lookup if edge_dict is available
+    if hasattr(graph, 'edge_dict'):
+        return graph.edge_dict.get((i, j))
+
+    # Fallback to position-based search for backwards compatibility
+    pos_i = graph.positions[i]
+    pos_j = graph.positions[j]
+    mid = (pos_i + pos_j) / 2
+
+    for edge in graph.edges_group:
+        edge_mid = edge.get_center()
+        if np.linalg.norm(edge_mid - mid) < 0.5:
+            return edge
+    return None
+
+
+def highlight_triangle(graph, triangle, color=YELLOW, edge_width=6):
+    """
+    Create highlight copies of edges forming a triangle.
+
+    Args:
+        graph: Graph created by create_undirected_graph
+        triangle: Tuple of 3 vertex indices (i, j, k)
+        color: Highlight color
+        edge_width: Stroke width for highlighted edges
+
+    Returns:
+        VGroup of highlighted edge copies
+    """
+    i, j, k = triangle
+    highlights = VGroup()
+
+    for a, b in [(i, j), (j, k), (i, k)]:
+        edge = get_edge_between_vertices(graph, a, b)
+        if edge:
+            highlight = edge.copy()
+            highlight.set_color(color)
+            highlight.set_stroke(width=edge_width)
+            highlights.add(highlight)
+
+    return highlights
+
+
+def color_nodes_by_value(graph, values, low_color=WHITE, high_color=RED):
+    """
+    Color graph nodes based on numeric values using gradient interpolation.
+
+    Args:
+        graph: Graph with vertices dict
+        values: List of values for each node (index-aligned), or dict {node: value}
+        low_color: Color for minimum value
+        high_color: Color for maximum value
+
+    Returns:
+        List of (vertex, target_color) tuples for animation
+    """
+    if isinstance(values, dict):
+        values_list = [values.get(i, 0) for i in range(len(graph.vertices))]
+    else:
+        values_list = values
+
+    min_val = min(values_list)
+    max_val = max(values_list)
+    val_range = max_val - min_val if max_val > min_val else 1
+
+    result = []
+    for i, vertex in graph.vertices.items():
+        t = (values_list[i] - min_val) / val_range
+        color = interpolate_color(low_color, high_color, t)
+        result.append((vertex, color))
+
+    return result
+
+
+# Karate club graph adjacency data (Zachary 1977)
+# 34 nodes, 78 edges
+KARATE_EDGES = [
+    (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 10), (0, 11),
+    (0, 12), (0, 13), (0, 17), (0, 19), (0, 21), (0, 31),
+    (1, 2), (1, 3), (1, 7), (1, 13), (1, 17), (1, 19), (1, 21), (1, 30),
+    (2, 3), (2, 7), (2, 8), (2, 9), (2, 13), (2, 27), (2, 28), (2, 32),
+    (3, 7), (3, 12), (3, 13),
+    (4, 6), (4, 10),
+    (5, 6), (5, 10), (5, 16),
+    (6, 16),
+    (8, 30), (8, 32), (8, 33),
+    (9, 33),
+    (13, 33),
+    (14, 32), (14, 33),
+    (15, 32), (15, 33),
+    (18, 32), (18, 33),
+    (19, 33),
+    (20, 32), (20, 33),
+    (22, 32), (22, 33),
+    (23, 25), (23, 27), (23, 29), (23, 32), (23, 33),
+    (24, 25), (24, 27), (24, 31),
+    (25, 31),
+    (26, 29), (26, 33),
+    (27, 33),
+    (28, 31), (28, 33),
+    (29, 32), (29, 33),
+    (30, 32), (30, 33),
+    (31, 32), (31, 33),
+    (32, 33),
+]
+
+# Per-node triangle counts for karate graph
+KARATE_TRIANGLE_COUNTS = [
+    18, 12, 11, 10, 2, 3, 3, 6, 5, 1,  # nodes 0-9
+    2, 0, 1, 5, 1, 1, 1, 0, 1, 1,      # nodes 10-19
+    1, 0, 1, 6, 2, 2, 1, 4, 2, 3,      # nodes 20-29
+    3, 5, 11, 15                        # nodes 30-33
+]
+
+KARATE_TOTAL_TRIANGLES = 45
+
+
+def create_karate_graph(scale=0.08, node_radius=0.2):
+    """
+    Create the 34-node Zachary karate club graph with spring layout.
+
+    Args:
+        scale: Scale factor for positions
+        node_radius: Radius of node circles
+
+    Returns:
+        VGroup with vertices dict and edges_group
+    """
+    n_nodes = 34
+
+    # Pre-computed spring layout positions (normalized)
+    positions = {
+        0: np.array([-1.5, 0.5, 0]),
+        1: np.array([-1.2, 1.0, 0]),
+        2: np.array([-0.8, 0.3, 0]),
+        3: np.array([-1.0, 0.8, 0]),
+        4: np.array([-2.2, 0.8, 0]),
+        5: np.array([-2.5, 0.3, 0]),
+        6: np.array([-2.5, 0.6, 0]),
+        7: np.array([-1.0, 1.2, 0]),
+        8: np.array([-0.5, 0.0, 0]),
+        9: np.array([0.2, -0.5, 0]),
+        10: np.array([-2.2, 0.5, 0]),
+        11: np.array([-2.0, 0.2, 0]),
+        12: np.array([-1.8, 0.8, 0]),
+        13: np.array([-0.8, 0.8, 0]),
+        14: np.array([0.8, -1.0, 0]),
+        15: np.array([1.0, -1.2, 0]),
+        16: np.array([-2.8, 0.5, 0]),
+        17: np.array([-1.5, 1.2, 0]),
+        18: np.array([1.2, -1.0, 0]),
+        19: np.array([-0.5, 1.0, 0]),
+        20: np.array([1.0, -0.8, 0]),
+        21: np.array([-1.2, 1.3, 0]),
+        22: np.array([1.2, -0.6, 0]),
+        23: np.array([1.0, 0.2, 0]),
+        24: np.array([1.5, 0.8, 0]),
+        25: np.array([1.8, 0.5, 0]),
+        26: np.array([1.5, -0.3, 0]),
+        27: np.array([0.5, 0.5, 0]),
+        28: np.array([0.2, 0.2, 0]),
+        29: np.array([1.2, 0.0, 0]),
+        30: np.array([0.0, 0.8, 0]),
+        31: np.array([0.5, 1.0, 0]),
+        32: np.array([0.8, -0.2, 0]),
+        33: np.array([1.0, -0.5, 0]),
+    }
+
+    # Scale positions
+    for k in positions:
+        positions[k] = positions[k] * scale * 10
+
+    # Create vertices
+    vertices = {}
+    for i in range(n_nodes):
+        label = MathTex(str(i), color=BLACK).scale(0.35)
+        dot = LabeledDot(label, radius=node_radius, fill_color=WHITE, fill_opacity=1)
+        dot.move_to(positions[i])
+        vertices[i] = dot
+
+    # Create edges
+    edges_group = VGroup()
+    for src, tgt in KARATE_EDGES:
+        start = positions[src]
+        end = positions[tgt]
+        line = Line(start, end, color=BLUE, stroke_width=1.5)
+        # Shorten to avoid overlapping vertices
+        direction = end - start
+        length = np.linalg.norm(direction)
+        if length > 0:
+            unit = direction / length
+            line = Line(
+                start + unit * node_radius,
+                end - unit * node_radius,
+                color=BLUE,
+                stroke_width=1.5
+            )
+        edges_group.add(line)
+
+    graph = VGroup(edges_group, *vertices.values())
+    graph.vertices = vertices
+    graph.edges_group = edges_group
+    graph.positions = positions
+
     return graph

@@ -140,6 +140,50 @@ def create_sparse_matrix(data, scale=0.6, v_buff=0.8, h_buff=1.0):
 # e0: 0→1, e1: 1→2, e2: 0→2
 CHAPTER5_EDGES = [(0, 1), (1, 2), (0, 2)]
 
+# Chapter 8: 6-node graph with 4 triangles for triangle counting demonstration
+# Triangles: {0,1,2}, {0,2,3}, {2,3,4}, {3,4,5}
+CHAPTER8_MATRIX_DATA = [
+    [0, 1, 1, 1, 0, 0],   # node 0: connects to 1, 2, 3
+    [1, 0, 1, 0, 0, 0],   # node 1: connects to 0, 2
+    [1, 1, 0, 1, 1, 0],   # node 2: hub - connects to 0, 1, 3, 4
+    [1, 0, 1, 0, 1, 1],   # node 3: connects to 0, 2, 4, 5
+    [0, 0, 1, 1, 0, 1],   # node 4: connects to 2, 3, 5
+    [0, 0, 0, 1, 1, 0],   # node 5: connects to 3, 4
+]
+
+# Pre-computed A² for CHAPTER8_MATRIX_DATA (counts 2-hop paths)
+# A²[i,j] = number of 2-hop paths from i to j
+CHAPTER8_A2_DATA = [
+    [3, 1, 1, 1, 2, 1],   # row 0
+    [1, 2, 1, 2, 1, 0],   # row 1
+    [1, 1, 4, 2, 1, 2],   # row 2
+    [1, 2, 2, 4, 1, 1],   # row 3
+    [2, 1, 1, 1, 3, 1],   # row 4
+    [1, 0, 2, 1, 1, 2],   # row 5
+]
+
+# Pre-computed T = A² ⊙ A (element-wise product, triangle indicator)
+# T[i,j] = number of triangles containing edge (i,j)
+CHAPTER8_TRIANGLE_DATA = [
+    [0, 1, 1, 1, 0, 0],   # row 0
+    [1, 0, 1, 0, 0, 0],   # row 1
+    [1, 1, 0, 2, 1, 0],   # row 2
+    [1, 0, 2, 0, 1, 1],   # row 3
+    [0, 0, 1, 1, 0, 1],   # row 4
+    [0, 0, 0, 1, 1, 0],   # row 5
+]
+
+# List of triangles (node triples) in Chapter 8 graph
+CHAPTER8_TRIANGLES = [
+    (0, 1, 2),  # Triangle 1
+    (0, 2, 3),  # Triangle 2
+    (2, 3, 4),  # Triangle 3
+    (3, 4, 5),  # Triangle 4
+]
+
+# Per-node triangle participation counts (sum of row in T, divided by 2)
+CHAPTER8_PER_NODE_TRIANGLES = [2, 1, 3, 3, 2, 1]  # nodes 0-5
+
 
 def create_incidence_matrices(edges, n_nodes=None, scale=0.55,
                                node_color=BLUE, edge_color=GREEN):

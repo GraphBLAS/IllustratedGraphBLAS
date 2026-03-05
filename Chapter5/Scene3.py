@@ -121,7 +121,7 @@ class Scene3(VoiceoverScene, Scene):
             D_group = VGroup(D_label, VGroup(D_mat, D_row_labels, D_col_labels)).arrange(DOWN, buff=0.2)
 
             SD_group = VGroup(S_group, D_group).arrange(DOWN, buff=0.5)
-            SD_group.to_edge(RIGHT, buff=1).shift(DOWN * 0.3)
+            SD_group.to_edge(RIGHT, buff=1.8).shift(DOWN * 0.3)
 
             self.play(Write(SD_group))
             self.wait(1)

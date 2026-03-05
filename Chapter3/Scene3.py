@@ -59,28 +59,45 @@ class Scene3(VoiceoverScene, Scene):
             self.wait(1)
 
         # Create vector displays on the right
-        vec_group = VGroup()
-
-        # Frontier vector
+        # Create all four labels upfront
         frontier_label = Text("frontier:", font_size=22)
-        frontier_cells = self.create_vector_display(["", "T", "", "T", "", ""])
-        frontier_row = VGroup(frontier_label, frontier_cells).arrange(RIGHT, buff=0.3)
-
-        # Visited vector (mask)
         visited_label = Text("visited:", font_size=22)
-        visited_cells = self.create_vector_display(["T", "", "", "", "", ""])
-        visited_row = VGroup(visited_label, visited_cells).arrange(RIGHT, buff=0.3)
-
-        # Complement mask
         complement_label = Text("~visited.S:", font_size=22, color=BLUE)
+        result_label = Text("result (masked):", font_size=22, color=YELLOW)
+
+        # Create all four cell displays upfront (result starts empty)
+        frontier_cells = self.create_vector_display(["", "T", "", "T", "", ""])
+        visited_cells = self.create_vector_display(["T", "", "", "", "", ""])
         complement_cells = self.create_vector_display(
             ["F", "T", "T", "T", "T", "T"],
             colors=[RED, GREEN, GREEN, GREEN, GREEN, GREEN]
         )
-        complement_row = VGroup(complement_label, complement_cells).arrange(RIGHT, buff=0.3)
+        result_cells = self.create_vector_display(
+            ["", "", "", "", "", ""],
+            colors=[DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY]
+        )
 
-        vec_group = VGroup(frontier_row, visited_row, complement_row)
-        vec_group.arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+        # Position all cells aligned with each other (cells drive vertical spacing)
+        cells = VGroup(frontier_cells, visited_cells, complement_cells, result_cells)
+        cells.arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+
+        # Position each label to align vertically with its corresponding cells
+        # and align all labels on their right edge
+        labels = VGroup(frontier_label, visited_label, complement_label, result_label)
+        for label, cell_row in zip(labels, cells):
+            label.next_to(cell_row, LEFT, buff=0.3)
+        # Align all labels on their right edge
+        max_right = max(label.get_right()[0] for label in labels)
+        for label in labels:
+            label.shift(RIGHT * (max_right - label.get_right()[0]))
+
+        # Create row groups for reference
+        frontier_row = VGroup(frontier_label, frontier_cells)
+        visited_row = VGroup(visited_label, visited_cells)
+        complement_row = VGroup(complement_label, complement_cells)
+        result_row = VGroup(result_label, result_cells)
+
+        vec_group = VGroup(labels, cells)
         vec_group.to_edge(RIGHT, buff=0.5).shift(UP * 0.5)
 
         with self.voiceover(
@@ -128,10 +145,12 @@ class Scene3(VoiceoverScene, Scene):
         ):
             # Update visited to include 0, 1, 3
             new_visited_cells = self.create_vector_display(["T", "T", "", "T", "", ""])
+            new_visited_cells.move_to(visited_cells)
             new_complement_cells = self.create_vector_display(
                 ["F", "F", "T", "F", "T", "T"],
                 colors=[RED, RED, GREEN, RED, GREEN, GREEN]
             )
+            new_complement_cells.move_to(complement_cells)
 
             self.play(
                 Transform(visited_cells, new_visited_cells),
@@ -145,14 +164,12 @@ class Scene3(VoiceoverScene, Scene):
             )
             self.wait(1)
 
-        # Show the masked output
-        result_label = Text("result (masked):", font_size=22, color=YELLOW)
-        result_cells = self.create_vector_display(
+        # Show the masked output - transform the empty result cells to show values
+        new_result_cells = self.create_vector_display(
             ["", "", "T", "", "T", "T"],
             colors=[DARK_GRAY, DARK_GRAY, GREEN, DARK_GRAY, GREEN, GREEN]
         )
-        result_row = VGroup(result_label, result_cells).arrange(RIGHT, buff=0.3)
-        result_row.next_to(complement_row, DOWN, buff=0.5)
+        new_result_cells.move_to(result_cells)
 
         with self.voiceover(
             """The result only contains nodes two, four, and five. These are the
@@ -160,7 +177,9 @@ class Scene3(VoiceoverScene, Scene):
             three are masked out, even if the computation produced values there.
             The mask ensures we only track new discoveries."""
         ):
-            self.play(Write(result_row))
+            # Show the result row label and transform empty cells to show values
+            self.play(Write(result_label))
+            self.play(Transform(result_cells, new_result_cells))
             self.wait(2)
 
         # Show the power of this
@@ -181,10 +200,10 @@ class Scene3(VoiceoverScene, Scene):
             self.play(Write(power_box))
             self.wait(3)
 
-        # Cleanup
+        # Cleanup (result_row is part of vec_group now)
         self.play(
             FadeOut(title), FadeOut(graph), FadeOut(vec_group),
-            FadeOut(result_row), FadeOut(power_box)
+            FadeOut(power_box)
         )
         self.wait(0.5)
 

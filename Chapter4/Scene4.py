@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import math
-from scene_utils import create_sparse_matrix, create_small_graph_from_matrix, setup_scene, animate_vertex_fill
+from scene_utils import create_sparse_matrix, setup_scene, animate_vertex_fill
 
 
 class Scene4(VoiceoverScene, Scene):
@@ -38,10 +38,9 @@ class Scene4(VoiceoverScene, Scene):
         graph = self.create_graph()
         graph.scale(0.8).to_edge(RIGHT, buff=1)
 
-        A_mat = create_sparse_matrix(A_data, scale=0.4, v_buff=0.65, h_buff=0.65)
-        A_label = MathTex("A").scale(0.9)
-        A_small_graph = create_small_graph_from_matrix(A_data, scale=0.25, directed=False, edge_color=BLUE)
-        A_group = VGroup(A_label, A_mat, A_small_graph).arrange(DOWN, buff=0.2).to_edge(LEFT, buff=1).shift(UP * 0.5)
+        A_mat = create_sparse_matrix(A_data, scale=0.35, v_buff=0.5, h_buff=0.5)
+        A_label = MathTex("A").scale(0.8)
+        A_group = VGroup(A_label, A_mat).arrange(DOWN, buff=0.15).to_edge(LEFT, buff=1).shift(UP * 2.2)
 
         with self.voiceover(
             """Let's trace multi-hop paths in a concrete example. Here we have
@@ -66,10 +65,9 @@ class Scene4(VoiceoverScene, Scene):
         ]
 
         # Show A^2 calculation
-        A2_mat = create_sparse_matrix(A2_data, scale=0.4, v_buff=0.65, h_buff=0.65)
-        A2_label = MathTex("A^2").scale(0.9)
-        A2_small_graph = create_small_graph_from_matrix(A2_data, scale=0.25, directed=False, edge_color=YELLOW, show_weights=True)
-        A2_group = VGroup(A2_label, A2_mat, A2_small_graph).arrange(DOWN, buff=0.2).next_to(A_group, DOWN, buff=0.5)
+        A2_mat = create_sparse_matrix(A2_data, scale=0.35, v_buff=0.5, h_buff=0.5)
+        A2_label = MathTex("A^2").scale(0.8)
+        A2_group = VGroup(A2_label, A2_mat).arrange(DOWN, buff=0.15).next_to(A_group, DOWN, buff=0.3)
 
         with self.voiceover(
             """When we multiply the adjacency matrix by itself, A squared, we
@@ -127,38 +125,99 @@ class Scene4(VoiceoverScene, Scene):
 
         self.play(FadeOut(diag_text), FadeOut(diag_highlights))
 
-        # Briefly show A^3
-        # A^3 = A^2 @ A = 3-hop paths
-        A3_text = MathTex("A^3 = A^2 \\times A").scale(0.8).to_edge(DOWN, buff=1.5)
-        A3_desc = Text("3-hop paths", font_size=24, color=YELLOW).next_to(A3_text, DOWN, buff=0.3)
+        # Compute A^3 = A^2 @ A = 3-hop paths
+        A3_data = [
+            [0, 3, 1, 3, 1],  # 0: 3-hops to 1(3 paths), 2(1), 3(3), 4(1)
+            [3, 0, 3, 1, 1],  # 1: 3-hops to 0(3), 2(3), 3(1), 4(1)
+            [1, 3, 0, 1, 3],  # 2: 3-hops to 0(1), 1(3), 3(1), 4(3)
+            [3, 1, 1, 0, 3],  # 3: 3-hops to 0(3), 1(1), 2(1), 4(3)
+            [1, 1, 3, 3, 0],  # 4: 3-hops to 0(1), 1(1), 2(3), 3(3)
+        ]
+
+        # Show A^3 matrix
+        A3_mat = create_sparse_matrix(A3_data, scale=0.35, v_buff=0.5, h_buff=0.5)
+        A3_label = MathTex("A^3").scale(0.8)
+        A3_group = VGroup(A3_label, A3_mat).arrange(DOWN, buff=0.15).next_to(A2_group, DOWN, buff=0.3)
 
         with self.voiceover(
             """Cubing the matrix gives three-hop paths. We multiply A-squared
-            by A again. This pattern continues: A to the k gives k-hop path
-            counts. This is the algebraic foundation of graph analytics:
-            distances, influence propagation, and connectivity all emerge
-            from matrix powers."""
+            by A again. Each entry counts the number of paths of exactly
+            three hops between nodes."""
         ):
-            self.play(Write(A3_text), Write(A3_desc))
+            self.play(Write(A3_group))
+            self.wait(1)
+
+        # Highlight a specific 3-hop path: 0 -> 1 -> 2 -> 4
+        # This contributes to A^3[0,4]
+        path3_text = Text("Path: 0 → 1 → 2 → 4", font_size=28, color=PURPLE).to_edge(DOWN, buff=0.8)
+
+        with self.voiceover(
+            """Let's trace a three-hop path. From node zero, we go to node one,
+            then to node two, then to node four. This is the only three-hop
+            path from zero to four, which is why A-cubed at position zero-four
+            equals one."""
+        ):
+            self.play(Write(path3_text))
+            # Highlight the path nodes
+            self.play(animate_vertex_fill(graph.vertices[0], PURPLE))
+            self.play(animate_vertex_fill(graph.vertices[1], PURPLE))
+            self.play(animate_vertex_fill(graph.vertices[2], PURPLE))
+            self.play(animate_vertex_fill(graph.vertices[4], PURPLE))
+
+            # Highlight A^3[0,4]
+            highlight3 = SurroundingRectangle(A3_mat.get_entries()[4], color=PURPLE, buff=0.1)
+            self.play(Create(highlight3))
+            self.wait(1)
+
+        self.play(FadeOut(path3_text), FadeOut(highlight3))
+
+        # Reset vertex colors
+        self.play(
+            animate_vertex_fill(graph.vertices[0], WHITE),
+            animate_vertex_fill(graph.vertices[1], WHITE),
+            animate_vertex_fill(graph.vertices[2], WHITE),
+            animate_vertex_fill(graph.vertices[4], WHITE),
+        )
+
+        # Explain why A^3[0,1] = 3
+        # Three paths: 0→1→0→1, 0→1→2→1, 0→3→0→1
+        highlight_01 = SurroundingRectangle(A3_mat.get_entries()[1], color=ORANGE, buff=0.1)
+        paths_text = Text("3 paths: 0→1→0→1, 0→1→2→1, 0→3→0→1", font_size=24, color=ORANGE).to_edge(DOWN, buff=0.8)
+
+        with self.voiceover(
+            """Now look at position zero-one, which equals three. This means there
+            are three different three-hop paths from node zero to node one.
+            We can go zero to one to zero to one, bouncing back and forth.
+            Or zero to one to two to one, going through node two.
+            Or zero to three to zero to one, going through node three first.
+            Each distinct path contributes to this count."""
+        ):
+            self.play(Create(highlight_01))
+            self.play(Write(paths_text))
             self.wait(2)
+
+        self.play(FadeOut(highlight_01), FadeOut(paths_text))
 
         # Key insight
         insight_box = VGroup(
             Text("Key Insight:", font_size=24, color=YELLOW),
             MathTex(r"A^k[i,j] = \text{number of } k\text{-hop paths from } i \text{ to } j").scale(0.7)
         ).arrange(DOWN, buff=0.2)
-        insight_box.move_to(A3_text.get_center())
+        insight_box.to_edge(DOWN, buff=0.8)
 
-        self.play(
-            FadeOut(A3_text), FadeOut(A3_desc),
-            FadeIn(insight_box)
-        )
-        self.wait(2)
+        with self.voiceover(
+            """This pattern continues: A to the k gives k-hop path counts.
+            This is the algebraic foundation of graph analytics: distances,
+            influence propagation, and connectivity all emerge from matrix
+            powers."""
+        ):
+            self.play(FadeIn(insight_box))
+            self.wait(2)
 
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(graph), FadeOut(A_group),
-            FadeOut(A2_group), FadeOut(insight_box)
+            FadeOut(A2_group), FadeOut(A3_group), FadeOut(insight_box)
         )
         self.wait(0.5)
 
