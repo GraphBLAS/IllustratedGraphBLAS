@@ -96,14 +96,14 @@ class Scene3(VoiceoverScene, Scene):
             work."""
         ):
             # Position the sparse matrix and result vector next to the graph
-            sparse_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1.5)
+            sparse_matrix = Matrix(matrix_data, v_buff=0.5, h_buff=0.5).scale(1)
             for i, row in enumerate(matrix_data):
                 for j, value in enumerate(row):
                     if value == 0:
                         sparse_matrix.get_entries()[i * len(row) + j].set_opacity(0)
 
             sparse_matrix.to_edge(LEFT, buff=0.5)
-            sparse_vector = Matrix(initial_result_data, v_buff=0.5).scale(1.5).next_to(sparse_matrix, RIGHT, buff=0.5)
+            sparse_vector = Matrix(initial_result_data, v_buff=0.5).scale(1).next_to(sparse_matrix, RIGHT, buff=0.5)
 
             for j, sparse_entry in enumerate(sparse_vector.get_entries()):
                 if j in (4, 5):
