@@ -217,6 +217,67 @@ def create_small_graph_from_matrix(matrix_data, scale=0.3, directed=False, edge_
     return graph.scale(scale)
 
 
+def create_square_digraph(matrix_data, color, show_weights=False):
+    """
+    Create a directed graph from a 4x4 adjacency matrix with square layout.
+    Used for element-wise operation visualizations.
+
+    Args:
+        matrix_data: 4x4 adjacency matrix
+        color: Color for edges
+        show_weights: If True, show edge weight labels
+
+    Returns:
+        VGroup containing the graph with vertices and edges attributes
+    """
+    n = len(matrix_data)
+    positions = {
+        0: np.array([-0.7, 0.7, 0]),
+        1: np.array([0.7, 0.7, 0]),
+        2: np.array([0.7, -0.7, 0]),
+        3: np.array([-0.7, -0.7, 0]),
+    }
+
+    # Create vertices
+    vertices = {}
+    for i in range(n):
+        label = MathTex(str(i), color=BLACK).scale(0.5)
+        dot = LabeledDot(label, radius=0.2, fill_color=WHITE, fill_opacity=1)
+        dot.move_to(positions[i])
+        vertices[i] = dot
+
+    # Create edges
+    edges = VGroup()
+    edge_labels = VGroup()
+    for i in range(n):
+        for j in range(n):
+            if matrix_data[i][j] != 0:
+                arrow = Arrow(
+                    positions[i], positions[j],
+                    color=color, buff=0.25, stroke_width=3,
+                    tip_length=0.15, max_tip_length_to_length_ratio=0.25
+                )
+                edges.add(arrow)
+
+                if show_weights:
+                    weight = matrix_data[i][j]
+                    weight_label = Text(str(weight), font_size=16, color=color)
+                    # Position label at midpoint, offset perpendicular to edge
+                    mid = (positions[i] + positions[j]) / 2
+                    direction = positions[j] - positions[i]
+                    perp = np.array([-direction[1], direction[0], 0])
+                    perp = perp / np.linalg.norm(perp) * 0.15
+                    weight_label.move_to(mid + perp)
+                    edge_labels.add(weight_label)
+
+    graph = VGroup(edges, edge_labels, *vertices.values())
+    graph.vertices = vertices
+    graph.edges = edges
+    graph.edge_labels = edge_labels
+    graph.positions = positions
+    return graph
+
+
 def create_multigraph_visual(nodes, edges, scale=0.8, node_radius=0.3):
     """
     Create a multi-graph visualization with curved parallel edges.

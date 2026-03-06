@@ -34,24 +34,20 @@ class Scene5(VoiceoverScene, Scene):
 
             # Create original matrix
             mat_m = create_sparse_matrix(M_DATA, scale=0.6)
-            mat_m.shift(LEFT * 3)
+            mat_m.shift(LEFT * 4.5)
             mat_label = MathTex("M", font_size=36).next_to(mat_m, UP, buff=0.3)
 
             self.play(FadeIn(mat_m), Write(mat_label))
             self.wait(0.5)
 
-            # Show formula with highlighted scalar
-            formula = MathTex(r"2", r"\times", r"M", font_size=48)
-            formula[0].set_color(ORANGE)
-            formula.move_to(ORIGIN)
-
-            self.play(Write(formula))
-            self.wait(0.5)
-
-            # Emphasize scalar on left
-            scalar_note = Text("scalar on left", font_size=18, color=ORANGE)
-            scalar_note.next_to(formula[0], DOWN, buff=0.2)
-            self.play(Write(scalar_note))
+            # Show Python code
+            code = Code(
+                code_string="M.apply(binary.times, left=2)",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code.move_to(ORIGIN + UP * 0.5)
+            self.play(FadeIn(code))
             self.wait(0.5)
 
         with self.voiceover(
@@ -61,8 +57,8 @@ class Scene5(VoiceoverScene, Scene):
         ):
             # Create result matrix
             mat_result = create_sparse_matrix(DOUBLED_DATA, scale=0.6)
-            mat_result.shift(RIGHT * 3)
-            result_label = MathTex(r"2 \times M", font_size=36, color=ORANGE)
+            mat_result.shift(RIGHT * 4.5)
+            result_label = Text("Result", font_size=24, color=ORANGE)
             result_label.next_to(mat_result, UP, buff=0.3)
 
             self.play(FadeIn(mat_result), Write(result_label))
@@ -112,7 +108,6 @@ class Scene5(VoiceoverScene, Scene):
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(mat_m), FadeOut(mat_label),
-            FadeOut(formula), FadeOut(scalar_note),
-            FadeOut(mat_result), FadeOut(result_label),
+            FadeOut(code), FadeOut(mat_result), FadeOut(result_label),
         )
         self.wait(0.5)

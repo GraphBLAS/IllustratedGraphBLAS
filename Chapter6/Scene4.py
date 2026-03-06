@@ -34,16 +34,20 @@ class Scene4(VoiceoverScene, Scene):
 
             # Create original matrix
             mat_m = create_sparse_matrix(M_DATA, scale=0.6)
-            mat_m.shift(LEFT * 3)
+            mat_m.shift(LEFT * 4.5)
             mat_label = MathTex("M", font_size=36).next_to(mat_m, UP, buff=0.3)
 
             self.play(FadeIn(mat_m), Write(mat_label))
             self.wait(0.5)
 
-            # Show formula
-            formula = MathTex(r"\sqrt{M}", font_size=48, color=GREEN)
-            formula.move_to(ORIGIN)
-            self.play(Write(formula))
+            # Show Python code
+            code = Code(
+                code_string="M.apply(unary.sqrt)",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code.move_to(ORIGIN + UP * 0.5)
+            self.play(FadeIn(code))
             self.wait(0.5)
 
         with self.voiceover(
@@ -53,8 +57,8 @@ class Scene4(VoiceoverScene, Scene):
         ):
             # Create result matrix
             mat_result = create_sparse_matrix(SQRT_DATA, scale=0.6)
-            mat_result.shift(RIGHT * 3)
-            result_label = MathTex(r"\sqrt{M}", font_size=36, color=GREEN)
+            mat_result.shift(RIGHT * 4.5)
+            result_label = Text("Result", font_size=24, color=GREEN)
             result_label.next_to(mat_result, UP, buff=0.3)
 
             # Animate sqrt transformation for each non-zero entry
@@ -107,7 +111,7 @@ class Scene4(VoiceoverScene, Scene):
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(mat_m), FadeOut(mat_label),
-            FadeOut(formula), FadeOut(mat_result), FadeOut(result_label),
+            FadeOut(code), FadeOut(mat_result), FadeOut(result_label),
             FadeOut(note),
         )
         self.wait(0.5)

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import numpy as np
-from scene_utils import setup_scene, create_sparse_matrix
+from scene_utils import setup_scene, create_sparse_matrix, create_square_digraph
 
 
 # Shared data from notebook
@@ -37,7 +37,7 @@ class Scene2(VoiceoverScene, Scene):
             self.play(Write(title))
 
             # Create Graph A (left, blue)
-            graph_a = self.create_graph(A_DATA, BLUE)
+            graph_a = create_square_digraph(A_DATA, BLUE)
             graph_a.scale(1.2).shift(LEFT * 4 + DOWN * 0.5)
             label_a = Text("Graph A", font_size=24, color=BLUE).next_to(graph_a, UP)
 
@@ -46,7 +46,7 @@ class Scene2(VoiceoverScene, Scene):
             mat_a.next_to(graph_a, DOWN, buff=0.5)
 
             # Create Graph B (right, green)
-            graph_b = self.create_graph(B_DATA, GREEN)
+            graph_b = create_square_digraph(B_DATA, GREEN)
             graph_b.scale(1.2).shift(RIGHT * 4 + DOWN * 0.5)
             label_b = Text("Graph B", font_size=24, color=GREEN).next_to(graph_b, UP)
 
@@ -61,14 +61,18 @@ class Scene2(VoiceoverScene, Scene):
             self.wait(1)
 
         with self.voiceover(
-            """The result contains just two edges: 1 to 2 and 2 to 3. Contrast this
-            with union which gave us four edges. Intersection keeps only what
-            both graphs share."""
+            """The result contains just two edges: 1 to 2 and 2 to 3, each with
+            value 1 times 1 equals 1. Contrast this with union which gave us four
+            edges. Intersection keeps only what both graphs share."""
         ):
-            # Show formula
-            formula = MathTex(r"A \cap B", font_size=48, color=RED_C)
-            formula.move_to(ORIGIN + UP * 0.5)
-            self.play(Write(formula))
+            # Show Python code below title
+            code = Code(
+                code_string="A.ewise_mult(B, binary.times)",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code.next_to(title, DOWN, buff=0.3)
+            self.play(FadeIn(code))
             self.wait(0.5)
 
             # Highlight common edges and fade unique ones
@@ -110,8 +114,8 @@ class Scene2(VoiceoverScene, Scene):
             )
             self.wait(0.5)
 
-            # Create intersection result graph (center, red)
-            graph_int = self.create_graph(INTERSECTION_DATA, RED_C)
+            # Create intersection result graph (center, red) with edge weights
+            graph_int = create_square_digraph(INTERSECTION_DATA, RED_C, show_weights=True)
             graph_int.scale(1.2).move_to(ORIGIN + DOWN * 0.5)
             label_int = Text("A ∩ B", font_size=24, color=RED_C).next_to(graph_int, UP)
 
@@ -120,7 +124,7 @@ class Scene2(VoiceoverScene, Scene):
             mat_int.next_to(graph_int, DOWN, buff=0.5)
 
             self.play(
-                ReplacementTransform(formula, label_int),
+                Write(label_int),
                 Create(graph_int),
                 FadeIn(mat_int),
             )
@@ -138,47 +142,13 @@ class Scene2(VoiceoverScene, Scene):
 
         # Cleanup
         self.play(
-            FadeOut(title), FadeOut(graph_a), FadeOut(label_a), FadeOut(mat_a),
+            FadeOut(title), FadeOut(code),
+            FadeOut(graph_a), FadeOut(label_a), FadeOut(mat_a),
             FadeOut(graph_b), FadeOut(label_b), FadeOut(mat_b),
             FadeOut(graph_int), FadeOut(label_int), FadeOut(mat_int),
             FadeOut(comparison),
         )
         self.wait(0.5)
-
-    def create_graph(self, matrix_data, color):
-        """Create a directed graph from adjacency matrix with square layout."""
-        n = len(matrix_data)
-        positions = {
-            0: np.array([-0.7, 0.7, 0]),
-            1: np.array([0.7, 0.7, 0]),
-            2: np.array([0.7, -0.7, 0]),
-            3: np.array([-0.7, -0.7, 0]),
-        }
-
-        # Create vertices
-        vertices = {}
-        for i in range(n):
-            label = MathTex(str(i), color=BLACK).scale(0.5)
-            dot = LabeledDot(label, radius=0.2, fill_color=WHITE, fill_opacity=1)
-            dot.move_to(positions[i])
-            vertices[i] = dot
-
-        # Create edges
-        edges = VGroup()
-        for i in range(n):
-            for j in range(n):
-                if matrix_data[i][j] != 0:
-                    arrow = Arrow(
-                        positions[i], positions[j],
-                        color=color, buff=0.25, stroke_width=3,
-                        tip_length=0.15, max_tip_length_to_length_ratio=0.25
-                    )
-                    edges.add(arrow)
-
-        graph = VGroup(edges, *vertices.values())
-        graph.vertices = vertices
-        graph.edges = edges
-        return graph
 
     def get_nearest_node(self, pos):
         """Get the nearest node index for a position."""

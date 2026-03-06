@@ -34,21 +34,25 @@ class Scene3(VoiceoverScene, Scene):
 
             # Create weighted graph
             graph = self.create_weighted_graph(W_DATA)
-            graph.scale(1.5).shift(LEFT * 3 + DOWN * 0.3)
+            graph.scale(1.5).shift(LEFT * 3 + UP * 0.3)
             label = Text("Weighted Graph W", font_size=24).next_to(graph, UP)
 
             # Create matrix
             mat = create_sparse_matrix(W_DATA, scale=0.55)
-            mat.shift(RIGHT * 3 + UP * 0.5)
+            mat.shift(RIGHT * 3 + UP * 1.0)
             mat_label = Text("W", font_size=28).next_to(mat, UP)
 
             self.play(Create(graph), Write(label), FadeIn(mat), Write(mat_label))
             self.wait(0.5)
 
-            # Show threshold condition
-            threshold = MathTex(r"\text{weight} > 3", font_size=36, color=YELLOW)
-            threshold.next_to(mat, DOWN, buff=0.5)
-            self.play(Write(threshold))
+            # Show Python code for select
+            code = Code(
+                code_string='W.select(">", 3)',
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code.next_to(mat, DOWN, buff=0.4)
+            self.play(FadeIn(code))
             self.wait(1)
 
         with self.voiceover(
@@ -110,7 +114,7 @@ class Scene3(VoiceoverScene, Scene):
 
             # Show result matrix
             result_mat = create_sparse_matrix(FILTERED_DATA, scale=0.55)
-            result_mat.next_to(threshold, DOWN, buff=0.5)
+            result_mat.next_to(code, DOWN, buff=0.4)
             result_label = Text("Result: 2 edges", font_size=20, color=GREEN)
             result_label.next_to(result_mat, DOWN, buff=0.3)
 
@@ -120,7 +124,7 @@ class Scene3(VoiceoverScene, Scene):
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(graph), FadeOut(label),
-            FadeOut(mat), FadeOut(mat_label), FadeOut(threshold),
+            FadeOut(mat), FadeOut(mat_label), FadeOut(code),
             FadeOut(result_mat), FadeOut(result_label),
         )
         self.wait(0.5)

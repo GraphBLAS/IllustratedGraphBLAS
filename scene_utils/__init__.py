@@ -19,6 +19,7 @@ from .graph_utils import (
     create_adjacency_digraph,
     create_undirected_graph,
     create_small_graph_from_matrix,
+    create_square_digraph,
     set_vertex_fill_preserve_label,
     animate_vertex_fill,
     create_multigraph_visual,
