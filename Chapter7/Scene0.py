@@ -57,4 +57,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """This chapter covers the min-plus tropical semiring, single-source
+            shortest path, all-pairs shortest path, and the Bellman-Ford
+            algorithm."""
+        ):
+            chapter_title = Text("Chapter 7: Shortest Paths", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Min-plus (tropical) semiring", font_size=28),
+                Text("Single-source shortest path", font_size=28),
+                Text("All-pairs shortest path", font_size=28),
+                Text("Bellman-Ford algorithm", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

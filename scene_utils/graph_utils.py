@@ -725,6 +725,47 @@ KARATE_TRIANGLE_COUNTS = [
 
 KARATE_TOTAL_TRIANGLES = 45
 
+# Triangle centrality (TC1) values for karate graph
+# From Burkhardt's algorithm: TC = (3*(A@y) - 2*(T@y) + y) / k
+# Where y = per-node triangle counts, T = triangle indicator matrix
+# Key insight: non-triangle neighbors' triangles count MORE than triangle neighbors
+KARATE_TRIANGLE_CENTRALITY = {
+    0: 0.674074,
+    1: 0.555556,
+    2: 0.644444,
+    3: 0.474074,
+    4: 0.185185,
+    5: 0.200000,
+    6: 0.200000,
+    7: 0.422222,
+    8: 0.481481,
+    9: 0.577778,
+    10: 0.185185,
+    11: 0.400000,
+    12: 0.214815,
+    13: 0.755556,
+    14: 0.214815,
+    15: 0.214815,
+    16: 0.051852,
+    17: 0.229630,
+    18: 0.214815,
+    19: 0.562963,
+    20: 0.214815,
+    21: 0.229630,
+    22: 0.214815,
+    23: 0.296296,
+    24: 0.059259,
+    25: 0.125926,
+    26: 0.148148,
+    27: 0.414815,
+    28: 0.385185,
+    29: 0.274074,
+    30: 0.533333,
+    31: 0.651852,
+    32: 0.466667,
+    33: 0.562963,
+}
+
 
 def create_karate_graph(scale=0.08, node_radius=0.2):
     """

@@ -32,5 +32,6 @@ from .graph_utils import (
     KARATE_EDGES,
     KARATE_TRIANGLE_COUNTS,
     KARATE_TOTAL_TRIANGLES,
+    KARATE_TRIANGLE_CENTRALITY,
 )
 from .speech import get_speech_service, setup_scene, is_prod_mode

@@ -43,8 +43,8 @@ class Scene0(VoiceoverScene, Scene):
             """Triangles are a graph structure where three nodes are all connected
             to each other.  This is a fundamental building block in
             breaking down graphs for analysis and processing.  In this
-            video, we will go over several algebraic approaches to
-            triangle counting, both globally and for each node in a graph."""
+            video, we will cover triangle counting and triangle centrality,
+            two related metrics that reveal structure in graphs."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -56,4 +56,29 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """We'll explore what triangles are in graphs, the A squared
+            hadamard A formula for finding them, per-node triangle counts,
+            and triangle centrality, which identifies important vertices
+            based on triangle concentration."""
+        ):
+            chapter_title = Text("Chapter 8: Triangle Counting", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("What is a triangle in graphs", font_size=28),
+                Text("A squared hadamard A formula", font_size=28),
+                Text("Global triangle count", font_size=28),
+                Text("Per-node triangle counts", font_size=28),
+                Text("Triangle centrality", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

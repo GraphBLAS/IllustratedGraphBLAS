@@ -58,4 +58,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """This chapter covers installing the python-graphblas library,
+            creating matrices and vectors, basic operations, and provides
+            code examples that will be used throughout the rest of the series."""
+        ):
+            chapter_title = Text("Chapter 1: Python GraphBLAS", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Installing python-graphblas", font_size=28),
+                Text("Creating matrices and vectors", font_size=28),
+                Text("Basic operations", font_size=28),
+                Text("Code examples throughout the series", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

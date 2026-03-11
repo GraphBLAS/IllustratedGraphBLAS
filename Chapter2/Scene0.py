@@ -55,4 +55,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """We'll learn what a semiring is, explore plus-times for standard
+            arithmetic, min-plus for tropical optimization, and any-pair for
+            structural operations on graphs."""
+        ):
+            chapter_title = Text("Chapter 2: Semirings", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("What is a semiring", font_size=28),
+                Text("Plus-times (standard arithmetic)", font_size=28),
+                Text("Min-plus (tropical semiring)", font_size=28),
+                Text("Any-pair (structural operations)", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

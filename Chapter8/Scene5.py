@@ -6,89 +6,156 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from scene_utils import setup_scene
+from scene_utils import (
+    setup_scene,
+    create_undirected_graph,
+    CHAPTER8_MATRIX_DATA,
+    CHAPTER8_PER_NODE_TRIANGLES,
+    color_nodes_by_value,
+    animate_vertex_fill,
+)
 
 
 class Scene5(VoiceoverScene, Scene):
-    """Chapter 8 Summary and Chapter 9 Preview."""
+    """Triangle Centrality Introduction - motivating the concept."""
 
     def construct(self):
         setup_scene(self)
 
-        title = Text("Chapter 8 Summary", font_size=48).to_edge(UP)
+        # Title
+        title = Text("Triangle Centrality", font_size=42).to_edge(UP, buff=0.3)
         self.play(Write(title))
 
-        # Summary points
-        summary_items = VGroup(
-            Text("What we covered:", font_size=32, color=YELLOW),
-            Text("1. Triangles: three mutually connected nodes", font_size=24),
-            Text("2. A² counts 2-hop paths between nodes", font_size=24),
-            Text("3. A² ⊙ A identifies triangle-participating edges", font_size=24),
-            Text("4. Sum and divide by 6 for total triangle count", font_size=24),
-            Text("5. Row sums give per-node triangle participation", font_size=24),
-            Text("6. High triangle counts indicate community hubs", font_size=24),
-        ).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
-        summary_items.next_to(title, DOWN, buff=0.5)
-        summary_items.to_edge(LEFT, buff=1)
+        # Start with the question
+        question = Text(
+            "Per-node counts show participation...",
+            font_size=28
+        ).next_to(title, DOWN, buff=0.5)
+
+        question2 = Text(
+            "but which nodes are truly central?",
+            font_size=28,
+            color=YELLOW
+        ).next_to(question, DOWN, buff=0.2)
 
         with self.voiceover(
-            """Let's review what we covered in this chapter on triangle counting.
-            A triangle is three nodes where each pair is connected. We learned
-            that squaring the adjacency matrix counts two-hop paths. The element-wise
-            product of A squared and A identifies edges participating in triangles.
-            Summing all entries and dividing by six gives the total triangle count.
-            Row sums divided by two give per-node participation. And we saw how
-            high triangle counts reveal community hubs in real networks like the
-            karate club."""
+            """Per-node triangle counts tell us how many triangles each node
+            participates in. But participation is not the same as importance.
+            Which nodes are truly central to the triangle structure of a graph?"""
         ):
-            for item in summary_items:
-                self.play(Write(item), run_time=0.5)
+            self.play(Write(question))
+            self.play(Write(question2))
             self.wait(1)
 
-        # Key formula box
-        formula_box = VGroup(
-            Text("Key Formula:", font_size=28, color=GREEN),
-            MathTex(r"\text{triangles} = \frac{\text{sum}(A^2 \odot A)}{6}", font_size=36),
-        ).arrange(DOWN, buff=0.3)
-        formula_box.to_edge(RIGHT, buff=1.5).shift(UP * 0.5)
+        self.play(FadeOut(question), FadeOut(question2))
+
+        # Show graph with triangle counts
+        graph = create_undirected_graph(CHAPTER8_MATRIX_DATA, layout="circular", scale=0.7)
+        graph.move_to(LEFT * 3 + DOWN * 0.3)
+
+        # Color by triangle count
+        node_colors = color_nodes_by_value(
+            graph,
+            CHAPTER8_PER_NODE_TRIANGLES,
+            low_color=WHITE,
+            high_color=RED
+        )
+        for vertex, color in node_colors:
+            vertex.set_fill(color, opacity=1)
+            if vertex.submobjects:
+                vertex.submobjects[0].set_color(BLACK)
+
+        # Labels showing counts
+        count_labels = VGroup()
+        for i, count in enumerate(CHAPTER8_PER_NODE_TRIANGLES):
+            label = Text(f"{count}", font_size=16, color=YELLOW)
+            label.next_to(graph.vertices[i], UP, buff=0.12)
+            count_labels.add(label)
+
+        count_title = Text("Triangle Counts", font_size=24, color=RED)
+        count_title.next_to(graph, UP, buff=0.5)
 
         with self.voiceover(
-            """The key formula to remember: total triangles equals the sum of
-            A squared element-wise multiplied by A, all divided by six."""
+            """Here is our example graph colored by per-node triangle counts.
+            Nodes 2 and 3 have the highest counts with 3 triangles each.
+            But is raw participation the best measure of centrality?"""
         ):
-            self.play(Write(formula_box))
+            self.play(Create(graph))
+            self.play(Write(count_title), Write(count_labels))
             self.wait(1)
 
-        # Transition to Chapter 9 preview
-        self.play(FadeOut(summary_items), FadeOut(formula_box))
+        # Key insight panel on right
+        insight_title = Text("Key Insight", font_size=28, color=GREEN)
+        insight_title.to_edge(RIGHT, buff=2.5).shift(UP * 2)
 
-        preview_title = Text("Coming in Chapter 9", font_size=36, color=BLUE)
-        preview_title.next_to(title, DOWN, buff=0.8)
-
-        preview_items = VGroup(
-            Text("Sparse Neural Networks", font_size=28),
-            Text("• Neural networks as graph operations", font_size=22, color=GRAY),
-            Text("• Sparse weight matrices for efficiency", font_size=22, color=GRAY),
-            Text("• GraphBLAS for deep learning inference", font_size=22, color=GRAY),
-        ).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
-        preview_items.next_to(preview_title, DOWN, buff=0.5)
+        insight_lines = VGroup(
+            Text("A node is central if it", font_size=22),
+            Text("concentrates triangles:", font_size=22),
+            Text("By being in many itself", font_size=20, color=BLUE),
+            Text("OR", font_size=18, color=GRAY),
+            Text("By connecting to neighbors", font_size=20, color=BLUE),
+            Text("who are in many", font_size=20, color=BLUE),
+        ).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+        insight_lines.next_to(insight_title, DOWN, buff=0.3, aligned_edge=LEFT)
 
         with self.voiceover(
-            """In the next chapter, we will explore sparse neural networks.
-            Neural network layers can be expressed as matrix operations,
-            and when weight matrices are sparse, GraphBLAS provides an
-            efficient framework for inference. We will see how the same
-            algebraic building blocks we have learned apply to deep learning."""
+            """The key insight behind triangle centrality: a node is central
+            if it concentrates triangles. This can happen in two ways.
+            The node itself participates in many triangles. Or the node
+            connects to neighbors who participate in many triangles."""
         ):
-            self.play(Write(preview_title))
-            for item in preview_items:
-                self.play(Write(item), run_time=0.4)
-            self.wait(2)
+            self.play(Write(insight_title))
+            for line in insight_lines:
+                self.play(Write(line), run_time=0.3)
+            self.wait(1)
 
-        # Cleanup
+        # Show the weighting concept
+        weight_box = VGroup(
+            Text("Neighbor Weighting:", font_size=22, color=ORANGE),
+            Text("Triangle neighbors: weight 1", font_size=18),
+            Text("Non-triangle neighbors: weight 3", font_size=18, color=YELLOW),
+        ).arrange(DOWN, buff=0.12, aligned_edge=LEFT)
+        weight_box.next_to(insight_lines, DOWN, buff=0.5, aligned_edge=LEFT)
+
+        with self.voiceover(
+            """Triangle centrality weights neighbors differently.
+            Neighbors you share a triangle with count less than neighbors
+            you do not share a triangle with. Why? Non-triangle neighbors
+            represent bridges to other communities. Their triangle
+            participation signals connections beyond your local cluster."""
+        ):
+            self.play(Write(weight_box))
+            self.wait(1)
+
+        # Show formula preview
+        formula = MathTex(
+            r"TC = \frac{3(A \cdot y) - 2(T \cdot y) + y}{k}",
+            font_size=32
+        ).to_edge(DOWN, buff=0.8)
+
+        formula_label = Text("(we'll break this down next)", font_size=18, color=GRAY)
+        formula_label.next_to(formula, DOWN, buff=0.15)
+
+        with self.voiceover(
+            """The triangle centrality formula captures this weighting.
+            A times y sums all neighbors' triangle counts. T times y
+            sums only triangle neighbors' counts. The coefficients
+            3 and 2 create the differential weighting. We will break
+            down this computation in the next scene."""
+        ):
+            self.play(Write(formula), Write(formula_label))
+            self.wait(1)
+
+        # Fade out
         self.play(
             FadeOut(title),
-            FadeOut(preview_title),
-            FadeOut(preview_items),
+            FadeOut(graph),
+            FadeOut(count_title),
+            FadeOut(count_labels),
+            FadeOut(insight_title),
+            FadeOut(insight_lines),
+            FadeOut(weight_box),
+            FadeOut(formula),
+            FadeOut(formula_label),
         )
         self.wait(0.5)

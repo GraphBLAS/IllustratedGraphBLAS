@@ -102,7 +102,7 @@ class Scene3(VoiceoverScene, Scene):
                     if value == 0:
                         sparse_matrix.get_entries()[i * len(row) + j].set_opacity(0)
 
-            sparse_matrix.to_edge(LEFT, buff=0.5)
+            sparse_matrix.to_edge(LEFT, buff=0.75)
             sparse_vector = Matrix(initial_result_data, v_buff=0.5).scale(1).next_to(sparse_matrix, RIGHT, buff=0.5)
 
             for j, sparse_entry in enumerate(sparse_vector.get_entries()):

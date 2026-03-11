@@ -57,4 +57,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """This chapter covers vector-matrix multiply, masking to control
+            which outputs are written, complement masks for inverting selection,
+            and replacement semantics for managing state between iterations."""
+        ):
+            chapter_title = Text("Chapter 3: BFS Implementation", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Vector-matrix multiply (vxm)", font_size=28),
+                Text("Masking to control output", font_size=28),
+                Text("Complement masks", font_size=28),
+                Text("Replacement semantics", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

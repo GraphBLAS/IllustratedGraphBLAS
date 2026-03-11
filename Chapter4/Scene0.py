@@ -37,4 +37,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out intro elements
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """We'll explore multi-hop path discovery, how A squared finds
+            two-hop neighbors, transitive closure, and using mxm with
+            different semirings."""
+        ):
+            chapter_title = Text("Chapter 4: Matrix-Matrix Multiplication", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Multi-hop path discovery", font_size=28),
+                Text("A squared finds 2-hop neighbors", font_size=28),
+                Text("Transitive closure", font_size=28),
+                Text("mxm with semirings", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

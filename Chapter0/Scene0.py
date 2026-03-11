@@ -41,4 +41,28 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """In this chapter, we'll cover how sparse matrices represent graphs,
+            the duality between graphs and matrices, the basics of matrix-vector
+            multiplication, and why algebraic approaches to graph algorithms
+            are so powerful."""
+        ):
+            chapter_title = Text("Chapter 0: Introduction to GraphBLAS", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Sparse matrices and graph representation", font_size=28),
+                Text("Graph-matrix duality", font_size=28),
+                Text("Matrix-vector multiplication basics", font_size=28),
+                Text("Why algebraic graph algorithms", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

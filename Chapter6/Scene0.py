@@ -57,4 +57,28 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """We'll cover eWiseAdd for computing unions, eWiseMult for
+            intersections, select for filtering elements, apply for
+            transforming values, and reduce for aggregation."""
+        ):
+            chapter_title = Text("Chapter 6: Element-wise Operations", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("eWiseAdd (union)", font_size=28),
+                Text("eWiseMult (intersection)", font_size=28),
+                Text("Select (filtering)", font_size=28),
+                Text("Apply (transformation)", font_size=28),
+                Text("Reduce (aggregation)", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)

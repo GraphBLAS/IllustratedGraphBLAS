@@ -59,4 +59,27 @@ class Scene0(VoiceoverScene, Scene):
 
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
+
+        # Chapter summary slide
+        with self.voiceover(
+            """This chapter covers source and destination matrices, how
+            S times D equals the adjacency matrix, multigraphs with parallel
+            edges, and hypergraphs for complex relationships."""
+        ):
+            chapter_title = Text("Chapter 5: Incidence Matrices", font_size=40).to_edge(UP)
+
+            outline = VGroup(
+                Text("Source and destination matrices", font_size=28),
+                Text("S x D = Adjacency", font_size=28),
+                Text("Multigraphs (parallel edges)", font_size=28),
+                Text("Hypergraphs", font_size=28),
+            ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
+            outline.next_to(chapter_title, DOWN, buff=0.8)
+
+            self.play(Write(chapter_title))
+            self.play(FadeIn(outline))
+            self.wait(1)
+
+        # Fade out summary
+        self.play(FadeOut(chapter_title), FadeOut(outline))
         self.wait(0.5)
