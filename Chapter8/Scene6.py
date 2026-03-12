@@ -60,11 +60,11 @@ class Scene6(VoiceoverScene, Scene):
         A_group = VGroup(A_label, A_mat, A_desc).arrange(DOWN, buff=0.15)
         A_group.move_to(ORIGIN).shift(DOWN * 0.5)
 
-        # Right: T indicator matrix (binary version)
+        # Right: T matrix (binary version)
         T_indicator = [[1 if v > 0 else 0 for v in row] for row in CHAPTER8_TRIANGLE_DATA]
         T_mat = create_sparse_matrix(T_indicator, scale=0.35, v_buff=0.4, h_buff=0.4)
-        T_label = MathTex("T_{ind}", font_size=28, color=ORANGE)
-        T_desc = Text("T > 0 (binary)", font_size=16, color=GRAY)
+        T_label = MathTex("T", font_size=28, color=ORANGE)
+        T_desc = Text("T > 0 (bool)", font_size=16, color=GRAY)
         T_group = VGroup(T_label, T_mat, T_desc).arrange(DOWN, buff=0.15)
         T_group.to_edge(RIGHT, buff=0.8).shift(DOWN * 0.5)
 
@@ -72,7 +72,7 @@ class Scene6(VoiceoverScene, Scene):
             """We need three components. First, y: the row sums of our
             triangle matrix T, giving per-node triangle counts before
             dividing by 2. Second, A: our adjacency matrix. Third,
-            T indicator: a binary matrix showing where triangles exist."""
+            the triangle matrix T: a boolean matrix showing where triangles exist."""
         ):
             self.play(Write(y_label), Create(y_mat), Write(y_desc))
             self.play(Write(A_label), Create(A_mat), Write(A_desc))
@@ -94,20 +94,20 @@ class Scene6(VoiceoverScene, Scene):
         step1.next_to(formula, DOWN, buff=0.6)
 
         step2 = VGroup(
-            MathTex(r"T_{ind} \cdot y", font_size=32, color=ORANGE),
+            MathTex(r"T \cdot y", font_size=32, color=ORANGE),
             Text("= sum of TRIANGLE neighbors' counts", font_size=20),
         ).arrange(RIGHT, buff=0.3)
         step2.next_to(step1, DOWN, buff=0.4)
 
         step3 = VGroup(
-            MathTex(r"3(A \cdot y) - 2(T_{ind} \cdot y)", font_size=32),
+            MathTex(r"3(A \cdot y) - 2(T \cdot y)", font_size=32),
             Text("= weighted combination", font_size=20),
         ).arrange(RIGHT, buff=0.3)
         step3.next_to(step2, DOWN, buff=0.4)
 
         with self.voiceover(
             """A times y computes, for each node, the sum of all its
-            neighbors' triangle counts. T indicator times y computes
+            neighbors' triangle counts. T times y computes
             the sum of only triangle neighbors' counts. The difference
             with coefficients 3 and 2 means non-triangle neighbors
             contribute more to your centrality score."""
@@ -142,20 +142,23 @@ class Scene6(VoiceoverScene, Scene):
             FadeOut(weight_explanation),
         )
 
-        code_lines = [
-            "# y = per-node triangle counts",
-            "y = T.sum(axis=1)",
-            "",
-            "# k = normalization factor",
-            "k = y.sum()",
-            "",
-            "# Triangle centrality",
-            "Ay = A @ y",
-            "Ty = (T > 0) @ y",
-            "tc = (3*Ay - 2*Ty + y) / k",
-        ]
+        code_lines = """def triangle_centrality(A):
+    # y = per-node triangle counts
+    T = A.dup(clear=True)
+    T(A.S) << A.mxm(A.T)
+    y = T.reduce_rowwise(binary.plus).new()
+
+    # k = normalization factor (sum of all triangle counts)
+    k = y.reduce(binary.plus).new().value
+
+    # T1 = where triangles exist (binary mask)
+    T1 = T.dup(bool)
+
+    tc = (3 * (A @ y) + -2 * (T1 @ y) + y) / k
+
+    return tc.new()"""
         code = Code(
-            code_string="\n".join(code_lines),
+            code_string=code_lines,
             language="python",
             background="window",
         ).scale(0.7)
@@ -164,7 +167,7 @@ class Scene6(VoiceoverScene, Scene):
         with self.voiceover(
             """In code, the computation is straightforward. We compute y
             as row sums of T. k is the total for normalization. Then
-            A times y gives all-neighbor sums, T indicator times y gives
+            A times y gives all-neighbor sums, T times y gives
             triangle-neighbor sums, and we combine them with the weights
             3, negative 2, and 1."""
         ):

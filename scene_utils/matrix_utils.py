@@ -184,6 +184,27 @@ CHAPTER8_TRIANGLES = [
 # Per-node triangle participation counts (sum of row in T, divided by 2)
 CHAPTER8_PER_NODE_TRIANGLES = [2, 1, 3, 3, 2, 1]  # nodes 0-5
 
+# Lower triangular of A for Sandia method: L = A.select('tril')
+CHAPTER8_L_DATA = [
+    [0, 0, 0, 0, 0, 0],   # row 0: nothing (all above diagonal)
+    [1, 0, 0, 0, 0, 0],   # row 1: edge 1→0
+    [1, 1, 0, 0, 0, 0],   # row 2: edges 2→0, 2→1
+    [1, 0, 1, 0, 0, 0],   # row 3: edges 3→0, 3→2
+    [0, 0, 1, 1, 0, 0],   # row 4: edges 4→2, 4→3
+    [0, 0, 0, 1, 1, 0],   # row 5: edges 5→3, 5→4
+]
+
+# Sandia result: L(L.S) << L.mxm(L) - masked L² result
+# Each 1 represents exactly one triangle, sum = 4 triangles
+CHAPTER8_L_MASKED_DATA = [
+    [0, 0, 0, 0, 0, 0],   # row 0
+    [0, 0, 0, 0, 0, 0],   # row 1
+    [1, 0, 0, 0, 0, 0],   # row 2: triangle {0,1,2}
+    [1, 0, 0, 0, 0, 0],   # row 3: triangle {0,2,3}
+    [0, 0, 1, 0, 0, 0],   # row 4: triangle {2,3,4}
+    [0, 0, 0, 1, 0, 0],   # row 5: triangle {3,4,5}
+]
+
 
 def create_incidence_matrices(edges, n_nodes=None, scale=0.55,
                                node_color=BLUE, edge_color=GREEN):

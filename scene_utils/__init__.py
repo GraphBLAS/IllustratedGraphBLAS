@@ -8,6 +8,8 @@ from .matrix_utils import (
     CHAPTER8_TRIANGLE_DATA,
     CHAPTER8_TRIANGLES,
     CHAPTER8_PER_NODE_TRIANGLES,
+    CHAPTER8_L_DATA,
+    CHAPTER8_L_MASKED_DATA,
     create_labeled_matrix,
     create_sparse_matrix,
     create_incidence_matrices,
