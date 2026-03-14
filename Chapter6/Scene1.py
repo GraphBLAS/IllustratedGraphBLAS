@@ -134,6 +134,21 @@ class Scene1(VoiceoverScene, Scene):
             self.play(Write(edge_count))
             self.wait(1)
 
+        with self.voiceover(
+            """The same operation can be written more concisely using Python's OR
+            operator. The expression A pipe B creates a lazy union, which is then
+            passed to binary plus to produce the result."""
+        ):
+            # Transform code to show operator syntax
+            code2 = Code(
+                code_string="binary.plus(A | B).new()",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code2.next_to(title, DOWN, buff=0.3)
+            self.play(Transform(code, code2))
+            self.wait(1)
+
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(code),

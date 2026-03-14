@@ -105,6 +105,21 @@ class Scene5(VoiceoverScene, Scene):
 
             self.wait(0.5)
 
+        with self.voiceover(
+            """This operation can also be written using Python's multiplication
+            operator. The expression 2 times M applies the scalar on the left,
+            producing the same result."""
+        ):
+            # Transform code to show operator syntax
+            code2 = Code(
+                code_string="2 * M",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code2.move_to(ORIGIN + UP * 0.5)
+            self.play(Transform(code, code2))
+            self.wait(0.5)
+
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(mat_m), FadeOut(mat_label),

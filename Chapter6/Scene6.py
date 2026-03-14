@@ -115,6 +115,22 @@ class Scene6(VoiceoverScene, Scene):
             self.play(Write(contrast), Write(contrast_note))
             self.wait(1)
 
+        with self.voiceover(
+            """Division also uses Python's natural syntax. M divided by 2 applies
+            the scalar on the right, matching the mathematical notation. All common
+            Python mathematical operators are supported, making very natural looking
+            code possible."""
+        ):
+            # Transform code to show operator syntax
+            code2 = Code(
+                code_string="M / 2",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code2.move_to(ORIGIN + UP * 0.5)
+            self.play(Transform(code, code2))
+            self.wait(0.5)
+
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(mat_m), FadeOut(mat_label),

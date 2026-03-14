@@ -140,6 +140,21 @@ class Scene2(VoiceoverScene, Scene):
             self.play(Write(comparison))
             self.wait(1)
 
+        with self.voiceover(
+            """Similarly, Python's AND operator provides a shorthand for intersection.
+            A ampersand B creates a lazy intersection, which binary times then
+            materializes into the result."""
+        ):
+            # Transform code to show operator syntax
+            code2 = Code(
+                code_string="binary.times(A & B).new()",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code2.next_to(title, DOWN, buff=0.3)
+            self.play(Transform(code, code2))
+            self.wait(1)
+
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(code),

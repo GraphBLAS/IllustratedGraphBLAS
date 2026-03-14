@@ -121,6 +121,21 @@ class Scene3(VoiceoverScene, Scene):
             self.play(FadeIn(result_mat), Write(result_label))
             self.wait(1)
 
+        with self.voiceover(
+            """Comparison operators like greater-than can create boolean masks
+            directly. The expression W greater than 3 produces a matrix of true
+            and false values indicating which elements pass the test."""
+        ):
+            # Transform code to show operator syntax
+            code2 = Code(
+                code_string="(W > 3).new()",
+                language="python",
+                background="window",
+            ).scale(0.7)
+            code2.next_to(mat, DOWN, buff=0.4)
+            self.play(Transform(code, code2))
+            self.wait(1)
+
         # Cleanup
         self.play(
             FadeOut(title), FadeOut(graph), FadeOut(label),
