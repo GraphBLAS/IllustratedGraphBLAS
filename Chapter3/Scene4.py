@@ -47,24 +47,38 @@ class Scene4(VoiceoverScene, Scene):
             existing_cells = self.create_vector([1, 2, 3, "", "", ""], colors=[
                 BLUE, BLUE, BLUE, DARK_GRAY, DARK_GRAY, DARK_GRAY
             ])
-            existing_row = VGroup(existing_label, existing_cells).arrange(RIGHT, buff=0.5)
-            existing_row.shift(UP * 1.5)
 
             # Mask
             mask_label = Text("mask:", font_size=24)
             mask_cells = self.create_vector(["F", "F", "F", "T", "T", "T"], colors=[
                 RED, RED, RED, GREEN, GREEN, GREEN
             ])
-            mask_row = VGroup(mask_label, mask_cells).arrange(RIGHT, buff=0.5)
-            mask_row.next_to(existing_row, DOWN, buff=0.4)
 
             # Computed result (what would be written)
             result_label = Text("computed:", font_size=24)
             result_cells = self.create_vector(["", "", "", 5, 6, 7], colors=[
                 DARK_GRAY, DARK_GRAY, DARK_GRAY, YELLOW, YELLOW, YELLOW
             ])
-            result_row = VGroup(result_label, result_cells).arrange(RIGHT, buff=0.5)
-            result_row.next_to(mask_row, DOWN, buff=0.4)
+
+            # Align all labels to the left edge
+            labels = VGroup(existing_label, mask_label, result_label)
+            labels.arrange(DOWN, buff=0.75, aligned_edge=LEFT)
+
+            # Position cells to start at same X coordinate (right of widest label)
+            existing_cells.next_to(existing_label, RIGHT, buff=0.5)
+            mask_cells.move_to(existing_cells.get_center())
+            mask_cells.set_y(mask_label.get_center()[1])
+            result_cells.move_to(existing_cells.get_center())
+            result_cells.set_y(result_label.get_center()[1])
+
+            # Create row groups for animation/fadeout
+            existing_row = VGroup(existing_label, existing_cells)
+            mask_row = VGroup(mask_label, mask_cells)
+            result_row = VGroup(result_label, result_cells)
+
+            # Group everything and center vertically on screen
+            all_vectors = VGroup(existing_row, mask_row, result_row)
+            all_vectors.move_to(ORIGIN)
 
             self.play(Write(existing_row))
             self.wait(0.5)
@@ -76,8 +90,8 @@ class Scene4(VoiceoverScene, Scene):
         # Show the two outcomes side by side
         self.play(FadeOut(subtitle))
 
-        merge_title = Text("Default (Merge)", font_size=28, color=ORANGE).shift(LEFT * 3 + DOWN * 0.5)
-        replace_title = Text("replace=True", font_size=28, color=PURPLE).shift(RIGHT * 3 + DOWN * 0.5)
+        merge_title = Text("Default (Merge)", font_size=28, color=ORANGE).shift(LEFT * 3 + DOWN * 2)
+        replace_title = Text("replace=True", font_size=28, color=PURPLE).shift(RIGHT * 3 + DOWN * 2)
 
         with self.voiceover(
             """Here's where the two behaviors differ. With default merge behavior,

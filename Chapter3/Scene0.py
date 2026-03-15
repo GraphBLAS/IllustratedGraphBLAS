@@ -60,13 +60,15 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """This chapter covers vector-matrix multiply, masking to control
-            which outputs are written, complement masks for inverting selection,
-            and replacement semantics for managing state between iterations."""
+            """This chapter covers matrix-vector and vector-matrix
+            multiply, masking to control which outputs are written,
+            complement masks for inverting selection, and replacement
+            semantics for managing state between iterations."""
         ):
             chapter_title = Text("Chapter 3: BFS Implementation", font_size=40).to_edge(UP)
 
             outline = VGroup(
+                Text("Matrix-vector multiply (vxm)", font_size=28),
                 Text("Vector-matrix multiply (vxm)", font_size=28),
                 Text("Masking to control output", font_size=28),
                 Text("Complement masks", font_size=28),
