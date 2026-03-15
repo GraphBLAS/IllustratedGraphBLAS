@@ -86,7 +86,9 @@ class Scene6(VoiceoverScene, Scene):
             self.play(animate_vertex_fill(graph.vertices[0], YELLOW))
 
             new_frontier = self.create_vector_row(["T", "", "", "", "", ""])
+            new_frontier.move_to(frontier_cells)
             new_levels = self.create_vector_row(["1", "", "", "", "", ""])
+            new_levels.move_to(levels_cells)
             self.play(
                 Transform(frontier_cells, new_frontier),
                 Transform(levels_cells, new_levels),
@@ -102,6 +104,7 @@ class Scene6(VoiceoverScene, Scene):
         ):
             # Update level
             new_level_val = Text("2", font_size=24, color=BLUE)
+            new_level_val.move_to(level_val)
             self.play(Transform(level_val, new_level_val))
 
             # Show expansion: nodes 1 and 3 become frontier
@@ -113,7 +116,9 @@ class Scene6(VoiceoverScene, Scene):
 
             # Update vectors
             new_frontier = self.create_vector_row(["", "T", "", "T", "", ""])
+            new_frontier.move_to(frontier_cells)
             new_levels = self.create_vector_row(["1", "2", "", "2", "", ""])
+            new_levels.move_to(levels_cells)
             self.play(
                 Transform(frontier_cells, new_frontier),
                 Transform(levels_cells, new_levels),
@@ -129,6 +134,7 @@ class Scene6(VoiceoverScene, Scene):
         ):
             # Update level
             new_level_val = Text("3", font_size=24, color=BLUE)
+            new_level_val.move_to(level_val)
             self.play(Transform(level_val, new_level_val))
 
             # Show expansion: nodes 2, 4, 5 become frontier
@@ -142,7 +148,9 @@ class Scene6(VoiceoverScene, Scene):
 
             # Update vectors
             new_frontier = self.create_vector_row(["", "", "T", "", "T", "T"])
+            new_frontier.move_to(frontier_cells)
             new_levels = self.create_vector_row(["1", "2", "3", "2", "3", "3"])
+            new_levels.move_to(levels_cells)
             self.play(
                 Transform(frontier_cells, new_frontier),
                 Transform(levels_cells, new_levels),
@@ -159,6 +167,7 @@ class Scene6(VoiceoverScene, Scene):
         ):
             # Update level
             new_level_val = Text("4", font_size=24, color=BLUE)
+            new_level_val.move_to(level_val)
             self.play(Transform(level_val, new_level_val))
 
             # All frontier nodes become visited, no new frontier
@@ -170,6 +179,7 @@ class Scene6(VoiceoverScene, Scene):
 
             # Update frontier to empty
             new_frontier = self.create_vector_row(["", "", "", "", "", ""])
+            new_frontier.move_to(frontier_cells)
             self.play(Transform(frontier_cells, new_frontier))
             self.wait(1)
 
@@ -188,8 +198,9 @@ class Scene6(VoiceoverScene, Scene):
             self.play(Create(result_box))
             self.wait(2)
 
-        # Show the efficiency
-        self.play(FadeOut(done_label), FadeOut(result_box))
+        # Show the efficiency - fade out vectors and replace with summary
+        vec_area_pos = vec_area.get_center()
+        self.play(FadeOut(done_label), FadeOut(result_box), FadeOut(vec_area))
 
         with self.voiceover(
             """Notice what happened: three iterations to process six nodes, with
@@ -205,14 +216,14 @@ class Scene6(VoiceoverScene, Scene):
                 Text("• Each node processed once", font_size=22),
                 Text("• No explicit visited tracking", font_size=22),
             ).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
-            efficiency.to_edge(DOWN, buff=0.4)
+            efficiency.move_to(vec_area_pos)
 
             self.play(Write(efficiency))
             self.wait(3)
 
         self.play(
             FadeOut(title), FadeOut(graph), FadeOut(legend),
-            FadeOut(vec_area), FadeOut(efficiency)
+            FadeOut(efficiency)
         )
         self.wait(0.5)
 
