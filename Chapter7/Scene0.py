@@ -5,47 +5,22 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-from scene_utils import setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
         setup_scene(self)
 
-        # Load all logo images from the imgs/ directory
-        img_dir = "../imgs"
-        logo_filenames = [
-            "aristotle.png", "anaconda.png", "berkeley.png",
-            "cmu.png", "cwi.png", "du.png",
-            "graphegon.png", "humboldt.png", "intel.png",
-            "imbr.png", "lucata.png", "mit.png",
-            "njit.png", "nvidia.png", "pnnl.png",
-            "redis.png", "romatre.png", "tamu.png",
-            "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
-        ]
-
-        # Create ImageMobject for each logo and scale them uniformly
-        logos = [
-            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
-            for filename in logo_filenames
-        ]
-
-        # Arrange logos in a 4x6 grid using Group
-        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+        logos_group = create_logo_grid()
 
         # Title text
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In this video we will show a simple and elegant solution to the
-            problem of finding the shortest paths across a graph to
-            other nodes in the graph.  This shortest path algorithm
-            uses an important semiring called a "tropical" semiring,
-            very commonly used in optimization problems throughout
-            engineering and science."""
+            """This chapter shows how to find shortest paths in graphs
+            using the tropical semiring."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -60,9 +35,11 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """This chapter covers the min-plus tropical semiring, single-source
-            shortest path, all-pairs shortest path, and the Bellman-Ford
-            algorithm."""
+            """We'll explore the min-plus tropical semiring commonly used
+            in optimization, single-source shortest path from one node to
+            all others, all-pairs shortest path for the complete distance
+            matrix, and the Bellman-Ford algorithm for graphs with negative
+            edge weights."""
         ):
             chapter_title = Text("Chapter 7: Shortest Paths", font_size=40).to_edge(UP)
 

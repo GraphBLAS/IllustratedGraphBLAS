@@ -19,17 +19,8 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """The GraphBLAS is a sparse linear algebra API—a powerful
-            mathematical framework for graph analysis. In this video
-            series, we'll explore the basic concepts of algebraic
-            graph theory and how it can be used to write portable
-            graph algorithms on many different kinds of hardware,
-            including CPUs and GPUs. By the end of this series, you
-            will understand how to create new parallel graph
-            algorithms using simple mathematical notation. GraphBLAS
-            was developed by a consortium of researchers from academia
-            and industry, and is now an open standard with multiple
-            implementations."""
+            """This chapter introduces the GraphBLAS, a sparse linear
+            algebra API for graph analysis."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -44,10 +35,10 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """In this chapter, we'll cover how sparse matrices represent graphs,
-            the duality between graphs and matrices, the basics of matrix-vector
-            multiplication, and why algebraic approaches to graph algorithms
-            are so powerful."""
+            """We'll cover how sparse matrices represent graphs, the duality
+            between graphs and matrices, the basics of matrix-vector
+            multiplication, and why algebraic approaches enable portable,
+            parallel graph algorithms across CPUs and GPUs."""
         ):
             chapter_title = Text("Chapter 0: Introduction to GraphBLAS", font_size=40).to_edge(UP)
 

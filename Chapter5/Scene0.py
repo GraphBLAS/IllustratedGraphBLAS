@@ -5,49 +5,22 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-from scene_utils import setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
         setup_scene(self)
 
-        # Load all logo images from the imgs/ directory
-        img_dir = "../imgs"
-        logo_filenames = [
-            "aristotle.png", "anaconda.png", "berkeley.png",
-            "cmu.png", "cwi.png", "du.png",
-            "graphegon.png", "humboldt.png", "intel.png",
-            "imbr.png", "lucata.png", "mit.png",
-            "njit.png", "nvidia.png", "pnnl.png",
-            "redis.png", "romatre.png", "tamu.png",
-            "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
-        ]
-
-        # Create ImageMobject for each logo and scale them uniformly
-        logos = [
-            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
-            for filename in logo_filenames
-        ]
-
-        # Arrange logos in a 4x6 grid using Group
-        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+        logos_group = create_logo_grid()
 
         # Title text
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """So far we have represented graphs as adjacency matrices, where
-            rows and columns both represent nodes. But there is another
-            powerful representation using two incidence matrices: one for
-            sources and one for destinations. When we multiply these matrices,
-            S times D gives us back the adjacency matrix. This two-matrix
-            representation naturally handles multi-graphs and hypergraphs,
-            enabling complex relationship modeling beyond simple pairwise
-            connections."""
+            """This chapter introduces incidence matrices, an alternative
+            graph representation using source and destination matrices."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -62,9 +35,11 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """This chapter covers source and destination matrices, how
-            S times D equals the adjacency matrix, multigraphs with parallel
-            edges, and hypergraphs for complex relationships."""
+            """We'll learn how source and destination matrices decompose a
+            graph's structure, how multiplying S times D recovers the
+            adjacency matrix, how this representation naturally handles
+            multigraphs with parallel edges, and how hypergraphs model
+            complex relationships beyond pairwise connections."""
         ):
             chapter_title = Text("Chapter 5: Incidence Matrices", font_size=40).to_edge(UP)
 

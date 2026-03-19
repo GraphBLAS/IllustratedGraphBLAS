@@ -5,46 +5,22 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-from scene_utils import setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
         setup_scene(self)
 
-        # Load all logo images from the imgs/ directory
-        img_dir = "../imgs"
-        logo_filenames = [
-            "aristotle.png", "anaconda.png", "berkeley.png",
-            "cmu.png", "cwi.png", "du.png",
-            "graphegon.png", "humboldt.png", "intel.png",
-            "imbr.png", "lucata.png", "mit.png",
-            "njit.png", "nvidia.png", "pnnl.png",
-            "redis.png", "romatre.png", "tamu.png",
-            "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
-        ]
-
-        # Create ImageMobject for each logo and scale them uniformly
-        logos = [
-            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
-            for filename in logo_filenames
-        ]
-
-        # Arrange logos in a 4x6 grid using Group
-        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+        logos_group = create_logo_grid()
 
         # Title text
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """Triangles are a graph structure where three nodes are all connected
-            to each other.  This is a fundamental building block in
-            breaking down graphs for analysis and processing.  In this
-            video, we will cover triangle counting and triangle centrality,
-            two related metrics that reveal structure in graphs."""
+            """This chapter covers triangle counting and triangle centrality,
+            two metrics that reveal structural patterns in graphs."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -59,10 +35,10 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """We'll explore what triangles are in graphs, the A squared
-            hadamard A formula for finding them, per-node triangle counts,
-            and triangle centrality, which identifies important vertices
-            based on triangle concentration."""
+            """We'll explore what triangles are in graph theory, the A squared
+            hadamard A formula for detecting them, how to compute global and
+            per-node triangle counts, and triangle centrality for identifying
+            important vertices based on triangle concentration."""
         ):
             chapter_title = Text("Chapter 8: Triangle Counting", font_size=40).to_edge(UP)
 

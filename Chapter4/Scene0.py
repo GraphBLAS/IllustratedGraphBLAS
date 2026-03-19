@@ -21,11 +21,8 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In the previous chapters, we used vector-matrix multiply to discover
-            neighbors one hop away. But what if we want to find nodes two or three
-            hops away? Matrix-matrix multiplication lets us combine multiple
-            adjacency matrices to discover multi-hop paths in a single operation.
-            In GraphBLAS, we write this as C equals A dot mxm B with a semiring."""
+            """This chapter covers matrix-matrix multiplication for discovering
+            multi-hop paths in graphs."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -40,9 +37,10 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """We'll explore multi-hop path discovery, how A squared finds
-            two-hop neighbors, transitive closure, and using mxm with
-            different semirings."""
+            """We'll see how multiplying adjacency matrices finds multi-hop
+            neighbors, how A squared reveals two-hop paths, how repeated
+            multiplication computes transitive closure, and how different
+            semirings change what mxm discovers."""
         ):
             chapter_title = Text("Chapter 4: Matrix-Matrix Multiplication", font_size=40).to_edge(UP)
 

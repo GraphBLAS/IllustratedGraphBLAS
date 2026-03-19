@@ -5,47 +5,22 @@ from manim import *
 from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-from scene_utils import setup_scene
+from scene_utils import create_logo_grid, setup_scene
 
 
 class Scene0(VoiceoverScene, Scene):
     def construct(self):
         setup_scene(self)
 
-        # Load all logo images from the imgs/ directory
-        img_dir = "../imgs"
-        logo_filenames = [
-            "aristotle.png", "anaconda.png", "berkeley.png",
-            "cmu.png", "cwi.png", "du.png",
-            "graphegon.png", "humboldt.png", "intel.png",
-            "imbr.png", "lucata.png", "mit.png",
-            "njit.png", "nvidia.png", "pnnl.png",
-            "redis.png", "romatre.png", "tamu.png",
-            "ucdavis.png", "ucsb.png", "unibz.png",
-            "JuliaComputing.jpg", "falkor.png", "supabase3.png",
-        ]
-
-        # Create ImageMobject for each logo and scale them uniformly
-        logos = [
-            ImageMobject(os.path.join(img_dir, filename)).scale(0.5)
-            for filename in logo_filenames
-        ]
-
-        # Arrange logos in a 4x6 grid using Group
-        logos_group = Group(*logos).arrange_in_grid(rows=4, cols=6, buff=0.5)
+        logos_group = create_logo_grid()
 
         # Title text
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """In this chapter, we'll build a complete BFS implementation step by
-            step. First, we'll explore matrix-vector multiply, the core operation
-            for graph traversal. Then we'll add masking to control which outputs
-            are written, and replacement semantics to manage state between iterations.
-            By the end, you'll understand how these concepts combine into an
-            efficient, elegant graph algorithm."""
+            """This chapter builds a complete breadth-first search
+            implementation using GraphBLAS operations."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -60,10 +35,11 @@ class Scene0(VoiceoverScene, Scene):
 
         # Chapter summary slide
         with self.voiceover(
-            """This chapter covers matrix-vector and vector-matrix
-            multiply, masking to control which outputs are written,
-            complement masks for inverting selection, and replacement
-            semantics for managing state between iterations."""
+            """We'll explore vector-matrix and matrix-vector multiply for
+            graph traversal, masking to control which outputs are written,
+            complement masks for selecting unvisited nodes, and replacement
+            semantics for managing the frontier between iterations. By the
+            end, these concepts combine into an efficient BFS algorithm."""
         ):
             chapter_title = Text("Chapter 3: BFS Implementation", font_size=40).to_edge(UP)
 
