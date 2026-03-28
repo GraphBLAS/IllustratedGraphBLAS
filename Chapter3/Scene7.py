@@ -30,7 +30,8 @@ class Scene7(VoiceoverScene, Scene):
                 Code(
                     code_string="w << v.vxm(A, any_pair)",
                     language="python",
-                    background="window"
+                    background="window",
+                    formatter_style="dracula",
                 ).scale(0.5),
             ).arrange(DOWN, buff=0.2)
             block1.next_to(title, DOWN, buff=0.6)
@@ -49,7 +50,8 @@ class Scene7(VoiceoverScene, Scene):
                 Code(
                     code_string="w(~levels.S) << v.vxm(A, any_pair)",
                     language="python",
-                    background="window"
+                    background="window",
+                    formatter_style="dracula",
                 ).scale(0.5),
             ).arrange(DOWN, buff=0.2)
             block2.next_to(block1, DOWN, buff=0.5)
@@ -68,7 +70,8 @@ class Scene7(VoiceoverScene, Scene):
                 Code(
                     code_string="frontier(~levels.S, replace=True) << frontier.vxm(A, any_pair)",
                     language="python",
-                    background="window"
+                    background="window",
+                    formatter_style="dracula",
                 ).scale(0.5),
             ).arrange(DOWN, buff=0.2)
             block3.next_to(block2, DOWN, buff=0.5)

@@ -29,7 +29,7 @@ class Scene5(VoiceoverScene, Scene):
             summary_bullets.next_to(title, DOWN, buff=0.5)
 
             self.play(FadeIn(summary_bullets, shift=UP, lag_ratio=0.2))
-            self.wait(2)
+            self.wait(4)
 
         self.play(FadeOut(title), FadeOut(summary_bullets))
 
@@ -52,6 +52,6 @@ class Scene5(VoiceoverScene, Scene):
             preview_bullets.next_to(title, DOWN, buff=0.5)
 
             self.play(FadeIn(preview_bullets, shift=UP, lag_ratio=0.2))
-            self.wait(3)
+            self.wait(4)
 
         # No cleanup - chapter ends on the preview

@@ -273,8 +273,9 @@ class Scene4(VoiceoverScene, Scene):
         e0_label = Text("e0", font_size=14, color=BLUE).move_to(
             e0.point_from_proportion(0.5) + np.array([0, 0.25, 0])
         )
+        e0_bg = BackgroundRectangle(e0_label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
         edges.add(e0)
-        edge_labels.add(e0_label)
+        edge_labels.add(VGroup(e0_bg, e0_label))
 
         # e1: 0→1 (curved down) - parallel to e0
         e1 = CurvedArrow(
@@ -284,8 +285,9 @@ class Scene4(VoiceoverScene, Scene):
         e1_label = Text("e1", font_size=14, color=BLUE).move_to(
             e1.point_from_proportion(0.5) + np.array([0, -0.25, 0])
         )
+        e1_bg = BackgroundRectangle(e1_label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
         edges.add(e1)
-        edge_labels.add(e1_label)
+        edge_labels.add(VGroup(e1_bg, e1_label))
 
         # e2: 1→2 (straight)
         e2 = Arrow(
@@ -293,8 +295,9 @@ class Scene4(VoiceoverScene, Scene):
             color=BLUE, buff=0.35, stroke_width=3, tip_length=0.15
         )
         e2_label = Text("e2", font_size=14, color=BLUE).next_to(e2.get_center(), RIGHT, buff=0.1)
+        e2_bg = BackgroundRectangle(e2_label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
         edges.add(e2)
-        edge_labels.add(e2_label)
+        edge_labels.add(VGroup(e2_bg, e2_label))
 
         # e3: 0→2 (straight)
         e3 = Arrow(
@@ -302,8 +305,9 @@ class Scene4(VoiceoverScene, Scene):
             color=BLUE, buff=0.35, stroke_width=3, tip_length=0.15
         )
         e3_label = Text("e3", font_size=14, color=BLUE).next_to(e3.get_center(), LEFT, buff=0.1)
+        e3_bg = BackgroundRectangle(e3_label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
         edges.add(e3)
-        edge_labels.add(e3_label)
+        edge_labels.add(VGroup(e3_bg, e3_label))
 
         graph = VGroup(edges, edge_labels, *vertices.values())
         graph.vertices = vertices

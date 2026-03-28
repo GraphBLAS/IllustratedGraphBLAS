@@ -148,17 +148,20 @@ class Scene4(VoiceoverScene, Scene):
             Code(
                 code_string="w << A.mxv(v)             # No accumulator",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.6),
             Code(
                 code_string="w(gb.binary.plus) << A.mxv(v)   # PLUS accumulator",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.6),
             Code(
                 code_string="w(gb.binary.min) << A.mxv(v)    # MIN accumulator",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.6),
         ).arrange(DOWN, buff=0.5)
 

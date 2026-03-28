@@ -32,7 +32,8 @@ class Scene2(VoiceoverScene, Scene):
             ).arrange(DOWN, buff=0.2).next_to(title, DOWN, buff=0.5)
             self.play(Write(insight))
             self.wait(2)
-            self.play(FadeOut(insight))
+
+        self.play(FadeOut(insight))
 
         with self.voiceover(
             """There are two ways to specify a mask. A structural mask selects
@@ -54,7 +55,8 @@ class Scene2(VoiceoverScene, Scene):
             struct_syntax = Code(
                 code_string="w(mask.S) << ...",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.5).next_to(struct_vec, DOWN, buff=0.3)
             struct_result = Text(
                 "Positions 0, 2, 4 can receive values",
@@ -73,7 +75,8 @@ class Scene2(VoiceoverScene, Scene):
             value_syntax = Code(
                 code_string="w(mask.V) << ...",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.5).next_to(value_vec, DOWN, buff=0.3)
             value_result = Text(
                 "Positions 0, 2, 4 can receive values",
@@ -95,7 +98,7 @@ class Scene2(VoiceoverScene, Scene):
             self.play(Write(same_result))
             self.wait(1)
 
-            self.play(FadeOut(struct_group), FadeOut(value_group), FadeOut(same_result))
+        self.play(FadeOut(struct_group), FadeOut(value_group), FadeOut(same_result))
 
         with self.voiceover(
             """The complement operator, tilde, inverts the mask. With a complement
@@ -130,15 +133,16 @@ class Scene2(VoiceoverScene, Scene):
             comp_syntax = Code(
                 code_string="# Write only to unvisited positions\nfrontier(~visited.S) << ...",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.6).to_edge(DOWN, buff=0.8)
             self.play(Write(comp_syntax))
             self.wait(2)
 
-            self.play(
-                FadeOut(comp_title), FadeOut(orig_label), FadeOut(orig_vec),
-                FadeOut(comp_label), FadeOut(comp_vec), FadeOut(comp_syntax)
-            )
+        self.play(
+            FadeOut(comp_title), FadeOut(orig_label), FadeOut(orig_vec),
+            FadeOut(comp_label), FadeOut(comp_vec), FadeOut(comp_syntax)
+        )
 
         with self.voiceover(
             """Let's see this visually. When we compute a result, the mask
@@ -190,11 +194,11 @@ class Scene2(VoiceoverScene, Scene):
             self.play(Write(output_vals))
             self.wait(2)
 
-            self.play(
-                FadeOut(demo_title), FadeOut(result_label), FadeOut(result_vals),
-                FadeOut(mask_label), FadeOut(mask_vals), FadeOut(output_label),
-                FadeOut(output_vals), FadeOut(arrows)
-            )
+        self.play(
+            FadeOut(demo_title), FadeOut(result_label), FadeOut(result_vals),
+            FadeOut(mask_label), FadeOut(mask_vals), FadeOut(output_label),
+            FadeOut(output_vals), FadeOut(arrows)
+        )
 
         with self.voiceover(
             """Remember: the mask doesn't change what we compute, it changes where

@@ -30,6 +30,7 @@ def matrix_multiply(A, B):
             font_size=24,
             background="window",
             line_spacing=0.6,
+            formatter_style="dracula",
         )
         code_box.scale(0.8).to_edge(LEFT, buff=1)
 

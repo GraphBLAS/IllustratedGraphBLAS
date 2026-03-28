@@ -58,7 +58,17 @@ class Scene2(VoiceoverScene, Scene):
             self.play(*[FadeOut(highlight) for highlight in highlights])
 
         matrix_and_labels = VGroup(dense_matrix, *row_labels, *col_labels)
-        self.play(matrix_and_labels.animate.to_edge(LEFT))
+        self.play(matrix_and_labels.animate.to_edge(LEFT, buff=1.2))
+
+        source_label = Text("Source", font_size=24, color=GRAY).rotate(PI / 2)
+        source_label.next_to(matrix_and_labels, LEFT, buff=0.3)
+        source_label.set_y(dense_matrix.get_center()[1])
+
+        dest_label = Text("Destination", font_size=24, color=GRAY)
+        dest_label.next_to(matrix_and_labels, UP, buff=0.3)
+        dest_label.set_x(dense_matrix.get_center()[0])
+
+        self.play(FadeIn(source_label), FadeIn(dest_label))
 
         # Create the graph, shift it to the right, and raise it by 0.5 units
         nodes = [i for i in range(num_rows)]
@@ -98,12 +108,15 @@ class Scene2(VoiceoverScene, Scene):
                 for j in range(num_cols):
                     if matrix_data[i][j] != 0:
                         value = matrix_data[i][j]
-                        value_text = Tex(str(value)).move_to(dense_matrix.get_entries()[i * num_cols + j].get_center())
+                        value_text = Tex(str(value), color=WHITE)
+                        value_text.move_to(dense_matrix.get_entries()[i * num_cols + j].get_center())
+                        bg = BackgroundRectangle(value_text, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
+                        label = VGroup(bg, value_text)
                         edge_center = graph.edges[(i, j)].get_center()
 
                         # Move the value to the graph edge with a slight delay
-                        self.play(value_text.animate.move_to(edge_center))
-                        edge_labels.add(value_text)
+                        self.play(label.animate.move_to(edge_center))
+                        edge_labels.add(label)
                         self.wait(0.1)  # Small delay for clarity
 
                 # Unhighlight the previous node and edges
@@ -134,6 +147,8 @@ class Scene2(VoiceoverScene, Scene):
             FadeOut(matrix_label),
             FadeOut(graph_label),
             FadeOut(edge_labels),
+            FadeOut(source_label),
+            FadeOut(dest_label),
             run_time=1  # Smooth fade-out transition
         )
         self.wait(0.5)

@@ -41,6 +41,7 @@ class Scene3(VoiceoverScene, Scene):
             code_string="\n".join(code_lines),
             language="python",
             background="window",
+            formatter_style="dracula",
         ).scale(0.7)
         code.to_edge(LEFT, buff=0.3).shift(DOWN * 0.2)
 

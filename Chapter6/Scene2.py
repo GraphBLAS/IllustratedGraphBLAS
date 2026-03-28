@@ -70,6 +70,7 @@ class Scene2(VoiceoverScene, Scene):
                 code_string="A.ewise_mult(B, binary.times)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.next_to(title, DOWN, buff=0.3)
             self.play(FadeIn(code))
@@ -150,6 +151,7 @@ class Scene2(VoiceoverScene, Scene):
                 code_string="binary.times(A & B).new()",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code2.next_to(title, DOWN, buff=0.3)
             self.play(Transform(code, code2))

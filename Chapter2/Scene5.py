@@ -31,7 +31,8 @@ class Scene5(VoiceoverScene, Scene):
         code = Code(
             code_string="w << v.vxm(A, plus_times)",
             language="python",
-            background="window"
+            background="window",
+            formatter_style="dracula",
         ).scale(0.6).next_to(title, DOWN, buff=0.3)
 
         with self.voiceover(
@@ -165,7 +166,8 @@ class Scene5(VoiceoverScene, Scene):
         code2 = Code(
             code_string="w << v.vxm(A, any_pair)",
             language="python",
-            background="window"
+            background="window",
+            formatter_style="dracula",
         ).scale(0.6).next_to(title, DOWN, buff=0.3)
 
         # Reset w vector to question marks

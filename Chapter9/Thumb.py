@@ -5,10 +5,9 @@ class Thumb(Scene):
     def construct(self):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
         bullet_points = BulletedList(
-            "Sparse Neural Networks.",
-            "Introduce sparse vs dense tradeoffs.",
-            "Introduce Radix-Net concepts.",
-            "Radix-Net construction algorithms.",
+            "Sparse Neural Networks",
+            "DNN Inference with GraphBLAS",
+            "RadiX-Net Benchmark",
             font_size=36
         )
         bullet_points.next_to(title, DOWN, buff=0.5)

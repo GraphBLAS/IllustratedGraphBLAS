@@ -14,7 +14,7 @@ LOGO_FILENAMES = [
 ]
 
 
-def create_logo_grid(img_dir="../imgs", scale=0.5, rows=4, cols=6, buff=0.5):
+def create_logo_grid(img_dir="../imgs", scale=0.8, rows=4, cols=6, buff=0.5):
     """
     Create a grid of logo images.
 

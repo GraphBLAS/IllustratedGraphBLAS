@@ -26,9 +26,9 @@ class Scene4(VoiceoverScene, Scene):
         num_nodes = len(matrix_data)
 
         with self.voiceover(
-            """Breadth-first search is one of the most fundamental graph
-            algorithms. At its core, each step of BFS finds all neighbors
-            of the current frontier nodes, and that's exactly what
+            """Breadth-first search is one of the most fundamental
+            graph algorithms. Each step of BFS finds all neighbors of
+            the current frontier nodes, and that's exactly what
             matrix-vector multiplication does."""
         ):
             self.play(Write(title))

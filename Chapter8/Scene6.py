@@ -161,6 +161,7 @@ class Scene6(VoiceoverScene, Scene):
             code_string=code_lines,
             language="python",
             background="window",
+            formatter_style="dracula",
         ).scale(0.7)
         code.move_to(ORIGIN).shift(DOWN * 0.3)
 

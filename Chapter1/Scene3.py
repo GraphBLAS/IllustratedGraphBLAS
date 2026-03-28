@@ -99,7 +99,8 @@ w = gb.Vector(float, A.nrows)
 # Matrix-vector multiply
 w << A.mxv(v)""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.to_edge(DOWN, buff=0.3)
             self.play(FadeIn(code))
@@ -124,7 +125,7 @@ w << A.mxv(v)""",
                     result_entry, color=GREEN, buff=0.1
                 )
 
-                self.play(Create(row_highlight), run_time=0.2)
+                self.play(Create(row_highlight), run_time=0.5)
 
                 # Show which vector elements contribute
                 contributing = []
@@ -133,27 +134,28 @@ w << A.mxv(v)""",
                         mat_entry = matrix.get_entries()[i * num_cols + j]
                         vec_entry = vector.get_entries()[j]
                         contributing.append(
-                            SurroundingRectangle(
-                                VGroup(mat_entry, vec_entry), color=BLUE, buff=0.05
-                            )
+                            SurroundingRectangle(mat_entry, color=BLUE, buff=0.05)
+                        )
+                        contributing.append(
+                            SurroundingRectangle(vec_entry, color=BLUE, buff=0.05)
                         )
 
                 if contributing:
-                    self.play(*[Create(c) for c in contributing], run_time=0.2)
+                    self.play(*[Create(c) for c in contributing], run_time=0.4)
                     self.play(
                         result_entry.animate.set_opacity(1),
                         Create(result_highlight),
-                        run_time=0.3
+                        run_time=0.5
                     )
                     self.play(
                         *[FadeOut(c) for c in contributing],
                         FadeOut(result_highlight),
-                        run_time=0.2
+                        run_time=0.4
                     )
                 else:
-                    self.wait(0.2)
+                    self.wait(0.3)
 
-                self.play(FadeOut(row_highlight), run_time=0.2)
+                self.play(FadeOut(row_highlight), run_time=0.5)
 
         with self.voiceover(
             """Python also supports the at-sign operator as shorthand for
@@ -163,7 +165,8 @@ w << A.mxv(v)""",
             shorthand_code = Code(
                 code_string="# Shorthand syntax\nw << A @ v",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.8)
             shorthand_code.to_edge(DOWN, buff=0.5)
             self.play(FadeIn(shorthand_code))

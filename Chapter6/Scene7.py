@@ -95,6 +95,7 @@ class Scene7(VoiceoverScene, Scene):
                 code_string="M.reduce_scalar(monoid.plus)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.move_to(ORIGIN + UP * 0.5)
             self.play(FadeIn(code))
@@ -130,6 +131,7 @@ class Scene7(VoiceoverScene, Scene):
                 code_string="M.reduce_rowwise(monoid.plus)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.move_to(ORIGIN + UP * 0.5)
             self.play(FadeIn(code))
@@ -175,6 +177,7 @@ class Scene7(VoiceoverScene, Scene):
                 code_string="M.reduce_columnwise(monoid.plus)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.move_to(ORIGIN + UP * 0.5)
             self.play(FadeIn(code))

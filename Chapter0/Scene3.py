@@ -6,7 +6,7 @@ from manim_voiceover import VoiceoverScene
 from dotenv import load_dotenv
 load_dotenv()
 
-from scene_utils import CHAPTER0_MATRIX_DATA, create_adjacency_digraph, setup_scene
+from scene_utils import CHAPTER0_MATRIX_DATA, create_adjacency_digraph, animate_vertex_fill, setup_scene
 
 
 class Scene3(VoiceoverScene, Scene):
@@ -137,7 +137,7 @@ class Scene3(VoiceoverScene, Scene):
             col_highlight = SurroundingRectangle(sparse_matrix.get_rows()[3], color=YELLOW, buff=0.1)
             self.play(Create(col_highlight))
 
-            node_highlight = ApplyMethod(graph.vertices[3].set_fill, YELLOW, 1)
+            node_highlight = animate_vertex_fill(graph.vertices[3], YELLOW, 1)
             outgoing_edges = [
                 graph.edges[(3, j)].animate.set_stroke(color=YELLOW, width=4)
                 for j in range(6) if (3, j) in graph.edges

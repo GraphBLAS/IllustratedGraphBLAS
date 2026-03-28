@@ -314,6 +314,7 @@ class Scene1(VoiceoverScene, Scene):
             code_string=code_string,
             language="python",
             background="window",
+            formatter_style="dracula",
         )
         return code
 

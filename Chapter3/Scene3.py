@@ -34,7 +34,8 @@ class Scene3(VoiceoverScene, Scene):
             syntax = Code(
                 code_string="w(mask) << v.vxm(A, semiring)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).next_to(title, DOWN, buff=0.4)
             self.play(Write(syntax))
             self.wait(2)
@@ -185,11 +186,11 @@ class Scene3(VoiceoverScene, Scene):
         # Show the power of this
         power_box = VGroup(
             Text("Why this matters:", font_size=24, color=YELLOW),
-            Text("• No redundant computation on visited nodes", font_size=20),
-            Text("• Output directly usable as next frontier", font_size=20),
+            Text("• No redundant computation on nodes", font_size=20),
+            Text("• Output usable as next frontier", font_size=20),
             Text("• One operation does expand + filter", font_size=20),
         ).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
-        power_box.to_edge(DOWN, buff=0.5)
+        power_box.next_to(vec_group, DOWN, buff=0.3).align_to(vec_group, LEFT)
 
         with self.voiceover(
             """This pattern is incredibly efficient. We expand to all neighbors

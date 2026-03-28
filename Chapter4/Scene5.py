@@ -139,7 +139,8 @@ while True:
     if R.nvals == old_nvals:
         break  # Fixed point""",
             language="python",
-            background="window"
+            background="window",
+            formatter_style="dracula",
         ).scale(0.7).to_edge(LEFT, buff=0.8)
 
         with self.voiceover(

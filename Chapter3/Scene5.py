@@ -70,7 +70,8 @@ class Scene5(VoiceoverScene, Scene):
             step1_code = Code(
                 code_string="frontier << frontier.vxm(A, any_pair)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).next_to(step1_label, DOWN, buff=0.3)
             step1_problem = Text(
                 "Problem: includes already-visited nodes",
@@ -93,7 +94,8 @@ class Scene5(VoiceoverScene, Scene):
             step2_code = Code(
                 code_string="frontier(~levels.S) << frontier.vxm(A, any_pair)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).next_to(step2_label, DOWN, buff=0.3)
             step2_problem = Text(
                 "Problem: old frontier nodes still in vector",
@@ -118,7 +120,8 @@ class Scene5(VoiceoverScene, Scene):
             step3_code = Code(
                 code_string="frontier(~levels.S, replace=True) << frontier.vxm(A, any_pair)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).next_to(step3_label, DOWN, buff=0.3)
             step3_success = Text(
                 "Complete: expands, filters, and replaces in one line!",
@@ -163,35 +166,38 @@ class Scene5(VoiceoverScene, Scene):
 
     return levels""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.55).move_to(ORIGIN)
             self.play(Write(full_code))
             self.wait(3)
 
-        # Highlight key lines
+        # Highlight the frontier update line
         with self.voiceover(
-            """Notice the symmetry: the frontier update uses complement mask
-            with replace, targeting unvisited nodes. The levels update uses
-            a regular structural mask, writing only where the frontier is
-            present. Two masked assignments, two different purposes."""
+            """The frontier update uses a complement mask with replace,
+            targeting only unvisited nodes. The complement of the levels
+            structure excludes any node that already has a recorded distance."""
         ):
-            # Add annotations
-            frontier_annot = Text(
-                "complement + replace",
-                font_size=18, color=YELLOW
-            ).next_to(full_code, RIGHT, buff=0.3).shift(UP * 0.5)
-
-            levels_annot = Text(
-                "structural mask",
-                font_size=18, color=GREEN
-            ).next_to(full_code, RIGHT, buff=0.3).shift(DOWN * 0.8)
-
-            self.play(Write(frontier_annot))
-            self.wait(1)
-            self.play(Write(levels_annot))
+            frontier_highlight = SurroundingRectangle(
+                full_code.code_lines[10], color=YELLOW, buff=0.05
+            )
+            self.play(Create(frontier_highlight))
             self.wait(2)
 
-        self.play(FadeOut(full_code), FadeOut(frontier_annot), FadeOut(levels_annot))
+        # Highlight the levels update line
+        with self.voiceover(
+            """The levels update uses a regular structural mask, writing
+            only where the frontier is present. Two masked assignments,
+            two different purposes."""
+        ):
+            self.play(FadeOut(frontier_highlight))
+            levels_highlight = SurroundingRectangle(
+                full_code.code_lines[16], color=YELLOW, buff=0.05
+            )
+            self.play(Create(levels_highlight))
+            self.wait(2)
+
+        self.play(FadeOut(full_code), FadeOut(levels_highlight))
 
         # Summary of what each part does
         with self.voiceover(

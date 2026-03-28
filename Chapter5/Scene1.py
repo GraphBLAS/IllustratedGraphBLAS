@@ -243,7 +243,8 @@ class Scene1(VoiceoverScene, Scene):
             if np.linalg.norm(perp) > 0:
                 perp = perp / np.linalg.norm(perp) * 0.3
             label = Text(f"e{idx}", font_size=16, color=BLUE).move_to(mid + perp)
-            edge_labels.add(label)
+            bg = BackgroundRectangle(label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
+            edge_labels.add(VGroup(bg, label))
 
         graph = VGroup(edges, edge_labels, *vertices.values())
         graph.vertices = vertices

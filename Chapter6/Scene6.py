@@ -44,6 +44,7 @@ class Scene6(VoiceoverScene, Scene):
                 code_string="M.apply(binary.div, right=2)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.move_to(ORIGIN + UP * 0.5)
             self.play(FadeIn(code))
@@ -126,6 +127,7 @@ class Scene6(VoiceoverScene, Scene):
                 code_string="M / 2",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code2.move_to(ORIGIN + UP * 0.5)
             self.play(Transform(code, code2))

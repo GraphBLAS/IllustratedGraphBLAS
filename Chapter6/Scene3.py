@@ -50,6 +50,7 @@ class Scene3(VoiceoverScene, Scene):
                 code_string='W.select(">", 3)',
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code.next_to(mat, DOWN, buff=0.4)
             self.play(FadeIn(code))
@@ -131,6 +132,7 @@ class Scene3(VoiceoverScene, Scene):
                 code_string="(W > 3).new()",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             code2.next_to(mat, DOWN, buff=0.4)
             self.play(Transform(code, code2))
@@ -185,7 +187,8 @@ class Scene3(VoiceoverScene, Scene):
                         perp = perp / np.linalg.norm(perp) * 0.25
                     w_label = Text(str(weight), font_size=16, color=YELLOW)
                     w_label.move_to(mid + perp)
-                    weight_labels.add(w_label)
+                    w_bg = BackgroundRectangle(w_label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
+                    weight_labels.add(VGroup(w_bg, w_label))
 
         graph = VGroup(edges, weight_labels, *vertices.values())
         graph.vertices = vertices

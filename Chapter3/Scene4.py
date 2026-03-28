@@ -205,7 +205,8 @@ class Scene4(VoiceoverScene, Scene):
             syntax = Code(
                 code_string="# The crucial BFS line\nfrontier(~levels.S, replace=True) << frontier.vxm(A, any_pair)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).move_to(ORIGIN)
             self.play(Write(syntax))
             self.wait(2)

@@ -19,8 +19,10 @@ class Scene0(VoiceoverScene, Scene):
         title = Tex("The Illustrated GraphBLAS").scale(1.5).to_edge(UP)
 
         with self.voiceover(
-            """This chapter shows how sparse matrices in GraphBLAS can
-            represent and compute neural networks."""
+            """This chapter explores how sparse neural networks can be computed
+            using GraphBLAS. The same matrix operations we have used for graph
+            algorithms turn out to be the building blocks for deep learning
+            inference."""
         ):
             self.play(Write(title))
             for logo in logos_group:
@@ -33,21 +35,21 @@ class Scene0(VoiceoverScene, Scene):
         # Fade out title and logos at the end
         self.play(FadeOut(title), FadeOut(logos_group), FadeOut(footer))
 
-        # Chapter summary slide
+        # Chapter outline slide
         with self.voiceover(
-            """We'll see how neural networks map to graphs with weight
-            matrices, how sparsity overcomes memory limits of dense networks,
-            how forward propagation works as matrix multiplication through
-            layers, and how activation functions fit into the GraphBLAS
-            framework."""
+            """We will see how neural network layers map to bipartite graphs
+            and weight matrices, why sparse networks overcome the memory limits
+            of dense models, how the GraphChallenge benchmark structures its data,
+            and how the forward inference function works as a sequence of
+            GraphBLAS operations."""
         ):
-            chapter_title = Text("Chapter 9: Sparse Neural Networks", font_size=40).to_edge(UP)
+            chapter_title = Text("Chapter 9: Sparse Deep Neural Network Inference", font_size=36).to_edge(UP)
 
             outline = VGroup(
-                Text("Neural networks as graphs", font_size=28),
-                Text("Sparse weight matrices", font_size=28),
-                Text("Forward propagation", font_size=28),
-                Text("Activation functions", font_size=28),
+                Text("Neural networks as bipartite graphs", font_size=28),
+                Text("Dense vs sparse weight matrices", font_size=28),
+                Text("GraphChallenge data structure", font_size=28),
+                Text("Forward inference with GraphBLAS", font_size=28),
             ).arrange(DOWN, buff=0.4, aligned_edge=LEFT)
             outline.next_to(chapter_title, DOWN, buff=0.8)
 

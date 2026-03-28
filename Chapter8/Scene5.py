@@ -13,6 +13,7 @@ from scene_utils import (
     CHAPTER8_PER_NODE_TRIANGLES,
     color_nodes_by_value,
     animate_vertex_fill,
+    set_vertex_fill_preserve_label,
 )
 
 
@@ -61,9 +62,7 @@ class Scene5(VoiceoverScene, Scene):
             high_color=RED
         )
         for vertex, color in node_colors:
-            vertex.set_fill(color, opacity=1)
-            if vertex.submobjects:
-                vertex.submobjects[0].set_color(BLACK)
+            set_vertex_fill_preserve_label(vertex, color)
 
         # Labels showing counts
         count_labels = VGroup()

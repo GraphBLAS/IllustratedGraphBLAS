@@ -206,6 +206,25 @@ CHAPTER8_L_MASKED_DATA = [
 ]
 
 
+# Chapter 9: Sparse DNN example data
+# 4x4 sparse weight matrix (6 non-zeros out of 16 — sparse)
+CHAPTER9_W_DATA = [
+    [0, 0.5, 0, 0],
+    [0.3, 0, 0, -0.2],
+    [0, 0, 0.7, 0],
+    [0, -0.4, 0, 0.6],
+]
+
+# 2x4 input activation matrix (two images, four features each)
+CHAPTER9_Y_DATA = [
+    [1.0, 0, 0.5, 0],
+    [0, 0.8, 0, 0.3],
+]
+
+# Bipartite graph edges for Scene1 (4 inputs → 3 outputs, sparse)
+CHAPTER9_BIPARTITE_EDGES = [(0, 0), (0, 2), (1, 1), (2, 0), (2, 2), (3, 1)]
+
+
 def create_incidence_matrices(edges, n_nodes=None, scale=0.55,
                                node_color=BLUE, edge_color=GREEN):
     """

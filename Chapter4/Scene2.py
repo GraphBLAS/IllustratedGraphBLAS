@@ -102,7 +102,8 @@ C << A.mxm(B, semiring)
 # Or using Python operator (default semiring)
 C = A @ B""",
             language="python",
-            background="window"
+            background="window",
+            formatter_style="dracula",
         ).scale(0.8)
         syntax_code.next_to(syntax_title, DOWN, buff=0.8)
 

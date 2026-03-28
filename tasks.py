@@ -31,13 +31,15 @@ def build_scene(ctx, chapter, scene, quality='l', prod=False):
         ctx.run(command)
 
 @task
-def build_chapter(ctx, chapter, quality='l', pause_time=3, prod=False):
-    """Build all scenes in a chapter. Use --prod for production build with ElevenLabs TTS."""
+def build_chapter(ctx, chapter, quality='l', pause_time=3, prod=False, stitch=True):
+    """Build all scenes in a chapter and stitch the final video. Use --prod for production build with ElevenLabs TTS. Use --no-stitch to skip stitching."""
     for filename in sorted(os.listdir(chapter)):
         if filename.startswith("Scene") and filename.endswith(".py"):
             scene = filename.replace(".py", "")
             build_scene(ctx, chapter, scene, quality, prod)
             sleep(pause_time)
+    if stitch:
+        stitch_chapter(ctx, chapter, quality)
 
 @task
 def build_all(ctx, quality="l", prod=False):

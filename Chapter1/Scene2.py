@@ -35,7 +35,8 @@ v = gb.Vector.from_coo(
     size=6
 )""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             vector_code.to_edge(LEFT, buff=0.5).shift(DOWN * 0.5)
             self.play(FadeIn(vector_code))
@@ -78,7 +79,8 @@ A = gb.Matrix.from_coo(
     nrows=6, ncols=6
 )""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.65)
             matrix_code.to_edge(LEFT, buff=0.3).shift(DOWN * 0.5)
             self.play(FadeIn(matrix_code))
@@ -115,7 +117,8 @@ A = gb.Matrix.from_dicts({
     5: {4: 2}
 }, nrows=6, ncols=6)""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.65)
             dict_code.to_edge(LEFT, buff=0.3).shift(DOWN * 0.5)
             self.play(FadeIn(dict_code))
@@ -144,7 +147,8 @@ A = gb.Matrix.from_edgelist(
     edges, nrows=6, ncols=6
 )""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.65)
             edgelist_code.to_edge(LEFT, buff=0.3).shift(DOWN * 0.5)
             self.play(FadeIn(edgelist_code))
@@ -167,7 +171,8 @@ import graphblas.io as gbio
 A = gbio.mmread("karate.mtx")
 print(A)  # 34x34 matrix, 78 edges""",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7)
             mmread_code.to_edge(LEFT, buff=0.5).shift(DOWN * 0.5)
             self.play(FadeIn(mmread_code))

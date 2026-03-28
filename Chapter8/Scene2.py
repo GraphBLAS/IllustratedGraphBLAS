@@ -45,6 +45,7 @@ class Scene2(VoiceoverScene, Scene):
             code_string="\n".join(code_lines),
             language="python",
             background="window",
+            formatter_style="dracula",
         ).scale(0.7)
         code.to_edge(LEFT, buff=0.3).shift(DOWN * 0.2)
 
@@ -231,6 +232,7 @@ class Scene2(VoiceoverScene, Scene):
                 code_string="L(L.S) << L.mxm(L)",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.8)
             sandia_code.move_to(ORIGIN).shift(UP * 0.3)
             self.play(Create(sandia_code))
@@ -284,6 +286,7 @@ L(L.S) << L.mxm(L)
 triangles = L.reduce_scalar()""",
                 language="python",
                 background="window",
+                formatter_style="dracula",
             ).scale(0.8)
             full_code.move_to(ORIGIN)
             self.play(Create(full_code))

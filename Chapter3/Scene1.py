@@ -35,7 +35,8 @@ class Scene1(VoiceoverScene, Scene):
             syntax = Code(
                 code_string="w << v.vxm(A, semiring)",
                 language="python",
-                background="window"
+                background="window",
+                formatter_style="dracula",
             ).scale(0.7).next_to(title, DOWN, buff=0.5)
             self.play(Write(syntax))
             self.wait(2)
