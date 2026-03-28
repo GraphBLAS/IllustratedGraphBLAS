@@ -1,0 +1,168 @@
+name: Build Videos and Deploy Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Chapter*/**'
+      - 'scene_utils/**'
+      - 'imgs/**'
+      - 'docs/**/*.md'
+      - 'mkdocs.yml'
+      - 'manim.cfg'
+      - 'requirements.txt'
+  workflow_dispatch:
+    inputs:
+      chapters:
+        description: 'Chapters to rebuild (comma-separated, e.g. "0,3,5" or "all")'
+        required: false
+        default: 'all'
+      prod:
+        description: 'Use ElevenLabs TTS for production quality narration'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: manimcommunity/manim:latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Install dependencies
+        run: |
+          pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            pip install 'elevenlabs>=0.2.27,<0.3.0'
+          fi
+
+      - name: Restore video cache
+        uses: actions/cache@v4
+        with:
+          path: .video-cache
+          key: videos-${{ hashFiles('Chapter**/Scene*.py', 'Chapter**/Thumb.py', 'scene_utils/**/*.py', 'imgs/**', 'manim.cfg') }}
+          restore-keys: videos-
+
+      - name: Restore voiceover cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            Chapter0/media/voiceovers
+            Chapter1/media/voiceovers
+            Chapter2/media/voiceovers
+            Chapter3/media/voiceovers
+            Chapter4/media/voiceovers
+            Chapter5/media/voiceovers
+            Chapter6/media/voiceovers
+            Chapter7/media/voiceovers
+            Chapter8/media/voiceovers
+            Chapter9/media/voiceovers
+          key: voiceovers-${{ hashFiles('Chapter**/Scene*.py') }}
+          restore-keys: voiceovers-
+
+      - name: Determine chapters to build
+        id: chapters
+        run: |
+          mkdir -p .video-cache
+
+          # On workflow_dispatch, use the input
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.chapters }}" = "all" ]; then
+              echo "rebuild=0,1,2,3,4,5,6,7,8,9" >> "$GITHUB_OUTPUT"
+            else
+              echo "rebuild=${{ inputs.chapters }}" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            # On push, rebuild chapters that have cache misses
+            # (the cache key is based on source file hashes, so a miss means something changed)
+            REBUILD=""
+            for N in 0 1 2 3 4 5 6 7 8 9; do
+              CHAPTER="Chapter${N}"
+              if [ ! -f ".video-cache/${CHAPTER}_480p15.mp4" ] || [ ! -f ".video-cache/${CHAPTER}.png" ]; then
+                if [ -d "$CHAPTER" ]; then
+                  REBUILD="${REBUILD:+${REBUILD},}${N}"
+                fi
+              fi
+            done
+            echo "rebuild=${REBUILD}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build chapters
+        env:
+          ELEVEN_API_KEY: ${{ secrets.ELEVEN_API_KEY }}
+        run: |
+          REBUILD="${{ steps.chapters.outputs.rebuild }}"
+          echo "Chapters to rebuild: ${REBUILD:-none}"
+
+          # Copy cached videos for chapters we are NOT rebuilding
+          for N in 0 1 2 3 4 5 6 7 8 9; do
+            CHAPTER="Chapter${N}"
+            if [ -f ".video-cache/${CHAPTER}_480p15.mp4" ] && [ -f ".video-cache/${CHAPTER}.png" ]; then
+              echo "Using cached video for ${CHAPTER}"
+              cp ".video-cache/${CHAPTER}_480p15.mp4" "docs/${CHAPTER}_480p15.mp4"
+              cp ".video-cache/${CHAPTER}.png" "docs/${CHAPTER}.png"
+            fi
+          done
+
+          # Build chapters that need rebuilding
+          if [ -n "$REBUILD" ]; then
+            IFS=',' read -ra CHAPTERS <<< "$REBUILD"
+            for N in "${CHAPTERS[@]}"; do
+              N=$(echo "$N" | tr -d ' ')
+              CHAPTER="Chapter${N}"
+              if [ ! -d "$CHAPTER" ]; then
+                echo "Skipping ${CHAPTER} (directory not found)"
+                continue
+              fi
+
+              echo "=========================================="
+              echo "Building ${CHAPTER}"
+              echo "=========================================="
+
+              # Build and stitch the chapter
+              if [ "${{ inputs.prod }}" = "true" ]; then
+                invoke build-chapter --chapter "$CHAPTER" --quality l --pause-time 0 --prod
+              else
+                invoke build-chapter --chapter "$CHAPTER" --quality l --pause-time 0
+              fi
+
+              # Render thumbnail
+              cd "$CHAPTER"
+              manim -ql -s Thumb.py Thumb -o "../../../../docs/${CHAPTER}.png"
+              cd ..
+
+              # Cache the results
+              cp "docs/${CHAPTER}_480p15.mp4" ".video-cache/${CHAPTER}_480p15.mp4"
+              cp "docs/${CHAPTER}.png" ".video-cache/${CHAPTER}.png"
+
+              echo "${CHAPTER} complete"
+            done
+          fi
+
+      - name: Build MkDocs site
+        run: mkdocs build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
