@@ -48,10 +48,11 @@ jobs:
           fetch-depth: 2
 
       - name: Install dependencies
+        shell: bash -l {0}
         run: |
-          pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
+          conda run -n base pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
           if [ "${{ inputs.prod }}" = "true" ]; then
-            pip install 'elevenlabs>=0.2.27,<0.3.0'
+            conda run -n base pip install 'elevenlabs>=0.2.27,<0.3.0'
           fi
 
       - name: Restore video cache
@@ -106,9 +107,11 @@ jobs:
           fi
 
       - name: Build chapters
+        shell: bash -l {0}
         env:
           ELEVEN_API_KEY: ${{ secrets.ELEVEN_API_KEY }}
         run: |
+          eval "$(conda shell.bash hook)" && conda activate base
           REBUILD="${{ steps.chapters.outputs.rebuild }}"
           echo "Chapters to rebuild: ${REBUILD:-none}"
 
@@ -158,7 +161,8 @@ jobs:
           fi
 
       - name: Build MkDocs site
-        run: mkdocs build
+        shell: bash -l {0}
+        run: conda run -n base mkdocs build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
