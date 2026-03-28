@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/**'
       - 'Chapter*/**'
       - 'scene_utils/**'
       - 'imgs/**'
@@ -37,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: manimcommunity/manim:latest
+      options: --user root
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
