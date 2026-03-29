@@ -52,12 +52,12 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg libcairo2-dev libpango1.0-dev \
+          sudo apt-get install -y ffmpeg sox libcairo2-dev libpango1.0-dev \
             texlive texlive-latex-extra texlive-fonts-extra
 
       - name: Install Python dependencies
         run: |
-          pip install manim manim-voiceover[gtts] invoke python-graphblas \
+          pip install setuptools manim manim-voiceover[gtts] invoke python-graphblas \
             networkx matplotlib python-dotenv \
             mkdocs mkdocs-material pymdown-extensions
           if [ "${{ inputs.prod }}" = "true" ]; then
