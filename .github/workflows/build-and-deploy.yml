@@ -36,11 +36,6 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    container:
-      image: manimcommunity/manim:latest
-      options: --user root
-    env:
-      PATH: /opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -49,14 +44,22 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install system build dependencies
-        run: |
-          apt-get update
-          apt-get install -y gcc g++ pkg-config libcairo2-dev libpango1.0-dev
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
-          pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libcairo2-dev libpango1.0-dev \
+            texlive texlive-latex-extra texlive-fonts-extra
+
+      - name: Install Python dependencies
+        run: |
+          pip install manim manim-voiceover[gtts] invoke python-graphblas \
+            networkx matplotlib python-dotenv \
+            mkdocs mkdocs-material pymdown-extensions
           if [ "${{ inputs.prod }}" = "true" ]; then
             pip install 'elevenlabs>=0.2.27,<0.3.0'
           fi
