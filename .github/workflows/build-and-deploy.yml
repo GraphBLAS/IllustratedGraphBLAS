@@ -50,9 +50,10 @@ jobs:
       - name: Install dependencies
         shell: bash -l {0}
         run: |
-          conda run -n base pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
+          eval "$(conda shell.bash hook)" && conda activate base
+          pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
           if [ "${{ inputs.prod }}" = "true" ]; then
-            conda run -n base pip install 'elevenlabs>=0.2.27,<0.3.0'
+            pip install 'elevenlabs>=0.2.27,<0.3.0'
           fi
 
       - name: Restore video cache
@@ -162,7 +163,9 @@ jobs:
 
       - name: Build MkDocs site
         shell: bash -l {0}
-        run: conda run -n base mkdocs build
+        run: |
+          eval "$(conda shell.bash hook)" && conda activate base
+          mkdocs build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
