@@ -49,6 +49,11 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Install system build dependencies
+        run: |
+          apt-get update
+          apt-get install -y gcc g++ pkg-config libcairo2-dev libpango1.0-dev
+
       - name: Install dependencies
         run: |
           pip install manim-voiceover[gtts] invoke python-graphblas networkx matplotlib python-dotenv mkdocs mkdocs-material pymdown-extensions
