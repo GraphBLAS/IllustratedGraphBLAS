@@ -65,12 +65,19 @@ jobs:
             pip install 'elevenlabs>=0.2.27,<0.3.0'
           fi
 
-      - name: Restore video cache
+      - name: Restore dev video cache
         uses: actions/cache@v4
         with:
-          path: .video-cache
-          key: videos-${{ hashFiles('Chapter**/Scene*.py', 'Chapter**/Thumb.py', 'scene_utils/**/*.py', 'imgs/**', 'manim.cfg') }}
-          restore-keys: videos-
+          path: .video-cache/dev
+          key: dev-videos-${{ hashFiles('Chapter**/Scene*.py', 'Chapter**/Thumb.py', 'scene_utils/**/*.py', 'imgs/**', 'manim.cfg') }}
+          restore-keys: dev-videos-
+
+      - name: Restore prod video cache
+        uses: actions/cache@v4
+        with:
+          path: .video-cache/prod
+          key: prod-videos-${{ hashFiles('Chapter**/Scene*.py', 'Chapter**/Thumb.py', 'scene_utils/**/*.py', 'imgs/**', 'manim.cfg') }}
+          restore-keys: prod-videos-
 
       - name: Restore voiceover cache
         uses: actions/cache@v4
@@ -92,7 +99,14 @@ jobs:
       - name: Determine chapters to build
         id: chapters
         run: |
-          mkdir -p .video-cache
+          mkdir -p .video-cache/dev .video-cache/prod
+
+          # Determine build mode
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            CACHE_DIR=".video-cache/prod"
+          else
+            CACHE_DIR=".video-cache/dev"
+          fi
 
           # On workflow_dispatch, use the input
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -102,11 +116,11 @@ jobs:
               echo "rebuild=${{ inputs.chapters }}" >> "$GITHUB_OUTPUT"
             fi
           else
-            # On push, rebuild chapters that have cache misses
+            # On push, rebuild dev chapters that have cache misses
             REBUILD=""
             for N in 0 1 2 3 4 5 6 7 8 9; do
               CHAPTER="Chapter${N}"
-              if [ ! -f ".video-cache/${CHAPTER}_480p15.mp4" ] || [ ! -f ".video-cache/${CHAPTER}.png" ]; then
+              if [ ! -f "${CACHE_DIR}/${CHAPTER}_480p15.mp4" ] || [ ! -f "${CACHE_DIR}/${CHAPTER}.png" ]; then
                 if [ -d "$CHAPTER" ]; then
                   REBUILD="${REBUILD:+${REBUILD},}${N}"
                 fi
@@ -119,18 +133,16 @@ jobs:
         env:
           ELEVEN_API_KEY: ${{ secrets.ELEVEN_API_KEY }}
         run: |
-          REBUILD="${{ steps.chapters.outputs.rebuild }}"
-          echo "Chapters to rebuild: ${REBUILD:-none}"
+          # Determine target cache directory
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            CACHE_DIR=".video-cache/prod"
+          else
+            CACHE_DIR=".video-cache/dev"
+          fi
 
-          # Copy cached videos for chapters we are NOT rebuilding
-          for N in 0 1 2 3 4 5 6 7 8 9; do
-            CHAPTER="Chapter${N}"
-            if [ -f ".video-cache/${CHAPTER}_480p15.mp4" ] && [ -f ".video-cache/${CHAPTER}.png" ]; then
-              echo "Using cached video for ${CHAPTER}"
-              cp ".video-cache/${CHAPTER}_480p15.mp4" "docs/${CHAPTER}_480p15.mp4"
-              cp ".video-cache/${CHAPTER}.png" "docs/${CHAPTER}.png"
-            fi
-          done
+          REBUILD="${{ steps.chapters.outputs.rebuild }}"
+          echo "Build mode: $([ "${{ inputs.prod }}" = "true" ] && echo "PROD" || echo "DEV")"
+          echo "Chapters to rebuild: ${REBUILD:-none}"
 
           # Build chapters that need rebuilding
           if [ -n "$REBUILD" ]; then
@@ -160,15 +172,45 @@ jobs:
               cd ..
 
               # Cache the results
-              cp "docs/${CHAPTER}_480p15.mp4" ".video-cache/${CHAPTER}_480p15.mp4"
-              cp "docs/${CHAPTER}.png" ".video-cache/${CHAPTER}.png"
+              cp "docs/${CHAPTER}_480p15.mp4" "${CACHE_DIR}/${CHAPTER}_480p15.mp4"
+              cp "docs/${CHAPTER}.png" "${CACHE_DIR}/${CHAPTER}.png"
 
               echo "${CHAPTER} complete"
             done
           fi
 
-      - name: Build MkDocs site
-        run: mkdocs build
+      - name: Assemble and build site
+        run: |
+          # Step 1: Build prod site at root (if prod videos exist)
+          PROD_VIDEOS_EXIST=false
+          for N in 0 1 2 3 4 5 6 7 8 9; do
+            CHAPTER="Chapter${N}"
+            if [ -f ".video-cache/prod/${CHAPTER}_480p15.mp4" ]; then
+              cp ".video-cache/prod/${CHAPTER}_480p15.mp4" "docs/${CHAPTER}_480p15.mp4"
+              cp ".video-cache/prod/${CHAPTER}.png" "docs/${CHAPTER}.png"
+              PROD_VIDEOS_EXIST=true
+            fi
+          done
+
+          if [ "$PROD_VIDEOS_EXIST" = "true" ]; then
+            echo "Building prod site at root..."
+            mkdocs build -d site
+          else
+            echo "No prod videos cached yet. Building placeholder prod site..."
+            mkdocs build -d site
+          fi
+
+          # Step 2: Build dev site at /dev/
+          for N in 0 1 2 3 4 5 6 7 8 9; do
+            CHAPTER="Chapter${N}"
+            if [ -f ".video-cache/dev/${CHAPTER}_480p15.mp4" ]; then
+              cp ".video-cache/dev/${CHAPTER}_480p15.mp4" "docs/${CHAPTER}_480p15.mp4"
+              cp ".video-cache/dev/${CHAPTER}.png" "docs/${CHAPTER}.png"
+            fi
+          done
+
+          echo "Building dev site at /dev/..."
+          mkdocs build -d site/dev
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
