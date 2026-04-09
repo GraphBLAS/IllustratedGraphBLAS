@@ -92,7 +92,7 @@ class Scene4(VoiceoverScene, Scene):
             S_dim = Text("3×4", font_size=16, color=GRAY)
 
             S_row_labels = VGroup(*[
-                Text(str(i), font_size=12, color=BLUE).next_to(S_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(str(i), font_size=12, color=BLUE).next_to(S_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(3)
             ])
             S_col_labels = VGroup(*[
@@ -100,11 +100,11 @@ class Scene4(VoiceoverScene, Scene):
                 for j in range(4)
             ])
 
-            S_group = VGroup(
-                S_label, S_dim,
-                VGroup(S_mat, S_row_labels, S_col_labels)
-            ).arrange(DOWN, buff=0.2)
-            S_group.to_edge(LEFT, buff=0.5).shift(UP * 1)
+            S_matrix_block = VGroup(S_mat, S_row_labels, S_col_labels)
+            S_label.next_to(S_matrix_block, UP, buff=0.2)
+            S_dim.next_to(S_label, RIGHT, buff=0.3)
+            S_group = VGroup(S_label, S_dim, S_matrix_block)
+            S_group.to_edge(LEFT, buff=1.0).shift(UP * 1)
 
             self.play(Write(S_group))
 
@@ -126,7 +126,7 @@ class Scene4(VoiceoverScene, Scene):
             D_dim = Text("4×3", font_size=16, color=GRAY)
 
             D_row_labels = VGroup(*[
-                Text(f"e{i}", font_size=12, color=GREEN).next_to(D_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(f"e{i}", font_size=12, color=GREEN).next_to(D_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(4)
             ])
             D_col_labels = VGroup(*[
@@ -134,11 +134,11 @@ class Scene4(VoiceoverScene, Scene):
                 for j in range(3)
             ])
 
-            D_group = VGroup(
-                D_label, D_dim,
-                VGroup(D_mat, D_row_labels, D_col_labels)
-            ).arrange(DOWN, buff=0.2)
-            D_group.to_edge(LEFT, buff=0.5).shift(DOWN * 1.5)
+            D_matrix_block = VGroup(D_mat, D_row_labels, D_col_labels)
+            D_label.next_to(D_matrix_block, UP, buff=0.2)
+            D_dim.next_to(D_label, RIGHT, buff=0.3)
+            D_group = VGroup(D_label, D_dim, D_matrix_block)
+            D_group.to_edge(LEFT, buff=1.0).shift(DOWN * 2.0)
 
             self.play(Write(D_group))
 
@@ -165,7 +165,7 @@ class Scene4(VoiceoverScene, Scene):
             A_label = Text("Weighted Adjacency", font_size=20, color=GREEN)
 
             A_row_labels = VGroup(*[
-                Text(str(i), font_size=12, color=BLUE).next_to(A_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(str(i), font_size=12, color=BLUE).next_to(A_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(3)
             ])
             A_col_labels = VGroup(*[
@@ -185,8 +185,12 @@ class Scene4(VoiceoverScene, Scene):
             # Highlight the count entry
             count_entry = A_mat.get_entries()[1]  # Position [0,1]
             count_highlight = SurroundingRectangle(count_entry, color=RED, buff=0.05)
+            # Place the label just outside the matrix's right edge, aligned
+            # vertically with the highlighted entry, so it doesn't overdraw
+            # the rightmost matrix column.
             count_note = Text("Count = 2", font_size=18, color=RED)
-            count_note.next_to(count_highlight, RIGHT, buff=0.3)
+            count_note.next_to(A_mat, RIGHT, buff=0.4)
+            count_note.set_y(count_entry.get_y())
 
             self.play(Create(count_highlight), Write(count_note))
             self.wait(2)
@@ -226,13 +230,19 @@ class Scene4(VoiceoverScene, Scene):
             there are two edges, but we could not distinguish them or assign
             different properties to each."""
         ):
-            comparison = VGroup(
+            adj_section = VGroup(
                 Text("Adjacency Matrix:", font_size=22, color=RED),
                 Text("A[0,1] = 2 (edges collapsed)", font_size=18, color=GRAY),
-                Text(" ", font_size=10),
+            ).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+
+            sd_section = VGroup(
                 Text("S and D Matrices:", font_size=22, color=GREEN),
                 Text("e0 and e1 remain separate", font_size=18, color=GRAY),
-            ).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+            ).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+
+            comparison = VGroup(adj_section, sd_section).arrange(
+                DOWN, buff=0.6, aligned_edge=LEFT
+            )
             comparison.to_edge(DOWN, buff=0.5)
 
             self.play(Write(comparison))
@@ -265,10 +275,20 @@ class Scene4(VoiceoverScene, Scene):
         edges = VGroup()
         edge_labels = VGroup()
 
+        # CurvedArrow has no `buff` parameter, so we manually shorten the
+        # chord endpoints by `node_buff` along the chord direction so the
+        # arrowhead clears the node circle (matching the buff used by the
+        # straight Arrow calls below).
+        node_buff = 0.35
+        chord_01 = positions[1] - positions[0]
+        unit_01 = chord_01 / np.linalg.norm(chord_01)
+        start_01 = positions[0] + unit_01 * node_buff
+        end_01 = positions[1] - unit_01 * node_buff
+
         # e0: 0→1 (curved up)
         e0 = CurvedArrow(
-            positions[0], positions[1],
-            angle=-0.4, color=BLUE, stroke_width=3, tip_length=0.15
+            start_01, end_01,
+            angle=-0.55, color=BLUE, stroke_width=3, tip_length=0.15
         )
         e0_label = Text("e0", font_size=14, color=BLUE).move_to(
             e0.point_from_proportion(0.5) + np.array([0, 0.25, 0])
@@ -279,8 +299,8 @@ class Scene4(VoiceoverScene, Scene):
 
         # e1: 0→1 (curved down) - parallel to e0
         e1 = CurvedArrow(
-            positions[0], positions[1],
-            angle=0.4, color=BLUE, stroke_width=3, tip_length=0.15
+            start_01, end_01,
+            angle=0.55, color=BLUE, stroke_width=3, tip_length=0.15
         )
         e1_label = Text("e1", font_size=14, color=BLUE).move_to(
             e1.point_from_proportion(0.5) + np.array([0, -0.25, 0])

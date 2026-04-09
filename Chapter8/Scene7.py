@@ -91,12 +91,18 @@ class Scene7(VoiceoverScene, Scene):
         diffs = VGroup(diff1, diff2, diff3).arrange(DOWN, buff=0.15)
         diffs.next_to(diff_title, DOWN, buff=0.3)
 
+        diff_panel = VGroup(diff_title, diffs)
+        diff_bg = BackgroundRectangle(
+            diff_panel, color=BLACK, fill_opacity=0.85, buff=0.25, corner_radius=0.1,
+        )
+
         with self.voiceover(
             """The rankings differ significantly. Node 13 has only 6
             triangles but the highest centrality score. Node 0 has the
             most triangles at 18, but ranks second in centrality. Node
             32 has 13 triangles but a moderate centrality of 0.47."""
         ):
+            self.play(FadeIn(diff_bg))
             self.play(Write(diff_title))
             self.play(Write(diff1))
             # Pulse node 13 on both graphs
@@ -117,7 +123,7 @@ class Scene7(VoiceoverScene, Scene):
             self.play(Write(diff3))
             self.wait(1)
 
-        self.play(FadeOut(diff_title), FadeOut(diffs))
+        self.play(FadeOut(diff_title), FadeOut(diffs), FadeOut(diff_bg))
 
         # Explanation panel
         explain_title = Text("Why Node 13?", font_size=28, color=GREEN)
@@ -130,6 +136,11 @@ class Scene7(VoiceoverScene, Scene):
         ).arrange(DOWN, buff=0.15)
         explain_lines.next_to(explain_title, DOWN, buff=0.3)
 
+        explain_panel = VGroup(explain_title, explain_lines)
+        explain_bg = BackgroundRectangle(
+            explain_panel, color=BLACK, fill_opacity=0.85, buff=0.25, corner_radius=0.1,
+        )
+
         with self.voiceover(
             """Why does node 13 rank highest? Looking at the network,
             node 13 connects the instructor's group around node 0 with
@@ -138,6 +149,7 @@ class Scene7(VoiceoverScene, Scene):
             highly-triangulated communities, which the centrality formula
             rewards."""
         ):
+            self.play(FadeIn(explain_bg))
             self.play(Write(explain_title))
             for line in explain_lines:
                 self.play(Write(line), run_time=0.4)
@@ -150,7 +162,7 @@ class Scene7(VoiceoverScene, Scene):
             )
             self.wait(1)
 
-        self.play(FadeOut(explain_title), FadeOut(explain_lines))
+        self.play(FadeOut(explain_title), FadeOut(explain_lines), FadeOut(explain_bg))
 
         # Top 5 comparison table
         top5_title = Text("Top 5 by Each Metric", font_size=24)
@@ -179,6 +191,11 @@ class Scene7(VoiceoverScene, Scene):
         tables = VGroup(tc_top, cent_top).arrange(RIGHT, buff=1.5)
         tables.next_to(top5_title, DOWN, buff=0.3)
 
+        top5_panel = VGroup(top5_title, tables)
+        top5_bg = BackgroundRectangle(
+            top5_panel, color=BLACK, fill_opacity=0.85, buff=0.25, corner_radius=0.1,
+        )
+
         with self.voiceover(
             """Comparing the top 5 by each metric: by triangle count,
             nodes 0, 33, 32, 1, and 2 lead. By centrality, nodes 13,
@@ -186,6 +203,7 @@ class Scene7(VoiceoverScene, Scene):
             top 5 lists. Triangle centrality identifies different
             important vertices."""
         ):
+            self.play(FadeIn(top5_bg))
             self.play(Write(top5_title))
             self.play(Write(tc_top), Write(cent_top))
             self.wait(1)
@@ -216,6 +234,7 @@ class Scene7(VoiceoverScene, Scene):
             FadeOut(graph_right),
             FadeOut(top5_title),
             FadeOut(tables),
+            FadeOut(top5_bg),
             FadeOut(insight),
         )
         self.wait(0.5)

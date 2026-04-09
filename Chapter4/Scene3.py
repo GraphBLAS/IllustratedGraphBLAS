@@ -43,8 +43,8 @@ class Scene3(VoiceoverScene, Scene):
         B_mat = create_sparse_matrix(B_data, scale=0.5)
 
         # Create small graphs below matrices
-        A_graph = create_small_graph_from_matrix(A_data, scale=0.28, directed=True, edge_color=BLUE)
-        B_graph = create_small_graph_from_matrix(B_data, scale=0.28, directed=True, edge_color=BLUE)
+        A_graph = create_small_graph_from_matrix(A_data, scale=0.45, directed=True, edge_color=BLUE)
+        B_graph = create_small_graph_from_matrix(B_data, scale=0.45, directed=True, edge_color=BLUE)
 
         A_label = MathTex("A").scale(0.8)
         B_label = MathTex("B").scale(0.8)
@@ -63,12 +63,12 @@ class Scene3(VoiceoverScene, Scene):
         ], scale=0.5)
 
         # Create empty graph for C (just vertices, no edges)
-        C_graph_group = self.create_empty_graph(scale=0.28)
+        C_graph_group = self.create_empty_graph(scale=0.45)
 
         # Arrange with graphs below matrices
-        A_col = VGroup(A_label, A_mat, A_graph).arrange(DOWN, buff=0.15)
-        B_col = VGroup(B_label, B_mat, B_graph).arrange(DOWN, buff=0.15)
-        C_col = VGroup(C_label.copy(), C_initial, C_graph_group).arrange(DOWN, buff=0.15)
+        A_col = VGroup(A_label, A_mat, A_graph).arrange(DOWN, buff=0.2)
+        B_col = VGroup(B_label, B_mat, B_graph).arrange(DOWN, buff=0.2)
+        C_col = VGroup(C_label.copy(), C_initial, C_graph_group).arrange(DOWN, buff=0.2)
 
         # Arrange equation
         equation = VGroup(

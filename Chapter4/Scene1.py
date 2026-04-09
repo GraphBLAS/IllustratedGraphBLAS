@@ -37,8 +37,8 @@ class Scene1(VoiceoverScene, Scene):
         ], v_buff=0.6, h_buff=0.6).scale(0.5)
 
         # Small graph below the adjacency matrix
-        a_graph = create_small_graph_from_matrix(A_adj_data, scale=0.35, directed=False, edge_color=BLUE)
-        a_col = VGroup(a_mat, a_graph).arrange(DOWN, buff=0.2)
+        a_graph = create_small_graph_from_matrix(A_adj_data, scale=0.6, directed=False, edge_color=BLUE)
+        a_col = VGroup(a_mat, a_graph).arrange(DOWN, buff=0.25)
 
         equals_1 = MathTex("=").scale(0.8)
         result_1 = create_sparse_matrix([[0], [1], [1], [0]], scale=0.5)

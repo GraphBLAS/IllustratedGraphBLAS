@@ -41,8 +41,8 @@ class Scene2(VoiceoverScene, Scene):
             ["", "1", "1", ""],
         ], v_buff=0.6, h_buff=0.6).scale(0.4)
         a_label_1 = MathTex("A").scale(0.7)
-        a_graph_1 = create_small_graph_from_matrix(A_adj_data, scale=0.3, directed=False, edge_color=BLUE)
-        a_col_1 = VGroup(a_label_1, a_mat_1, a_graph_1).arrange(DOWN, buff=0.15)
+        a_graph_1 = create_small_graph_from_matrix(A_adj_data, scale=0.5, directed=False, edge_color=BLUE)
+        a_col_1 = VGroup(a_label_1, a_mat_1, a_graph_1).arrange(DOWN, buff=0.2)
 
         times_2 = MathTex(r"\times").scale(0.8)
 
@@ -53,8 +53,8 @@ class Scene2(VoiceoverScene, Scene):
             ["", "1", "1", ""],
         ], v_buff=0.6, h_buff=0.6).scale(0.4)
         a_label_2 = MathTex("A").scale(0.7)
-        a_graph_2 = create_small_graph_from_matrix(A_adj_data, scale=0.3, directed=False, edge_color=BLUE)
-        a_col_2 = VGroup(a_label_2, a_mat_2, a_graph_2).arrange(DOWN, buff=0.15)
+        a_graph_2 = create_small_graph_from_matrix(A_adj_data, scale=0.5, directed=False, edge_color=BLUE)
+        a_col_2 = VGroup(a_label_2, a_mat_2, a_graph_2).arrange(DOWN, buff=0.2)
 
         equals_2 = MathTex("=").scale(0.8)
 
@@ -66,8 +66,8 @@ class Scene2(VoiceoverScene, Scene):
             ["2", "", "", "2"],
         ], v_buff=0.6, h_buff=0.6).scale(0.4)
         a2_label = MathTex("A^2").scale(0.7)
-        a2_graph = create_small_graph_from_matrix(A2_adj_data, scale=0.3, directed=False, edge_color=YELLOW)
-        a2_col = VGroup(a2_label, a2_mat, a2_graph).arrange(DOWN, buff=0.15)
+        a2_graph = create_small_graph_from_matrix(A2_adj_data, scale=0.5, directed=False, edge_color=YELLOW)
+        a2_col = VGroup(a2_label, a2_mat, a2_graph).arrange(DOWN, buff=0.2)
 
         mxm_eq = VGroup(
             a_col_1,
@@ -75,8 +75,8 @@ class Scene2(VoiceoverScene, Scene):
             a_col_2,
             equals_2,
             a2_col
-        ).arrange(RIGHT, buff=0.3)
-        mxm_eq.next_to(mxm_title, DOWN, buff=0.4)
+        ).arrange(RIGHT, buff=0.4)
+        mxm_eq.next_to(mxm_title, DOWN, buff=0.5)
 
         label_mxm = Text("2-hop paths", font_size=24, color=YELLOW).next_to(mxm_eq, DOWN, buff=0.3)
 

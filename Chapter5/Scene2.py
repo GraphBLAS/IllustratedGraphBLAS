@@ -44,7 +44,7 @@ class Scene2(VoiceoverScene, Scene):
         ):
             # Create S group with label and dimension
             S_label = MathTex("S", font_size=36, color=YELLOW)
-            S_dim = Text("3×3", font_size=16, color=GRAY)
+            S_dim = Text("3×4", font_size=16, color=GRAY)
 
             S_group = VGroup(
                 S_label,
@@ -57,7 +57,7 @@ class Scene2(VoiceoverScene, Scene):
 
             # Create D group with label and dimension
             D_label = MathTex("D", font_size=36, color=YELLOW)
-            D_dim = Text("3×3", font_size=16, color=GRAY)
+            D_dim = Text("4×3", font_size=16, color=GRAY)
 
             D_group = VGroup(
                 D_label,
@@ -85,7 +85,7 @@ class Scene2(VoiceoverScene, Scene):
 
             # Row/col labels for A
             A_row_labels = VGroup(*[
-                Text(str(i), font_size=12, color=BLUE).next_to(A_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(str(i), font_size=12, color=BLUE).next_to(A_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(3)
             ])
             A_col_labels = VGroup(*[
@@ -131,10 +131,10 @@ class Scene2(VoiceoverScene, Scene):
         # Show specific computation
         with self.voiceover(
             """Let us verify one entry. To compute A at row 0, column 1, we
-            take row 0 of S and column 1 of D. Row 0 of S is one, zero, one.
-            Column 1 of D is one, zero, zero. The dot product is one times
-            one plus zero plus zero, which equals one. Indeed, there is an
-            edge from node 0 to node 1."""
+            take row 0 of S and column 1 of D. Row 0 of S is one, zero, one,
+            zero. Column 1 of D is one, zero, zero, zero. The dot product is
+            one times one, plus zero, plus zero, plus zero, which equals one.
+            Indeed, there is an edge from node 0 to node 1."""
         ):
             # Highlight row 0 of S
             S_row0 = SurroundingRectangle(S_mat.get_rows()[0], color=RED, buff=0.05)
@@ -149,7 +149,7 @@ class Scene2(VoiceoverScene, Scene):
 
             # Show computation
             computation = MathTex(
-                r"A[0,1] = (1 \cdot 1) + (0 \cdot 0) + (1 \cdot 0) = 1",
+                r"A[0,1] = (1 \cdot 1) + (0 \cdot 0) + (1 \cdot 0) + (0 \cdot 0) = 1",
                 font_size=24
             ).set_color(RED)
             computation.to_edge(DOWN, buff=1)

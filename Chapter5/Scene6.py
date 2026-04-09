@@ -192,7 +192,7 @@ class Scene6(VoiceoverScene, Scene):
             S_label_b = MathTex("S", font_size=28).set_color(BLUE)
 
             S_row_labels = VGroup(*[
-                Text(f"W{i}", font_size=10, color=BLUE).next_to(S_mat_b.get_rows()[i], LEFT, buff=0.2)
+                Text(f"W{i}", font_size=10, color=BLUE).next_to(S_mat_b.get_rows()[i], LEFT, buff=0.35)
                 for i in range(3)
             ])
             S_col_labels = VGroup(*[
@@ -210,7 +210,7 @@ class Scene6(VoiceoverScene, Scene):
             D_label_b = MathTex("D", font_size=28).set_color(GREEN)
 
             D_row_labels = VGroup(*[
-                Text(f"e{i}", font_size=10, color=GRAY).next_to(D_mat_b.get_rows()[i], LEFT, buff=0.2)
+                Text(f"e{i}", font_size=10, color=GRAY).next_to(D_mat_b.get_rows()[i], LEFT, buff=0.35)
                 for i in range(4)
             ])
             D_col_labels = VGroup(*[

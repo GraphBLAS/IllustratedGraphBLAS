@@ -71,7 +71,7 @@ class Scene5(VoiceoverScene, Scene):
             S_label = MathTex("S", font_size=32, color=YELLOW)
 
             S_row_labels = VGroup(*[
-                Text(str(i), font_size=12, color=BLUE).next_to(S_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(str(i), font_size=12, color=BLUE).next_to(S_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(3)
             ])
             S_col_labels = VGroup(*[
@@ -89,7 +89,7 @@ class Scene5(VoiceoverScene, Scene):
             D_label = MathTex("D", font_size=32, color=YELLOW)
 
             D_row_labels = VGroup(*[
-                Text(f"e{i}", font_size=12, color=GREEN).next_to(D_mat.get_rows()[i], LEFT, buff=0.25)
+                Text(f"e{i}", font_size=12, color=GREEN).next_to(D_mat.get_rows()[i], LEFT, buff=0.40)
                 for i in range(3)
             ])
             D_col_labels = VGroup(*[
@@ -182,7 +182,7 @@ class Scene5(VoiceoverScene, Scene):
             S_label_h = MathTex("S", font_size=32, color=YELLOW)
 
             S_row_labels_h = VGroup(*[
-                Text(str(i), font_size=12, color=BLUE).next_to(S_mat_h.get_rows()[i], LEFT, buff=0.25)
+                Text(str(i), font_size=12, color=BLUE).next_to(S_mat_h.get_rows()[i], LEFT, buff=0.40)
                 for i in range(4)
             ])
             S_col_labels_h = VGroup(*[
@@ -213,7 +213,7 @@ class Scene5(VoiceoverScene, Scene):
             D_label_h = MathTex("D", font_size=32, color=YELLOW)
 
             D_row_labels_h = VGroup(*[
-                Text(f"h{i}", font_size=12, color=RED).next_to(D_mat_h.get_rows()[i], LEFT, buff=0.25)
+                Text(f"h{i}", font_size=12, color=RED).next_to(D_mat_h.get_rows()[i], LEFT, buff=0.40)
                 for i in range(2)
             ])
             D_col_labels_h = VGroup(*[

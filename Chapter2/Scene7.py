@@ -36,8 +36,7 @@ class Scene7(VoiceoverScene, Scene):
                 self.play(Write(bullet))
                 self.wait(0.5)
 
-            self.wait(2)
-            self.play(FadeOut(summary))
+        self.play(FadeOut(summary))
 
         with self.voiceover(
             """In the next chapter, we'll explore masking and put together

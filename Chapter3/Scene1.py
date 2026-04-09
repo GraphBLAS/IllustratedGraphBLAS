@@ -39,8 +39,8 @@ class Scene1(VoiceoverScene, Scene):
                 formatter_style="dracula",
             ).scale(0.7).next_to(title, DOWN, buff=0.5)
             self.play(Write(syntax))
-            self.wait(2)
-            self.play(FadeOut(syntax))
+
+        self.play(FadeOut(syntax))
 
         # Create input vector v (frontier at node 0) - vertical column vector
         v_data = [[1], [0], [0], [0], [0], [0]]

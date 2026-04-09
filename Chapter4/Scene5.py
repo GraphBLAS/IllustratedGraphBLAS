@@ -50,8 +50,8 @@ class Scene5(VoiceoverScene, Scene):
         ]
 
         # Create graph
-        graph = self.create_graph()
-        graph.to_edge(RIGHT, buff=1.5)
+        graph = self.create_graph().scale(0.7)
+        graph.next_to(title, DOWN, buff=0.3)
 
         with self.voiceover(
             """Consider this graph. Node zero connects to node one. Node one
@@ -66,20 +66,6 @@ class Scene5(VoiceoverScene, Scene):
         # R_0 = A (direct connections)
         R0_data = A_data
 
-        R0_mat = create_sparse_matrix(R0_data, scale=0.32, v_buff=0.55, h_buff=0.55)
-        R0_label = MathTex("R_0 = A").scale(0.6)
-        R0_small_graph = create_small_graph_from_matrix(R0_data, scale=0.22, directed=False, edge_color=BLUE)
-        R0_desc = Text("Direct edges", font_size=16, color=GRAY)
-        R0_group = VGroup(R0_label, R0_mat, R0_small_graph, R0_desc).arrange(DOWN, buff=0.1).to_edge(LEFT, buff=0.8).shift(UP * 1.5)
-
-        with self.voiceover(
-            """We compute transitive closure iteratively. Start with R-zero
-            equal to A, the direct connections. Then repeatedly add new
-            reachable pairs by multiplying."""
-        ):
-            self.play(Write(R0_group))
-            self.wait(1)
-
         # R_1 = R_0 | (A @ R_0) - adds 2-hop connections
         # Union of direct and 2-hop paths
         R1_data = [
@@ -90,21 +76,6 @@ class Scene5(VoiceoverScene, Scene):
             [0, 0, 1, 1, 1],  # 4 can reach 2,3,4
         ]
 
-        R1_mat = create_sparse_matrix(R1_data, scale=0.32, v_buff=0.55, h_buff=0.55)
-        R1_label = MathTex(r"R_1 = R_0 \cup (A \times R_0)").scale(0.5)
-        R1_small_graph = create_small_graph_from_matrix(R1_data, scale=0.22, directed=False, edge_color=GREEN)
-        R1_desc = Text("+ 2-hop paths", font_size=16, color=GREEN)
-        R1_group = VGroup(R1_label, R1_mat, R1_small_graph, R1_desc).arrange(DOWN, buff=0.1).next_to(R0_group, DOWN, buff=0.3)
-
-        with self.voiceover(
-            """R-one equals R-zero union A times R-zero. This adds all
-            two-hop paths to our reachability. Notice how the matrix
-            fills in as new pairs become connected."""
-        ):
-            self.play(Write(R1_group))
-            # Highlight new entries that appeared
-            self.wait(1)
-
         # R_2 = R_1 | (A @ R_1) - converges (all pairs now reachable)
         R2_data = [
             [1, 1, 1, 1, 1],  # 0 can reach all
@@ -114,11 +85,44 @@ class Scene5(VoiceoverScene, Scene):
             [1, 1, 1, 1, 1],  # 4 can reach all
         ]
 
+        R0_mat = create_sparse_matrix(R0_data, scale=0.32, v_buff=0.55, h_buff=0.55)
+        R0_label = MathTex("R_0 = A").scale(0.6)
+        R0_small_graph = create_small_graph_from_matrix(R0_data, scale=0.45, directed=False, edge_color=BLUE)
+        R0_desc = Text("Direct edges", font_size=16, color=GRAY)
+        R0_group = VGroup(R0_label, R0_mat, R0_small_graph, R0_desc).arrange(DOWN, buff=0.15)
+
+        R1_mat = create_sparse_matrix(R1_data, scale=0.32, v_buff=0.55, h_buff=0.55)
+        R1_label = MathTex(r"R_1 = R_0 \cup (A \times R_0)").scale(0.5)
+        R1_small_graph = create_small_graph_from_matrix(R1_data, scale=0.45, directed=False, edge_color=GREEN)
+        R1_desc = Text("+ 2-hop paths", font_size=16, color=GREEN)
+        R1_group = VGroup(R1_label, R1_mat, R1_small_graph, R1_desc).arrange(DOWN, buff=0.15)
+
         R2_mat = create_sparse_matrix(R2_data, scale=0.32, v_buff=0.55, h_buff=0.55)
         R2_label = MathTex(r"R_2 = R_1 \cup (A \times R_1)").scale(0.5)
-        R2_small_graph = create_small_graph_from_matrix(R2_data, scale=0.22, directed=False, edge_color=YELLOW)
+        R2_small_graph = create_small_graph_from_matrix(R2_data, scale=0.45, directed=False, edge_color=YELLOW)
         R2_desc = Text("Fixed point", font_size=16, color=YELLOW)
-        R2_group = VGroup(R2_label, R2_mat, R2_small_graph, R2_desc).arrange(DOWN, buff=0.1).next_to(R1_group, DOWN, buff=0.3)
+        R2_group = VGroup(R2_label, R2_mat, R2_small_graph, R2_desc).arrange(DOWN, buff=0.15)
+
+        # Arrange the three iteration groups in a horizontal row below the chain graph
+        r_row = VGroup(R0_group, R1_group, R2_group).arrange(RIGHT, buff=0.6, aligned_edge=UP)
+        r_row.next_to(graph, DOWN, buff=0.4)
+
+        with self.voiceover(
+            """We compute transitive closure iteratively. Start with R-zero
+            equal to A, the direct connections. Then repeatedly add new
+            reachable pairs by multiplying."""
+        ):
+            self.play(Write(R0_group))
+            self.wait(1)
+
+        with self.voiceover(
+            """R-one equals R-zero union A times R-zero. This adds all
+            two-hop paths to our reachability. Notice how the matrix
+            fills in as new pairs become connected."""
+        ):
+            self.play(Write(R1_group))
+            # Highlight new entries that appeared
+            self.wait(1)
 
         with self.voiceover(
             """After another iteration, R-two fills completely. Every node

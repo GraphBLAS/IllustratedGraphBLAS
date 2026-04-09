@@ -136,9 +136,9 @@ def create_sparse_matrix(data, scale=0.6, v_buff=0.8, h_buff=1.0):
     return matrix
 
 
-# Chapter 5 example: 3 nodes, 3 directed edges
-# e0: 0→1, e1: 1→2, e2: 0→2
-CHAPTER5_EDGES = [(0, 1), (1, 2), (0, 2)]
+# Chapter 5 example: 3 nodes, 4 directed edges
+# e0: 0→1, e1: 1→2, e2: 0→2, e3: 2→0
+CHAPTER5_EDGES = [(0, 1), (1, 2), (0, 2), (2, 0)]
 
 # Chapter 8: 6-node graph with 4 triangles for triangle counting demonstration
 # Triangles: {0,1,2}, {0,2,3}, {2,3,4}, {3,4,5}
@@ -266,7 +266,7 @@ def create_incidence_matrices(edges, n_nodes=None, scale=0.55,
 
     S_row_labels = VGroup(*[
         Text(str(i), font_size=12, color=node_color).next_to(
-            S_mat.get_rows()[i], LEFT, buff=0.25)
+            S_mat.get_rows()[i], LEFT, buff=0.40)
         for i in range(n_nodes)
     ])
     S_col_labels = VGroup(*[
@@ -289,7 +289,7 @@ def create_incidence_matrices(edges, n_nodes=None, scale=0.55,
 
     D_row_labels = VGroup(*[
         Text(f"e{i}", font_size=12, color=edge_color).next_to(
-            D_mat.get_rows()[i], LEFT, buff=0.25)
+            D_mat.get_rows()[i], LEFT, buff=0.40)
         for i in range(n_edges)
     ])
     D_col_labels = VGroup(*[

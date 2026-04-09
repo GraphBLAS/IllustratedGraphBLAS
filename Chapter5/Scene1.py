@@ -24,12 +24,12 @@ class Scene1(VoiceoverScene, Scene):
         title = Text("The Two-Matrix Representation", font_size=44).to_edge(UP)
         self.play(Write(title))
 
-        # 3-node graph with 3 edges defined in CHAPTER5_EDGES: [(0,1), (1,2), (0,2)]
+        # 3-node graph with 4 edges defined in CHAPTER5_EDGES: [(0,1), (1,2), (0,2), (2,0)]
         #
-        # S (source matrix): n×m = 3×3 (nodes × edges)
+        # S (source matrix): n×m = 3×4 (nodes × edges)
         # S[i,e] = 1 if node i is the SOURCE of edge e
         #
-        # D (destination matrix): m×n = 3×3 (edges × nodes)
+        # D (destination matrix): m×n = 4×3 (edges × nodes)
         # D[e,j] = 1 if node j is the DESTINATION of edge e
 
         # Node positions for graph (triangle)
@@ -42,7 +42,7 @@ class Scene1(VoiceoverScene, Scene):
         with self.voiceover(
             """For directed graphs, we represent incidence using two separate
             matrices: S for sources, and D for destinations. Consider this
-            simple graph with three nodes and three directed edges."""
+            simple graph with three nodes and four directed edges."""
         ):
             # Create graph
             graph = self.create_directed_graph(positions)
@@ -58,9 +58,9 @@ class Scene1(VoiceoverScene, Scene):
         ):
             # Create empty S matrix display
             S_matrix = self.create_labeled_matrix(
-                rows=3, cols=3,
+                rows=3, cols=4,
                 row_labels=["0", "1", "2"],
-                col_labels=["e0", "e1", "e2"],
+                col_labels=["e0", "e1", "e2", "e3"],
                 row_title="nodes",
                 col_title="edges",
                 row_color=BLUE,
@@ -70,7 +70,7 @@ class Scene1(VoiceoverScene, Scene):
             S_dim = Text("n × m", font_size=16, color=GRAY).next_to(S_label, RIGHT, buff=0.3)
 
             S_group = VGroup(S_label, S_dim, S_matrix)
-            S_group.to_edge(LEFT, buff=0.6).shift(UP * 1.2)
+            S_group.to_edge(LEFT, buff=0.6).shift(UP * 0.7)
 
             self.play(Write(S_group))
             self.wait(0.5)
@@ -114,7 +114,7 @@ class Scene1(VoiceoverScene, Scene):
 
         with self.voiceover(
             """Edge e2 goes from node 0 to node 2. Node 0 is the source again,
-            so S at row 0, column e2 is one. The S matrix is now complete."""
+            so S at row 0, column e2 is one."""
         ):
             e2_highlight = graph.edges[2].copy().set_color(YELLOW).set_stroke(width=5)
             self.play(Create(e2_highlight))
@@ -129,6 +129,23 @@ class Scene1(VoiceoverScene, Scene):
             )
 
         with self.voiceover(
+            """Edge e3 goes from node 2 back to node 0. Node 2 is the source
+            this time, so S at row 2, column e3 is one. The S matrix is
+            now complete."""
+        ):
+            e3_highlight = graph.edges[3].copy().set_color(YELLOW).set_stroke(width=5)
+            self.play(Create(e3_highlight))
+            self.play(animate_vertex_fill(graph.vertices[2], RED))
+
+            self.fill_entry(S_matrix.matrix, 2, 3, "1", RED)
+            self.wait(0.5)
+
+            self.play(
+                FadeOut(e3_highlight),
+                animate_vertex_fill(graph.vertices[2], WHITE),
+            )
+
+        with self.voiceover(
             """Now we build the D matrix. This matrix has edges as rows and nodes
             as columns. D at position e, j equals one if node j is the
             destination of edge e. Notice the dimensions are flipped: D is
@@ -136,8 +153,8 @@ class Scene1(VoiceoverScene, Scene):
         ):
             # Create D matrix display
             D_matrix = self.create_labeled_matrix(
-                rows=3, cols=3,
-                row_labels=["e0", "e1", "e2"],
+                rows=4, cols=3,
+                row_labels=["e0", "e1", "e2", "e3"],
                 col_labels=["0", "1", "2"],
                 row_title="edges",
                 col_title="nodes",
@@ -148,7 +165,7 @@ class Scene1(VoiceoverScene, Scene):
             D_dim = Text("m × n", font_size=16, color=GRAY).next_to(D_label, RIGHT, buff=0.3)
 
             D_group = VGroup(D_label, D_dim, D_matrix)
-            D_group.to_edge(LEFT, buff=0.6).shift(DOWN * 1.5)
+            D_group.to_edge(LEFT, buff=0.6).shift(DOWN * 2.5)
 
             self.play(Write(D_group))
             self.wait(0.5)
@@ -156,7 +173,8 @@ class Scene1(VoiceoverScene, Scene):
         with self.voiceover(
             """Edge e0 goes to node 1. So D at row e0, column 1 is one.
             Edge e1 goes to node 2. D at row e1, column 2 is one.
-            Edge e2 also goes to node 2. D at row e2, column 2 is one."""
+            Edge e2 also goes to node 2. D at row e2, column 2 is one.
+            And edge e3 goes to node 0. D at row e3, column 0 is one."""
         ):
             # Fill D matrix entries for destinations
             # e0 → node 1
@@ -179,6 +197,13 @@ class Scene1(VoiceoverScene, Scene):
             self.play(animate_vertex_fill(graph.vertices[2], GREEN))
             self.fill_entry(D_matrix.matrix, 2, 2, "1", GREEN)
             self.play(FadeOut(e2_highlight), animate_vertex_fill(graph.vertices[2], WHITE))
+
+            # e3 → node 0
+            e3_highlight = graph.edges[3].copy().set_color(YELLOW).set_stroke(width=5)
+            self.play(Create(e3_highlight))
+            self.play(animate_vertex_fill(graph.vertices[0], GREEN))
+            self.fill_entry(D_matrix.matrix, 3, 0, "1", GREEN)
+            self.play(FadeOut(e3_highlight), animate_vertex_fill(graph.vertices[0], WHITE))
 
             self.wait(1)
 
@@ -217,7 +242,11 @@ class Scene1(VoiceoverScene, Scene):
         self.wait(0.5)
 
     def create_directed_graph(self, positions):
-        """Create a directed graph with arrows."""
+        """Create a directed graph with arrows.
+
+        Edges between the same pair of nodes in opposite directions are
+        rendered as curved arrows so they don't visually overlap.
+        """
         vertices = {}
         for i, pos in positions.items():
             label = MathTex(str(i), color=BLACK).scale(0.6)
@@ -225,24 +254,61 @@ class Scene1(VoiceoverScene, Scene):
             dot.move_to(pos)
             vertices[i] = dot
 
+        # Detect which edges have a reciprocal partner — those need curving
+        edge_set = set(CHAPTER5_EDGES)
+        has_reciprocal = [(dst, src) in edge_set for (src, dst) in CHAPTER5_EDGES]
+
         edges = VGroup()
         edge_labels = VGroup()
 
-        for idx, (src, dst) in enumerate(CHAPTER5_EDGES):
-            arrow = Arrow(
-                positions[src], positions[dst],
-                color=BLUE, buff=0.35, stroke_width=3,
-                tip_length=0.2, max_tip_length_to_length_ratio=0.2
-            )
-            edges.add(arrow)
+        # For a reciprocal pair (A→B and B→A) we use the SAME angle sign for
+        # both. Manim's CurvedArrow `angle` is signed relative to the chord
+        # direction, so the same sign on opposite-direction chords places the
+        # two arcs on opposite sides of the line. (Using opposite signs would
+        # put them on the same side and they would overdraw.)
+        RECIPROCAL_ANGLE = 1.1
 
-            # Edge label
-            mid = (positions[src] + positions[dst]) / 2
-            direction = positions[dst] - positions[src]
-            perp = np.array([-direction[1], direction[0], 0])
-            if np.linalg.norm(perp) > 0:
-                perp = perp / np.linalg.norm(perp) * 0.3
-            label = Text(f"e{idx}", font_size=16, color=BLUE).move_to(mid + perp)
+        for idx, (src, dst) in enumerate(CHAPTER5_EDGES):
+            if has_reciprocal[idx]:
+                # CurvedArrow has no `buff` parameter, so we manually shorten
+                # the chord endpoints by `node_buff` along the chord direction
+                # so the arrowhead clears the node circle.
+                node_buff = 0.35
+                chord = positions[dst] - positions[src]
+                chord_len = np.linalg.norm(chord)
+                unit = chord / chord_len if chord_len > 0 else chord
+                start = positions[src] + unit * node_buff
+                end = positions[dst] - unit * node_buff
+
+                arrow = CurvedArrow(
+                    start, end,
+                    angle=RECIPROCAL_ANGLE, color=BLUE, stroke_width=3,
+                    tip_length=0.2,
+                )
+                # Place the label just outside the apex of the arc, on the
+                # same side as the curve. Derive that direction from the
+                # geometry so it's correct regardless of the angle's sign.
+                arc_mid = arrow.point_from_proportion(0.5)
+                chord_mid = (start + end) / 2
+                offset = arc_mid - chord_mid
+                if np.linalg.norm(offset) > 0:
+                    offset = offset / np.linalg.norm(offset) * 0.25
+                label = Text(f"e{idx}", font_size=16, color=BLUE).move_to(arc_mid + offset)
+            else:
+                arrow = Arrow(
+                    positions[src], positions[dst],
+                    color=BLUE, buff=0.35, stroke_width=3,
+                    tip_length=0.2, max_tip_length_to_length_ratio=0.2
+                )
+                # Edge label perpendicular to the straight arrow
+                mid = (positions[src] + positions[dst]) / 2
+                direction = positions[dst] - positions[src]
+                perp = np.array([-direction[1], direction[0], 0])
+                if np.linalg.norm(perp) > 0:
+                    perp = perp / np.linalg.norm(perp) * 0.3
+                label = Text(f"e{idx}", font_size=16, color=BLUE).move_to(mid + perp)
+
+            edges.add(arrow)
             bg = BackgroundRectangle(label, color=BLACK, fill_opacity=0.8, buff=0.1, corner_radius=0.05)
             edge_labels.add(VGroup(bg, label))
 
@@ -264,7 +330,7 @@ class Scene1(VoiceoverScene, Scene):
 
         # Row labels
         row_label_group = VGroup(*[
-            Text(lbl, font_size=14, color=row_color).next_to(matrix.get_rows()[i], LEFT, buff=0.3)
+            Text(lbl, font_size=14, color=row_color).next_to(matrix.get_rows()[i], LEFT, buff=0.45)
             for i, lbl in enumerate(row_labels)
         ])
 
@@ -286,7 +352,7 @@ class Scene1(VoiceoverScene, Scene):
 
     def fill_entry(self, matrix, row, col, value, color, run_time=0.3):
         """Fill a matrix entry with a value."""
-        num_cols = 3  # We know we have 3 columns
+        num_cols = len(matrix.get_columns())
         entry = matrix.get_entries()[row * num_cols + col]
         new_text = Text(value, font_size=18, color=color)
         new_text.move_to(entry.get_center())
