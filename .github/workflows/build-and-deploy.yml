@@ -101,6 +101,26 @@ jobs:
         run: |
           mkdir -p .video-cache/dev .video-cache/prod
 
+          # Per-chapter source hash. A chapter is rebuilt when this hash differs
+          # from the .hash sidecar stored alongside the cached video. Inputs:
+          # the chapter's own scene/thumb sources plus shared files that affect
+          # every chapter (scene_utils, imgs, manim.cfg). The cache restore-keys
+          # fallback can resurrect stale videos, so existence-only checks are
+          # not sufficient — see commit 496d908 for the bug this guards against.
+          # NOTE: keep this function in sync with the copy in "Build chapters".
+          compute_chapter_hash() {
+            local chapter="$1"
+            {
+              find "$chapter" -maxdepth 1 -type f \( -name 'Scene*.py' -o -name 'Thumb.py' \) -print0 \
+                | sort -z | xargs -0 sha256sum
+              find scene_utils -type f -name '*.py' -print0 \
+                | sort -z | xargs -0 sha256sum
+              find imgs -type f -print0 \
+                | sort -z | xargs -0 sha256sum
+              sha256sum manim.cfg
+            } | sha256sum | awk '{print $1}'
+          }
+
           # Determine build mode
           if [ "${{ inputs.prod }}" = "true" ]; then
             CACHE_DIR=".video-cache/prod"
@@ -116,14 +136,26 @@ jobs:
               echo "rebuild=${{ inputs.chapters }}" >> "$GITHUB_OUTPUT"
             fi
           else
-            # On push, rebuild dev chapters that have cache misses
+            # On push, rebuild chapters whose source hash doesn't match the cached hash
             REBUILD=""
             for N in 0 1 2 3 4 5 6 7 8 9; do
               CHAPTER="Chapter${N}"
-              if [ ! -f "${CACHE_DIR}/${CHAPTER}_480p15.mp4" ] || [ ! -f "${CACHE_DIR}/${CHAPTER}.png" ]; then
-                if [ -d "$CHAPTER" ]; then
-                  REBUILD="${REBUILD:+${REBUILD},}${N}"
-                fi
+              [ -d "$CHAPTER" ] || continue
+
+              VIDEO="${CACHE_DIR}/${CHAPTER}_480p15.mp4"
+              THUMB="${CACHE_DIR}/${CHAPTER}.png"
+              HASHFILE="${CACHE_DIR}/${CHAPTER}.hash"
+
+              CURRENT_HASH=$(compute_chapter_hash "$CHAPTER")
+
+              if [ ! -f "$VIDEO" ] || [ ! -f "$THUMB" ] || [ ! -f "$HASHFILE" ]; then
+                echo "${CHAPTER}: rebuild (missing artifact)"
+                REBUILD="${REBUILD:+${REBUILD},}${N}"
+              elif [ "$(cat "$HASHFILE")" != "$CURRENT_HASH" ]; then
+                echo "${CHAPTER}: rebuild (source changed: $(cat "$HASHFILE") -> $CURRENT_HASH)"
+                REBUILD="${REBUILD:+${REBUILD},}${N}"
+              else
+                echo "${CHAPTER}: cache hit"
               fi
             done
             echo "rebuild=${REBUILD}" >> "$GITHUB_OUTPUT"
@@ -133,6 +165,20 @@ jobs:
         env:
           ELEVEN_API_KEY: ${{ secrets.ELEVEN_API_KEY }}
         run: |
+          # NOTE: keep this function in sync with the copy in "Determine chapters to build".
+          compute_chapter_hash() {
+            local chapter="$1"
+            {
+              find "$chapter" -maxdepth 1 -type f \( -name 'Scene*.py' -o -name 'Thumb.py' \) -print0 \
+                | sort -z | xargs -0 sha256sum
+              find scene_utils -type f -name '*.py' -print0 \
+                | sort -z | xargs -0 sha256sum
+              find imgs -type f -print0 \
+                | sort -z | xargs -0 sha256sum
+              sha256sum manim.cfg
+            } | sha256sum | awk '{print $1}'
+          }
+
           # Determine target cache directory
           if [ "${{ inputs.prod }}" = "true" ]; then
             CACHE_DIR=".video-cache/prod"
@@ -174,6 +220,7 @@ jobs:
               # Cache the results
               cp "docs/${CHAPTER}_480p15.mp4" "${CACHE_DIR}/${CHAPTER}_480p15.mp4"
               cp "docs/${CHAPTER}.png" "${CACHE_DIR}/${CHAPTER}.png"
+              compute_chapter_hash "$CHAPTER" > "${CACHE_DIR}/${CHAPTER}.hash"
 
               echo "${CHAPTER} complete"
             done
